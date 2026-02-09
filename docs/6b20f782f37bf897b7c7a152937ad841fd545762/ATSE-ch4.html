@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; Univariate time series processes and models – Advanced Time Series Econometrics (ATSE)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ATSE-ch5.html" rel="next">
+<link href="./ATSE-ch3.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<!-- Use JavaScript to Disable Right-Click -->
+<script>
+document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+
+<!-- Custom JavaScript for toggling code visibility -->
+<script>
+function toggleCode(id) {
+  var x = document.getElementById(id);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
+
+
+<!-- Visibility selections. display: none;? 
+  <style>
+
+/* Initially hide elements */
+.marginnotevideo {
+  display: none;
+}
+
+.marginnote {
+  display: none;
+}
+
+  </style>
+-->
+</head><body class="nav-sidebar docked">$$
+\newcommand{\ubar}[1]{\mkern3mu\underline{\mkern-3mu#1\mkern-3mu}\mkern3mu}
+$$
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles-ATSE.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch4.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Univariate time series processes and models</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Advanced Time Series Econometrics (ATSE)</a> 
+        <div class="sidebar-tools-main">
+    <a href="./msATSE2026.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch4.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Univariate time series processes and models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Univariate nonstationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>) process</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Estimation and hypothesis testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Model selection and diagnostic checking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch10-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch11-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch12-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch13-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-Appendices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appendix</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#arprocess" id="toc-arprocess" class="nav-link active" data-scroll-target="#arprocess"><span class="header-section-number">4.1</span> Autoregressive process</a></li>
+  <li><a href="#armaprocess" id="toc-armaprocess" class="nav-link" data-scroll-target="#armaprocess"><span class="header-section-number">4.2</span> ARMA processes</a></li>
+  <li><a href="#univestimation" id="toc-univestimation" class="nav-link" data-scroll-target="#univestimation"><span class="header-section-number">4.3</span> Parameter estimation of AR and ARMA models</a></li>
+  <li><a href="#armamodelselection" id="toc-armamodelselection" class="nav-link" data-scroll-target="#armamodelselection"><span class="header-section-number">4.4</span> Model selection of the ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) model</a></li>
+  <li><a href="#armaforecasting" id="toc-armaforecasting" class="nav-link" data-scroll-target="#armaforecasting"><span class="header-section-number">4.5</span> Forecasting with AR and ARMA models</a></li>
+  <li><a href="#oosforecasting" id="toc-oosforecasting" class="nav-link" data-scroll-target="#oosforecasting"><span class="header-section-number">4.6</span> Out-of-sample forecasting</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="univmodels" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Univariate time series processes and models</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In this chapter, we briefly introduce and review univariate time series models. We will concentrate on the autoregressive (AR) models, but more general ARMA models will be also briefly discussed.</p>
+<ul>
+<li>Notice that ‘’process’’ and ‘’model’’ are often used interchangeably. The term ’‘<strong>process</strong>’’ emphasizes that a time series is a realization of the underlying (stochastic) process, whereas ’‘<strong>model</strong>’’ emphasizes the specific statistical specification selected for the observed data.</li>
+</ul>
+<p>A more extensive description of the univariate models is provided in the Time Series Econometrics:</p>
+<p><a href="https://utueconometrics.github.io/TSE/789b88ee1973bf77cb3b31fd81c828867ba139a0/" target="_blank">Link to the TSE material</a></p>
+<section id="arprocess" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="arprocess"><span class="header-section-number">4.1</span> Autoregressive process</h2>
+<p>At a general level, the structure of a (univariate) time series <span class="math inline">\(y_t\)</span> can be thought of as consisting of two (additive) parts: a systematic part (‘’predictable’’ or ‘’structural’’ part or ``skeleton’’) and an unpredictable part.</p>
+<p><strong>An autoregressive process (model) of order <span class="math inline">\(p\)</span></strong>, <strong>AR(<span class="math inline">\(p\)</span>) process</strong>, is defined by the equation <span class="math display">\[\begin{equation*}
+y_{t}= \nu + \phi_1 y_{t-1}+\cdots+\phi_p y_{t-p}+u_{t}, \quad u_{t} \sim \mathsf{iid}(0,\sigma^2).
+\end{equation*}\]</span> That is, the observation <span class="math inline">\(y_{t}\)</span> is explained by its own lags <span class="math inline">\(y_{t-1},\ldots,y_{t-p}\)</span> and the constant term <span class="math inline">\(\nu\)</span> (cf.&nbsp;a linear regression model). Additionally, <span class="math inline">\(u_{t}\)</span> is a zero mean error term. In the following, this assumption is strengthened (unless otherwise stated) so that <span class="math inline">\(u_{t} \sim \mathsf{iid}(0,\sigma^2)\)</span> and occasionally <span class="math inline">\(u_{t} \sim \mathrm{nid}(0,\sigma^2)\)</span>, that is assuming normality of the error term.</p>
+<ul>
+<li>In this material, the process/model is written with the constant term <span class="math inline">\(\nu\)</span>. In an alternative notation, the process <span class="math inline">\(y_t\)</span> will be <strong>demeaned </strong>around the mean, that is <span class="math inline">\(y_t-\mu\)</span>, where <span class="math inline">\(\mathsf{E}(y_{t}) = \mu\)</span>, indicating a demeaned (centered) process without the constant term: <span class="math display">\[\begin{equation*}
+(y_{t} -\mu)= \phi_1 (y_{t-1}-\mu) + \cdots+ \phi_p (y_{t-p}-\mu) + u_{t}, \quad u_{t} \sim \mathsf{iid}(0,\sigma^2).
+\end{equation*}\]</span></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Stationarity</strong>. For the process defined in this way to be stationary, or even well-defined for all <span class="math inline">\(t=0,\pm 1,\ldots,\)</span> conditions must be imposed on the coefficients <span class="math inline">\(\phi_1,\ldots,\phi_p\)</span>. In the case of <span class="math inline">\(p=1\)</span>, that is when considering an <strong>AR(1) process</strong>, we specify <span class="math inline">\(\left\vert\phi_1\right\vert &lt;1\)</span>. Then <span class="math display">\[\begin{eqnarray*}
+y_{t} &amp; = &amp; \nu + \phi_1 y_{t-1} + u_{t} \\
+&amp;=&amp; \nu + \phi_1 \nu + u_{t}+\phi_1 u_{t-1}+\phi_1^2 y_{t-2} \\
+&amp; \vdots &amp; \\
+&amp;=&amp; \nu \sum_{j=0}^k\phi_1^j + \sum_{j=0}^k\phi_1^j u_{t-j}+\phi_1^{k+1} y_{t-k-1},
+\end{eqnarray*}\]</span> which leads to the representation (given <span class="math inline">\(\left\vert\phi_1\right\vert &lt;1\)</span>) <span class="math display">\[\begin{equation*}
+y_{t} = \nu \sum_{j=0}^\infty \phi_1^j + \sum_{j=0}^{\infty}\phi_1^j u_{t-j}.
+\end{equation*}\]</span> Since <span class="math inline">\(u_{t}\)</span> is strictly (strongly) stationary, the equation above shows that the same applies to the process <span class="math inline">\(y_t\)</span> under the condition <span class="math inline">\(\left\vert\phi_1\right\vert &lt;1\)</span>. Weak stationarity also holds. To see this, let us compute the expectation <span class="math display">\[\begin{eqnarray*}
+\mathsf{E}(y_{t}) &amp; \equiv &amp;  \mu \\
+&amp;=&amp; \mathsf{E}\left(\nu \sum_{j=0}^\infty \phi_1^j +\sum_{j=0}^{\infty}\phi_1^j u_{t-j}\right) \\
+&amp;=&amp; \nu \sum_{j=0}^\infty \phi_1^j + \sum_{j=0}^{\infty}\phi_1^j \mathsf{E}(u_{t-j})\\
+&amp;=&amp; \nu \sum_{j=0}^\infty \phi_1^j \\
+&amp;=&amp; \nu / (1- \phi_1) &lt;\infty,
+\end{eqnarray*}\]</span> and variance <span class="math display">\[\begin{equation*}
+\mathsf{Var}(y_{t}) \stackrel{ \perp \! \! \! \! \! \perp }{=} \sum_{j=0}^{\infty}\mathsf{Var}(\phi_1^j u_{t-j})
+= \sum_{j=0}^{\infty} \phi_1^{2j} \mathsf{Var}(u_{t-j})
+=\frac{\sigma^2}{1-\phi_1^2}&lt;\infty.
+\end{equation*}\]</span> We can also notice that <span class="math inline">\(u_{t} \perp \! \! \! \perp y_{t-h}\)</span>, <span class="math inline">\(h&gt;0\)</span>, from which it follows <span class="math inline">\(\mathsf{E}(u_t(y_{t-h}-\mu))=0\)</span>, and <span class="math display">\[\begin{equation*}
+\mathsf{E}\Big((y_{t}-\mu) (y_{t-h}-\mu)\Big) = \phi_1 \mathsf{E}\Big((y_{t-1}-\mu) (y_{t-h}-\mu)\Big),
+\end{equation*}\]</span> and therefore autocorrelation coefficients (see the definition in Section 2) in this special case of <span class="math inline">\(p=1\)</span> follow a recursion <span class="math display">\[\begin{equation*}
+\rho_h = \phi_1 \rho_{h-1},\quad h=1,2,\ldots.
+\end{equation*}\]</span> Since <span class="math inline">\(\rho_0=1\)</span>, the solution to the AR(1) process is <span class="math display">\[\begin{equation*}
+\rho_h = \phi_1^h,\quad h=0,1,2,\ldots,
+\end{equation*}\]</span> from which it is seen that <span class="math inline">\(\rho_h \longrightarrow 0\)</span> geometrically as <span class="math inline">\(h \longrightarrow \infty\)</span>. The fact that mean and autocovariances (autocorrelations) are not dependent on time confirms weak stationarity of an AR(1) process.</p>
+<p>&nbsp;</p>
+<p><strong>Stationarity of the AR(<span class="math inline">\(p\)</span>) process</strong>. Now, let us return to the general AR(<span class="math inline">\(p\)</span>) case and introduce the <strong>lag (backshift) operator</strong> <span class="math inline">\(\mathsf{B}\)</span>, which has the properties <span class="math display">\[\begin{equation*}
+\mathsf{B}^1 x_t= x_{t-1}, \quad \mathsf{B}^k x_t=x_{t-k} \quad \mathrm{and} \quad \mathsf{B}^0=1,
+\end{equation*}\]</span> where, in general, <span class="math inline">\(x_t\)</span> can be scalar or vector-valued process. Then the AR(<span class="math inline">\(p\)</span>) process can be written as <span class="math display">\[\begin{equation*}
+\phi(\mathsf{B}) y_{t} = \nu + u_{t},
+\end{equation*}\]</span> where <span class="math inline">\(\phi(\mathsf{B}) = 1 - \phi_1 \mathsf{B} -\cdots- \phi_p \mathsf{B}^p\)</span>.</p>
+<p><strong>A sufficient condition for the stationarity of an AR(<span class="math inline">\(p\)</span>) process</strong>. A sufficient condition for the stationarity of the AR(<span class="math inline">\(p\)</span>) process is that the roots of the polynomial (characteristic equation) <span class="math inline">\(\phi\left(z\right)\)</span> <span class="math inline">\(\left(z\in \mathbb{C}\right)\)</span> lie outside the unit circle/disk in the complex plane, or equivalently <span class="math display">\[\begin{equation*}
+\phi\left(z\right)\neq 0 \,\, \mathrm{for}\,\, \left\vert z\right\vert \leq1.
+\end{equation*}\]</span></p>
+<ul>
+<li><p>As an example, in the stationary AR(1) case (<span class="math inline">\(|\phi_1| &lt; 1)\)</span>, the characteristic equation yields <span class="math inline">\(\phi(z)=0 \Leftrightarrow 1-\phi _{1}z = 0\)</span> when <span class="math inline">\(|z| &gt; 1\)</span>. This shows why in the case <span class="math inline">\(p=1\)</span>, the condition <span class="math inline">\(\left\vert \phi_{1}\right\vert&lt;1\)</span> was found sufficient to ensure the existence of a (causal)&nbsp;stationary MA(<span class="math inline">\(\infty\)</span>)–representation.</p></li>
+<li><p>Notice that the resulting roots can also be complex numbers. Related to the above stationarity condition, the absolute value or norm of a complex number <span class="math inline">\(z=x+iy\)</span> <span class="math inline">\(\left(i=\sqrt{-1}\right)\)</span> is defined as <span class="math inline">\(\left\vert z\right\vert=\sqrt{x^{2}+y^{2}}\)</span>.</p></li>
+<li><p>This stationarity condition is not necessary. However, in what follows, we will focus on causal processes only, and in this case this stationarity condition is also a necessary condition.</p></li>
+</ul>
+<p>&nbsp;</p>
+<div class="toggle-button" onclick="toggleCode('Extra41')">
+Extra: More details on complex roots and the stationarity condition
+</div>
+<div id="Extra41" style="display:none;">
+<p>Still more details about the possibility of getting complex roots. The absolute value or norm of a complex number <span class="math inline">\(z=x+iy\)</span> <span class="math inline">\(\left(i=\sqrt{-1}\right)\)</span> can be identified with the norm of the vector <span class="math inline">\(\left(x,y\right)\)</span>. The latter form of the stationarity condition can be further expressed as <span class="math inline">\(\phi\left(z\right)=0\Rightarrow\left\vert z\right\vert&gt;1\)</span>. Because the coefficients of the polynomial <span class="math inline">\(\phi\left(z\right)\)</span> are real numbers, the potential complex roots always appear as conjugate roots, that is, if <span class="math inline">\(\zeta=x+iy\)</span> is a root, then also <span class="math inline">\(\tilde{\zeta}=x-iy\)</span> is a root.</p>
+<p>Furthermore, one way to illustrate this stationarity condition makes use of the fundamental theorem of algebra. As a consequence of this result, the polynomial <span class="math inline">\(\phi\left(z\right)\)</span> can be written as (assuming that <span class="math inline">\(\phi_{p}\neq0\)</span>) <span class="math display">\[\begin{equation*}
+    \phi \left(z\right)=\left(1-\zeta _{1}^{-1}z\right) \cdots \left( 1-\zeta_{p}^{-1}z\right),
+\end{equation*}\]</span> where for the roots <span class="math inline">\(\zeta_{i}\)</span> it therefore holds that <span class="math inline">\(\phi\left(\zeta_{i}\right)=0\)</span> and <span class="math inline">\(\left\vert \zeta_{i}\right\vert&gt;1\)</span> (<span class="math inline">\(i=1,\ldots,p\)</span>). Therefore, an AR(<span class="math inline">\(p\)</span>) process can be expressed as <span class="math inline">\(\left(1-\zeta_{1}^{-1}B\right)\cdots\left(1-\zeta_{p}^{-1}B\right)  y_{t}=u_{t}\)</span>. If all the roots of <span class="math inline">\(\phi\left(z\right)\)</span> are real, this equation can be divided with the polynomials <span class="math inline">\(\left(  1-\zeta_{i}^{-1}B\right)\)</span>, <span class="math inline">\(i=1,\ldots,p\)</span>, one at a time, and in this way it can be seen (similarly as in the case <span class="math inline">\(p=1\)</span>) that the resulting expression is a well-defined linear process. This procedure can also be generalized to the case of complex roots.</p>
+</div>
+<p>&nbsp;</p>
+<p>Based on the above-mentioned, a (causal) stationary AR(<span class="math inline">\(p\)</span>) process have a (causal) <strong>MA<span class="math inline">\(\left(\infty\right)\)</span> representation</strong> <span class="math display">\[\begin{equation*}
+    y_{t} = \phi\left(\mathsf{B}\right)^{-1}\nu + \phi\left(\mathsf{B}\right)^{-1}u_{t}
+    = \phi\left(1\right)^{-1}\nu + \psi\left(\mathsf{B}\right)u_{t}
+    = \mu + \sum_{j=0}^{\infty}\psi_{j}u_{t-j},
+\end{equation*}\]</span> where <span class="math inline">\(\psi\left(\mathsf{B}\right) =\sum_{j=0}^{\infty}\psi_{j}\mathsf{B}^{j}=\phi\left(\mathsf{B}\right)^{-1}\)</span> and <span class="math inline">\(\mu = \phi\left(1\right)^{-1}\nu\)</span>. The coefficients <span class="math inline">\(\psi_{j}\)</span> can be solved as a function of the parameters <span class="math inline">\(\phi_{1},\ldots,\phi_{p}\)</span> from equation <span class="math display">\[\begin{equation*}
+    \left(1-\phi_{1}\mathsf{B}-\cdots-\phi_{p}\mathsf{B}^{p}\right) \left(\psi_{0}+\psi_{1}\mathsf{B}+\psi_{2}\mathsf{B}^{2}+\cdots \right)=1
+\end{equation*}\]</span> by interpreting the right hand side as a power series in <span class="math inline">\(\mathsf{B}\)</span>, and setting the coefficients of <span class="math inline">\(\mathsf{B}^{j}\)</span> equal to each other on both sides of the equation.</p>
+<ul>
+<li><p>Recall that two polynomials are the same if their coefficients are the same.</p></li>
+<li><p>For instance, the coefficient of <span class="math inline">\(\mathsf{B}^{0}\)</span>&nbsp;is 1, so that <span class="math inline">\(\psi_{0}=1\)</span>. Next, the coefficient of <span class="math inline">\(\mathsf{B}^{1}\)</span>&nbsp;is zero, so that <span class="math inline">\(\psi_{1}-\phi_{1}\psi_{0}=0\)</span> from which <span class="math inline">\(\psi_{1}=\phi_{1}\)</span> follows. The general solution is left as an exercise.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Autocorrelation function</strong>. The autocorrelation function of an AR(<span class="math inline">\(p\)</span>) process could be derived by making use of its MA<span class="math inline">\(\left(\infty\right)\)</span> representation. Instead, we present an often used and rather practical alternative approach based on the model equation.</p>
+<p>Multiplying both sides of the AR(<span class="math inline">\(p\)</span>) process with <span class="math inline">\(y_{t-h}-\mu\)</span> <span class="math inline">\(\left(h\geq0\right)\)</span> and taking expectations, we obtain <span class="math display">\[\begin{equation*}
+    \mathsf{E}\Big((y_{t}-\mu) (y_{t-h}-\mu)\Big)  = \phi_{1}\mathsf{E}\Big((y_{t-1}-\mu) (y_{t-h}-\mu)\Big) +\cdots+ \phi_{p}\mathsf{E}\Big((y_{t-p}-\mu) (y_{t-h}-\mu)\Big)  +\mathsf{E}\left(u_{t} (y_{t-h}-\mu)\right).
+\end{equation*}\]</span> Because <span class="math inline">\(y_{t-h}\)</span> is a linear function of the innovation terms <span class="math inline">\(u_{t-h}\)</span>, <span class="math inline">\(u_{t-h-1},\ldots\)</span>, the variables <span class="math inline">\(y_{t-h}\)</span> and <span class="math inline">\(u_{t}\)</span> are independent when <span class="math inline">\(h&gt;0\)</span>. Therefore, we get</p>
+<ul>
+<li><p><span class="math inline">\(\mathsf{E}\left(u_{t}(y_{t-h}-\mu)\right)=0 \, \, (h&gt;0)\)</span></p></li>
+<li><p>For <span class="math inline">\(h=0\)</span>, it can be seen that <span class="math inline">\(\mathsf{E}\left(u_{t} (y_{t}-\mu) \right)=\mathsf{E}\left(u_{t}^{2}\right)=\sigma^{2}\)</span>.</p></li>
+</ul>
+<p>As <span class="math inline">\(\gamma_{h}=\gamma_{-h}\)</span>, we get <span class="math display">\[\begin{equation*}
+    \gamma_{h}=\left\{
+    \begin{array}
+        [c]{l}
+        \phi_{1}\gamma_{1}+\cdots+\phi_{p}\gamma_{p}+\sigma^{2},\,\, h=0, \\
+        \phi_{1}\gamma_{h-1}+\cdots+\phi_{p}\gamma_{h-p},\,\, h &gt; 0.
+    \end{array}
+    \right.
+\end{equation*}\]</span> Dividing this (in the case <span class="math inline">\(h&gt;0\)</span>) with the variance <span class="math inline">\(\gamma_{0}\)</span> leads to <span class="math display">\[\begin{equation*}
+    \rho_{h}=\phi_{1}\rho_{h-1}+\cdots+\phi_{p}\rho_{h-p},\,\, h&gt;0,
+\end{equation*}\]</span> so that the autocorrelation function of an AR(<span class="math inline">\(p\)</span>) process satisfies a difference equation similar to the one the AR(<span class="math inline">\(p\)</span>) process itself satisfies.</p>
+<ul>
+<li><p>When the roots of <span class="math inline">\(\phi\left(z\right)\)</span> lie outside the unit disk on the complex plane, the solution <span class="math inline">\(\rho_{h}\)</span> to this difference equation decays exponentially to zero as the lag length <span class="math inline">\(h\)</span> increases. <!-- , potentially with a pattern resembling a dampening sine wave (this follows from properties of solutions to difference equations -- skip details).  --></p></li>
+<li><p>The solution <span class="math inline">\(\phi_{1}^{h}\)</span> for the AR(1) is an example of this (this solution can also be easily obtained by solving the difference equation in the case <span class="math inline">\(p=1\)</span> using the initial value <span class="math inline">\(\rho_{0}=1\)</span>).</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Partial autocorrelation function</strong>. We next define the partial autocorrelation function, which is, among other things, a useful tool for model selection in univariate time series analysis. In general, <span class="math inline">\(\alpha_{h}\)</span> equals the conventional <strong>partial correlation coefficient</strong> that measures the correlation between the random variables <span class="math inline">\(y_{t}\)</span> and <span class="math inline">\(y_{t-h}\)</span> when the linear effect of the random variables <span class="math inline">\(y_{t-1}, \ldots, y_{t-h+1}\)</span> has been first eliminated.</p>
+<ul>
+<li>Therefore, a particular consequence is that <span class="math inline">\(\left\vert \alpha_{h}\right\vert\leq1\)</span>.</li>
+</ul>
+<p>In the case of an AR(<span class="math inline">\(p\)</span>) process, the partial autocorrelation function <span class="math inline">\(\alpha_{h}\)</span> has a special useful feature. For <span class="math inline">\(m&gt;p\)</span>, an AR(<span class="math inline">\(p\)</span>) process can be interpreted as an AR(<span class="math inline">\(m\)</span>) process with <span class="math inline">\(\phi_{p+1}=\cdots=\phi_{m}=0\)</span>, which makes it clear that the partial autocorrelation function of an AR(<span class="math inline">\(p\)</span>) process satisfies (also <span class="math inline">\(\alpha_0=1\)</span>): <span class="math display">\[\begin{equation*}
+y_{t} \thicksim \mathrm{AR}(p) \Rightarrow \alpha_{p} = \phi_p \quad
+\mathrm{and} \quad \alpha_{h}=0 \,\, \mathrm{for}\,\, h &gt; p.
+\end{equation*}\]</span> In other words, the partial autocorrelation function of an AR(<span class="math inline">\(p\)</span>) process drops to zero after lag <span class="math inline">\(p\)</span> (assuming <span class="math inline">\(\phi_p \neq 0\)</span>).</p>
+<ul>
+<li><p>The (sample) partial autocorrelation function can generally be based on so called Yule-Walker equations.</p></li>
+<li><p>The sample counterpart of the (population) partial autocorrelation function, <strong>sample partial autocorrelation function</strong> (cf.&nbsp;the sample autocorrelation function defined in Section 2) is obtained by using sample autocovariances <span class="math inline">\(c_{h}\)</span>.</p></li>
+</ul>
+<p><strong>An important detail</strong> is that if an observed time series has been generated by an AR(<span class="math inline">\(p\)</span>) process, its <strong>estimated autocorrelation function</strong> should decay to zero as the lag length increases <strong>with no apparent breaks</strong>, whereas <strong>the estimated partial autocorrelation function</strong> should have <strong>a visible break after lag</strong> <span class="math inline">\(p\)</span>. These features can be made use of when judging whether an AR(<span class="math inline">\(p\)</span>) process would be a good choice for an observed time series.</p>
+<p>To identify the location of the break point in the estimated partial autocorrelation function, one can make use of the following result. In the case of an AR(<span class="math inline">\(p\)</span>) process, the estimators <span class="math inline">\(\widehat{\alpha}_{h}\)</span>, <span class="math inline">\(h&gt;p\)</span>, are approximately independent with <span class="math inline">\(\mathsf{N}\left(0,T^{-1}\right)\)</span>–distribution. Therefore, <span class="math display">\[\begin{equation*}
+\mathsf{P}(\left\vert \widehat{\alpha}_{h}\right\vert \geq1.96/\sqrt{T})\approx0.05
+\end{equation*}\]</span> when <span class="math inline">\(h&gt;p\)</span>. On the other hand, because the estimators <span class="math inline">\(\mathsf{c}_{1},\ldots,\mathsf{c}_{p}\)</span>&nbsp;are consistent, the estimator <span class="math inline">\(\widehat{\alpha}_{p}\)</span> converges in probability to the value of the theoretical partial autocorrelation coefficient <span class="math inline">\(\alpha_{p}\)</span> which for an AR(<span class="math inline">\(p\)</span>) process is nonzero. Therefore, for <span class="math inline">\(h=p\)</span>, <span class="math inline">\(\mathsf{P}(\left\vert \widehat{\alpha}_{h}\right\vert \geq1.96/\sqrt{T})\)</span> approaches one as the sample size increases.</p>
+<p>These remarks justify depicting the sample partial autocorrelation coefficients similar to that of the usual sample autocorrelation coefficients, and adding to it horizontal critical/confidence bands to make its interpretation easier.</p>
+<p>&nbsp;</p>
+</section>
+<section id="armaprocess" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="armaprocess"><span class="header-section-number">4.2</span> ARMA processes</h2>
+<p>Already above we have seen that when the AR(<span class="math inline">\(p\)</span>) process is stationary, it also has the following <strong>univariate (causal) linear process</strong> <span class="math display">\[\begin{equation*}
+    y_{t} = \mu + \sum_{j=0}^{\infty}\psi_j u_{t-j}, \quad u_{t} \sim \mathsf{iid}(0,\sigma^2),
+\end{equation*}\]</span> where <span class="math inline">\(\psi_0=1\)</span> and coefficients <span class="math inline">\(\psi_j\)</span> are functions of the AR parameters, and <span class="math display">\[\begin{equation*}
+    \sum_{j=0}^{\infty}\psi_j^2&lt;\infty.
+\end{equation*}\]</span> As the process <span class="math inline">\(\left\{u_{t}\right\}\)</span> is (strictly) stationary, so is the process <span class="math inline">\(\left\{ y_{t}\right\}\)</span>.</p>
+<ul>
+<li><p>A linear process can be defined more generally by allowing <span class="math inline">\(j&lt;0\)</span>. This type of linear process is called non-causal. Non-causal models won’t be considered in this course.</p></li>
+<li><p><strong>As two special cases</strong> (cf.&nbsp;and in addition to the AR(<span class="math inline">\(p\)</span> process) of the linear process, we consider <strong>MA(<span class="math inline">\(q\)</span>)</strong> and <strong>ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) processes</strong>.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>MA(<span class="math inline">\(q\)</span>) process</strong>. The MA(<span class="math inline">\(q\)</span>) process is defined as <span class="math display">\[\begin{equation*}
+    y_{t}= \mu + u_{t}+\theta_{1}u_{t-1}+\cdots+\theta_{q}u_{t-q}, \quad u_{t}\sim\mathsf{iid}\left(0,\sigma^{2}\right),
+\end{equation*}\]</span> or alternatively using the lag operator as <span class="math display">\[\begin{equation*}
+    y_{t} = \mu + \theta\left(\mathsf{B}\right)u_{t},\,\, u_{t}\sim\mathsf{iid}\left(0,\sigma^{2}\right)
+\end{equation*}\]</span> with the lag-polynomial <span class="math inline">\(\theta\left(\mathsf{B}\right)=1+\theta_{1} \mathsf{B} +\cdots+\theta_{q} \mathsf{B}^{q}\)</span>. Therefore, the current value of the process is assumed to depend linearly on the present and <span class="math inline">\(q\)</span> last unobservable random shocks (or error terms or innovations). Because an MA(<span class="math inline">\(q\)</span>) process is a special case of the (causal) linear process, it is always (both weakly and strictly) stationary. Moreover, we get</p>
+<ul>
+<li><p><span class="math inline">\(\mathsf{E}\left( y_{t}\right)=\mu\)</span>,</p></li>
+<li><p><span class="math inline">\(\mathsf{Var}\left( y_{t}\right) =\gamma _{0}=\left( 1+\theta _{1}^{2}+\cdots +\theta _{q}^{2}\right) \sigma^{2}\)</span>.</p></li>
+</ul>
+<p><strong>Autocorrelation function</strong>. By making use of the general results for linear process, the MA(<span class="math inline">\(q\)</span>) process has the autocovariance function given by <span class="math display">\[\begin{equation*}
+    \gamma_{h}=
+        \begin{cases}
+        \sigma^{2}\sum_{j=0}^{q-h}\theta_{j}\theta_{j+h}, &amp; \text{for } \, 0\leq h\leq q,\\
+        0, &amp; \text{for } \, h&gt;q,
+    \end{cases}
+\end{equation*}\]</span> where <span class="math inline">\(\theta_0=1\)</span>. The autocorrelation function is then obtained via the above-mentioned and discussed formula <span class="math inline">\(\rho_{h}=\gamma_{h}\gamma_{0}\)</span>. Therefore, the autocorrelation function of an MA(<span class="math inline">\(q\)</span>) process drops to zero after lag <span class="math inline">\(q\)</span> (assuming that <span class="math inline">\(\theta_{q}\neq0\)</span>). If one observes a similar feature in a sample autocorrelation function, one can consider an MA(<span class="math inline">\(q\)</span>) process as a good candidate to model the time series.</p>
+<p>When considering the suitability of an MA(<span class="math inline">\(q\)</span>) process, one can make use of the following result: In the case of an MA(<span class="math inline">\(q\)</span>) process, the estimators <span class="math inline">\(\mathsf{r}_{h}\)</span>, <span class="math inline">\(h&gt;q\)</span>, are approximately normally distributed with mean zero and variance <span class="math inline">\(\left(1+2\rho_{1}^{2}+\cdots+2\rho_{q}^{2}\right)/T\)</span>. Therefore, if one wants to test at the 5% significance level whether an individual autocorrelation coefficient is different from zero, the estimates <span class="math inline">\(\mathsf{r}_{h}\)</span>, <span class="math inline">\(h&gt;q\)</span>, should be compared with the critical bounds <span class="math display">\[\begin{equation*}
+\pm1.96\sqrt{\mathsf{\widehat{w}}_{q}/T}, \quad \mathsf{\widehat{w}}_{q}=\left(1+2\mathsf{r}_{1}^{2}+\cdots+2\mathsf{r}_{q}^{2}\right).
+\end{equation*}\]</span> In this case, <span class="math inline">\(\mathsf{P}(\left\vert \mathsf{r}_{h}\right\vert \geq1.96\sqrt{\mathsf{\widehat{w}}_{q}/T})\approx0.05\)</span>. Note also that the bounds above are wider than in the case <span class="math inline">\(y_{t}\sim\mathsf{iid}\left(0,\sigma^{2}\right)\)</span> when <span class="math inline">\(\mathsf{\widehat{w}}_{q}\)</span> is replaced by <span class="math inline">\(1\)</span>.</p>
+<p>&nbsp;</p>
+<p><strong>Invertibility</strong>. It can be shown that for the (causal) AR(<span class="math inline">\(p\)</span>) process, there exists a one to one correspondence between the parameters <span class="math inline">\(\boldsymbol{\phi}=(\phi_1,\ldots,\phi_p)\)</span> and <span class="math inline">\(\sigma^{2}\)</span>, and the autocovariance function.</p>
+<ul>
+<li><p>For an MA(<span class="math inline">\(q\)</span>) process, a similar result does not hold. To see this, consider as an example the MA(1) process for which it holds that (assume that <span class="math inline">\(\theta_1\neq0\)</span>) <span class="math display">\[\begin{equation*}
+  \gamma_{0}=\sigma^{2}\left(1+\theta_1^{2}\right)=\sigma^{2}\theta_1^{2}\left(1+1/\theta_1^{2}\right) \quad \mathrm{and} \quad \gamma_{1}=\sigma^{2}\theta_1=\theta_1^{2}\sigma^{2}\left(1/\theta_1\right).
+\end{equation*}\]</span> Define <span class="math inline">\(\theta_1^{\ast}=1/\theta_1\)</span> and <span class="math inline">\(\sigma_{\ast}^{2}=\theta_1^{2}\sigma^{2}\)</span>, so that <span class="math inline">\(u_{t}^{\ast}=\theta_1u_{t}\sim\mathsf{iid}\left(0,\sigma_{\ast}^{2}\right)\)</span>. Now, it can be seen that the two MA(1) processes <span class="math inline">\(y_{t} = \mu + u_{t}+\theta_1u_{t-1}\)</span> and <span class="math inline">\(y_{t}^{\ast} = \mu + u_{t}^{\ast}+\theta_1^{\ast}u_{t-1}^{\ast}\)</span> have exactly the same autocovariance function, so that they cannot be distinguished from each other based on autocovariances. If in addition <span class="math inline">\(u_{t}\sim\mathsf{nid}\left(  0,\sigma^{2}\right)\)</span>, the entire probability structures of these two processes are indistinguishable.</p></li>
+<li><p>A consequence is that estimating the parameters based on an observed time series, unless one “tells” the method which of the parameter combinations <span class="math inline">\(\left(\theta_1,\sigma^{2}\right)\)</span> and <span class="math inline">\(\left(\theta_1^{\ast},\sigma_{\ast}^{2}\right)\)</span> (that fit the data equally well), should be chosen.</p></li>
+</ul>
+<p>The typical solution to the above problem in the MA(<span class="math inline">\(1\)</span>) process is to set the condition <span class="math inline">\(\left\vert \theta_1\right\vert &lt;1\)</span>. Then, one can use the equation <span class="math inline">\(u_{t}=y_{t}-\mu - \theta_1 u_{t-1}\)</span> and repetitive substitutions to first obtain <span class="math inline">\(u_{t}=y_{t}-\mu -\theta_1 (y_{t-1}-\mu) +\theta_1^{2}u_{t-2}\)</span>, and eventually <span class="math display">\[\begin{equation*}
+    (y_{t}-\mu)=-\sum_{j=1}^{k}\left(-\theta_1\right)^{j}(y_{t-j}-\mu)-\left(-\theta_1\right)^{k+1}u_{t-k-1}+u_{t}.
+\end{equation*}\]</span> The condition <span class="math inline">\(\left\vert \theta_1\right\vert &lt;1\)</span> ensures that the summation on the right hand side converges in mean square and therefore we obtain the representation <span class="math display">\[\begin{equation*}
+    y_{t}=-\sum_{j=1}^{\infty}\left(-\theta_1\right)^{j}y_{t-j}+u_{t}.
+\end{equation*}\]</span> That is, when <span class="math inline">\(\left\vert \theta_1 \right\vert&lt;1\)</span>&nbsp;holds, an MA(1) process can be “inverted” to an AR<span class="math inline">\(\left(\infty\right)\)</span> process, which explains why in the case <span class="math inline">\(\left\vert \theta_1\right\vert&lt;1\)</span> an MA(1) process is called <strong>invertible</strong>.</p>
+<p><strong>Invertibility condition of an MA(<span class="math inline">\(q\)</span>) process </strong>. An MA(<span class="math inline">\(q\)</span>) process, including the above case <span class="math inline">\(q=1\)</span>, is invertible, if the roots of the polynomial <span class="math inline">\(\theta\left(z\right)\)</span> <span class="math inline">\(\left(z\in\mathbb{C}\right)\)</span> lie outside the unit circle/disk on the complex plane or, equivalently, if <span class="math display">\[\begin{equation*}
+\theta\left(z\right) \neq0 \,\,\, \mathrm{for} \,\,\, \left\vert z\right\vert\leq1.
+\end{equation*}\]</span></p>
+<p>&nbsp;</p>
+<p>When the invertibility condition holds, one can formally solve <span class="math inline">\(u_{t}\)</span> from equation <span class="math inline">\((y_{t}-\mu)=\theta\left(\mathsf{B}\right)u_{t}\)</span> by dividing both sides by the polynomial <span class="math inline">\(\theta\left(\mathsf{B}\right)^{-1}\)</span>. The solution is <span class="math display">\[\begin{equation*}
+    \pi\left(\mathsf{B}\right)(y_{t}-\mu) = u_{t} \quad \mathrm{or} \quad \sum_{j=0}^{\infty}\pi_{j}(y_{t-j}-\mu)=u_{t},
+\end{equation*}\]</span> where <span class="math inline">\(\pi\left(\mathsf{B}\right)=\sum_{j=0}^{\infty}\pi_{j}\mathsf{B}^{j}=\theta\left(\mathsf{B}\right)^{-1}\)</span> and the coefficients <span class="math inline">\(\pi_{j}\)</span> can be solved as a function of the parameters <span class="math inline">\(\theta_{1},\ldots,\theta_{q}\)</span> from the equation <span class="math display">\[\begin{equation*}
+    \left(1+\theta_{1}\mathsf{B}+\cdots+\theta_{q} \mathsf{B}^{q}\right) \left(\pi_{0}+\pi_{1}\mathsf{B}+\pi_{2}\mathsf{B}^{2}+\cdots\right)=1
+\end{equation*}\]</span> by interpreting the right hand side as a power series in <span class="math inline">\(\mathsf{B}\)</span>, setting the coefficients of <span class="math inline">\(\mathsf{B}^{j}\)</span> equal on both sides of the equation (and <span class="math inline">\(\pi_{0}=1\)</span>).</p>
+<p>The general definition of a <strong>partial autocorrelation function</strong> (PACF) can also be applied in the case of an MA(<span class="math inline">\(q\)</span>) process, but the calculations involved would become rather complicated. However, because an MA(<span class="math inline">\(q\)</span>) process has (due to invertibility and assuming here <span class="math inline">\(\theta_{q}\neq0\)</span>) an AR(<span class="math inline">\(\infty\)</span>) representation (see above), and based on what was said above about the partial autocorrelation function of an AR(<span class="math inline">\(p\)</span>) process, it is intuitively clear that the <strong>partial autocorrelation function of an MA(<span class="math inline">\(q\)</span>) process does not drop to zero at any point</strong>, but rather smoothly decays towards zero.</p>
+<!-- - It can be shown that the the partial autocorrelation function of an MA(1) process is 
+\begin{equation*}
+    \alpha_{h}=-\left(-\theta_{1}\right)^{h}/\left(1+\theta_{1}^{2}+\cdots+\theta_{1}^{2h}\right).
+\end{equation*}
+Because $\left\vert \theta_{1}\right\vert<1$, the partial autocorrelation function of an MA(1) process decays to zero at an exponential rate as the lag length $h$ increases. 
+
+- For a general MA(q) process, it can be shown that the partial autocorrelation function decays to zero at an exponential rate, potentially following the shape of a dampening sine wave. -->
+<p>&nbsp;</p>
+<p><strong>ARMA(<span class="math inline">\(p,q\)</span>) process</strong> process can be characterized as a combination of AR(<span class="math inline">\(p\)</span>) and MA(<span class="math inline">\(q\)</span>) processes <span class="math display">\[\begin{equation*}
+    y_{t} = \nu + \phi_{1}y_{t-1}+\cdots+\phi_{p}y_{t-p}+u_{t}+\theta_{1}u_{t-1}+\cdots+\theta_{q}u_{t-q},
+\end{equation*}\]</span> where <span class="math inline">\(u_{t}\sim\mathsf{iid}\left(0,\sigma^{2}\right)\)</span>. Unlike the AR(<span class="math inline">\(p\)</span>) process, the error term is now (generally) not an independent random shock, but instead an autocorrelated MA(<span class="math inline">\(q\)</span>) process.</p>
+<p>Using the lag operator and the lag-polynomials <span class="math inline">\(\phi\left(\mathsf{B}\right)=1-\phi_{1}\mathsf{B}-\cdots-\phi_{p}\mathsf{B}^{p}\)</span> and <span class="math inline">\(\theta\left(\mathsf{B}\right)=1+\theta_{1}\mathsf{B} + \cdots + \theta_{q} \mathsf{B}^{q}\)</span>, the ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process can be expressed as <span class="math display">\[\begin{equation*}
+    \phi\left(\mathsf{B}\right)y_{t} = \nu + \theta\left(\mathsf{B}\right)u_{t}.
+\end{equation*}\]</span></p>
+<ul>
+<li><p>If <span class="math inline">\(\theta\left(\mathsf{B}\right)=1\)</span> (that is, <span class="math inline">\(q=0\)</span>), one obtains the AR(<span class="math inline">\(p\)</span>) process as a special case.</p></li>
+<li><p>If <span class="math inline">\(\phi\left(\mathsf{B}\right)=1\)</span> (that is, <span class="math inline">\(p=0\)</span>), one obtains the MA(<span class="math inline">\(q\)</span>) process.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Stationarity and invertibility</strong>. Based on what was said for linear process, it is clear than an ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process has a well-defined (causal) MA(<span class="math inline">\(\infty\)</span>) representation if the polynomial <span class="math inline">\(\phi\left(z\right)\)</span> satisfies the sufficient stationarity condition of an AR(<span class="math inline">\(p\)</span>) process (apply what was said in the case of an AR(<span class="math inline">\(p\)</span>) process, but now with MA(<span class="math inline">\(q\)</span>) error term).</p>
+<ul>
+<li>A sufficient condition for the stationarity of an ARMA(<span class="math inline">\(p,q\)</span>) process is that the roots of the polynomial <span class="math inline">\(\phi\left(z\right)\)</span> <span class="math inline">\(\left(z\in\mathbb{C}\right)\)</span> lie outside the unit circle/disk on the complex plane, or equivalently that <span class="math display">\[\begin{equation*}
+\phi\left(  z\right)  \neq0 \,\,\, \mathrm{for} \,\,\, \left\vert z\right\vert \leq1.
+\end{equation*}\]</span></li>
+</ul>
+<p>Based on the above discussion, the <strong>invertibility condition</strong> of an MA(<span class="math inline">\(q\)</span>) process will also suffice to ensure the invertibility of an ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process <span class="math display">\[\begin{equation*}
+\theta\left(z\right)\neq0 \,\,\, \mathrm{for} \,\,\, \left\vert z\right\vert \leq1.
+\end{equation*}\]</span></p>
+<p>Furthermore, as can be deduced from what was discussed above, when the stationarity condition holds, an ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process has an MA<span class="math inline">\(\left(\infty\right)\)</span> representation (cf.&nbsp;the AR(<span class="math inline">\(p\)</span>) case) <span class="math display">\[\begin{equation*}
+    (y_{t}-\mu)=\frac{\theta\left(\mathsf{B}\right)}{\phi\left(\mathsf{B}\right)}u_{t}=\psi\left(\mathsf{B}\right)u_{t},
+\end{equation*}\]</span> where <span class="math inline">\(\psi\left(\mathsf{B}\right)=\sum_{j=0}^{\infty}\psi_{j}\mathsf{B}^{j}=\theta\left(\mathsf{B}\right)\phi\left(\mathsf{B}\right)^{-1}\)</span> and the coefficients <span class="math inline">\(\psi_{j}\)</span> can be solved as a function of the parameters <span class="math inline">\(\phi_{1},\ldots,\phi_{p}\)</span> and <span class="math inline">\(\theta_{1},\ldots,\theta_{q}\)</span> by equating the coefficients of <span class="math inline">\(\mathsf{B}^{j}\)</span> on both sides of the equation <span class="math display">\[\begin{equation*}
+\left(1-\phi_{1}\mathsf{B}-\cdots-\phi_{p}\mathsf{B}^{p}\right)\left(\psi_{0}+\psi_{1}\mathsf{B}+\psi_{2}\mathsf{B}^{2}+\cdots\right)=1+\theta_{1}\mathsf{B}+\cdots+\theta_{p}\mathsf{B}^{q}.
+\end{equation*}\]</span></p>
+<ul>
+<li>From this equation, it can be solved that <span class="math inline">\(\psi_{0}=1\)</span>, <span class="math inline">\(\theta_{1}=\psi_{1}-\psi_{0}\phi_{1}\)</span>, and in general, <span class="math display">\[\begin{equation*}
+  \psi_{j}=\sum_{i=1}^{p}\phi_{i}\psi_{j-i}+\theta_{j}, \,\, j=0,1,2,\ldots,
+\end{equation*}\]</span> where <span class="math inline">\(\theta_{0}=1,\)</span> <span class="math inline">\(\theta_{j}=0\)</span>, <span class="math inline">\(j&gt;q\)</span>, and <span class="math inline">\(\psi_{j}=0\)</span>, <span class="math inline">\(j&lt;0\)</span>.</li>
+</ul>
+<!-- Results from the theory of difference equations imply (skip details how) that the solved coefficients $\psi_{j}$ decay to zero at an exponential rate as $j\rightarrow\infty$ (in the special case $p=1$ this is easy to see). -->
+<p>On the other hand, when the invertibility condition holds, an ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process also has an AR<span class="math inline">\(\left(\infty\right)\)</span> representation <span class="math display">\[\begin{equation*}
+    \frac{\phi\left(\mathsf{B}\right)}{\theta\left(\mathsf{B}\right)}(y_{t}-\mu)=\pi\left(\mathsf{B}\right)(y_{t}-\mu)=u_{t},
+\end{equation*}\]</span> where <span class="math inline">\(\pi\left(\mathsf{B}\right)=\sum_{j=0}^{\infty}\pi_{j}\mathsf{B}^{j}=\phi\left(\mathsf{B}\right)\theta\left(\mathsf{B}\right)^{-1}\)</span>. The coefficients <span class="math inline">\(\pi_{j}\)</span> can be solved similarly as the <span class="math inline">\(\psi_{j}\)</span>’s above (just exchange the roles of the polynomials <span class="math inline">\(\phi\left(\mathsf{B}\right)\)</span> and <span class="math inline">\(\theta\left(\mathsf{B}\right)\)</span>). The end result can be expressed as <span class="math display">\[\begin{equation*}
+    \pi_{j}=-\sum_{i=1}^{p}\theta_{i}\pi_{j-i}-\phi_{j},\,\, j=0,1,2,\ldots,
+\end{equation*}\]</span> where <span class="math inline">\(\phi_{0}=-1,\)</span> <span class="math inline">\(\phi_{j}=0\)</span>, <span class="math inline">\(j&gt;p\)</span>, and <span class="math inline">\(\pi_{j}=0\)</span>, <span class="math inline">\(j&lt;0\)</span>. In particular, it holds that <span class="math inline">\(\pi_{0}=1\)</span> and, as in the case of the coefficients <span class="math inline">\(\psi_{j}\)</span>, <span class="math inline">\(\pi_{j}\rightarrow 0\)</span> at an exponential rate as <span class="math inline">\(j\rightarrow \infty\)</span>.</p>
+<p>The general discussion concerning invertibility in the previous subsection in connection with the MA(1) process also holds here and generalizes to the case of an ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process.</p>
+<p>&nbsp;</p>
+<p><strong>Identification (or uniqueness) condition of an ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process</strong>. Earlier in connection to MA processes, the invertibility condition was motivated by the fact that it guarantees the existence of a one-to-one correspondence between the autocovariance function of a process and its model parameters. For general ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) processes, invertibility alone is not sufficient to guarantee the existence of such a correspondence, which is also required for maximum likelihood estimation of the parameters.</p>
+<ul>
+<li><p>Therefore, the polynomials <span class="math inline">\(\phi\left(z\right)=1-\phi_{1}z-\cdots-\phi_{p}z^{p}\)</span> and <span class="math inline">\(\theta\left(z\right)=1+\theta_{1}z+\cdots+\theta_{q}z^{q}\)</span> of a stationary and invertible ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process are assumed to have <strong>no common roots</strong> and, moreover, <span class="math inline">\(\phi_{p}\neq0\)</span> or <span class="math inline">\(\theta_{q}\neq0\)</span>.</p></li>
+<li><p>Quite often, the requirement that <span class="math inline">\(\phi_{p}\neq0\)</span> or <span class="math inline">\(\theta_{q}\neq0\)</span> is not explicitly mentioned but is understood to be contained in the condition ruling out common roots. Unless otherwise mentioned, in what follows, we assume that this identification condition holds.</p></li>
+<li><p>As an example of non-identifiable process, consider an ARMA(1,1) process, with the linear representation <span class="math display">\[\begin{equation*}
+  (y_{t}-\mu)=\frac{1+\theta_{1}B}{1-\phi_{1}B}u_{t},
+\end{equation*}\]</span> in the special case <span class="math inline">\(\phi_{1}=-\theta_{1}\)</span>, it is clear that the polynomials on the right hand side can be cancelled out, resulting in the equation <span class="math inline">\(y_{t}-\mu=u_{t}\)</span> so that the process is not a “real” ARMA(1,1) process, but instead just white noise.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p>The <strong>autocorrelation function of an ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process</strong> can be derived in a manner similar to the AR(<span class="math inline">\(p\)</span>) case. In what follows, we only present the general principle of the solution.</p>
+<p>Multiplying both sides of the (demeaned) ARMA(<span class="math inline">\(p,q\)</span>) process with <span class="math inline">\(y_{t-h}\)</span> <span class="math inline">\(\left(h\geq0\right)\)</span> and taking expectations yields <span class="math display">\[\begin{align*}
+    \mathsf{E}\Big((y_{t}-\mu)(y_{t-h}-\mu)\Big) &amp; = \phi_{1}\mathsf{E}\Big(y_{t-1}-\mu)(y_{t-h}-\mu)\Big)+\cdots+\phi_{p}\mathsf{E}\Big((y_{t-p}-\mu)(y_{t-h}-\mu)\Big)+\mathsf{E}\Big(u_{t}(y_{t-h}-\mu)\Big) \\
+    &amp; +\theta_{1}\mathsf{E}\Big(u_{t-1}(y_{t-h}-\mu)\Big)+\cdots+\theta_{q}\mathsf{E}\Big(u_{t-q}(y_{t-h}-\mu)\Big).
+\end{align*}\]</span> Making use of the MA<span class="math inline">\(\left(\infty\right)\)</span> representation and the definition of autocovariance this further leads to <span class="math display">\[\begin{equation*}
+    \gamma_{h}=
+    \begin{cases}
+    \phi_{1}\gamma_{h-1}+\cdots+\phi_{p}\gamma_{h-p}+\sigma^{2}\sum_{j=0}^{\infty}\theta_{h+j}\psi_{j}, &amp; 0\leq h&lt;\max\left\{p,q+1\right\}, \\
+    \phi_{1}\gamma_{h-1}+\cdots+\phi_{p}\gamma_{h-p}, &amp; h\geq\max\left\{p,q+1\right\}  ,
+    \end{cases}
+\end{equation*}\]</span> where <span class="math inline">\(\theta_{0}=1\)</span> and <span class="math inline">\(\theta_{j}=0\)</span> for <span class="math inline">\(j\notin\left\{0,\ldots,q\right\}\)</span>. Moreover, the coefficients <span class="math inline">\(\psi_{j}\)</span> can be expressed as function of the parameters <span class="math inline">\(\phi_{1},\ldots,\phi_{p}\)</span> and <span class="math inline">\(\theta_{1},\ldots,\theta_{q}\)</span>.</p>
+<ul>
+<li><p>It is rather clear that as the lag length <span class="math inline">\(h\)</span> increases, the autocorrelation function of an ARMA(<span class="math inline">\(p,q\)</span>) process decays exponentially to zero, potentially following the shape of a dampening sine wave (in the case <span class="math inline">\(p=1\)</span> this is rather easy to verify).</p></li>
+<li><p>Because an ARMA(<span class="math inline">\(p,q\)</span>) process has an AR(<span class="math inline">\(\infty\)</span>) representation when the invertibility condition holds, one can use the general definition of the partial autocorrelation function to conclude that the general shape of the partial autocorrelation function of an ARMA(<span class="math inline">\(p,q\)</span>) process is comparable to that of the autocorrelation function.</p></li>
+</ul>
+<p>To conclude, importantly, neither the autocorrelation nor the partial autocorrelation function of an ARMA(<span class="math inline">\(p,q\)</span>) process <strong>ever drop to zero</strong> but instead both steadily decay towards zero.</p>
+<p>&nbsp;</p>
+</section>
+<section id="univestimation" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="univestimation"><span class="header-section-number">4.3</span> Parameter estimation of AR and ARMA models</h2>
+<p>Consider the AR(<span class="math inline">\(p\)</span>) model and normally distributed errors where <span class="math inline">\(u_{t} \sim \mathsf{nid}(0,\sigma^2)\)</span> and the parameters <span class="math inline">\(\phi_1,\ldots,\phi_p\)</span> satisfy the stationarity condition.</p>
+<p>Denote <span class="math display">\[\begin{equation*}
+\ubar{\mathbf{Y}}_{t} =(y_{-p+1}, \ldots, y_0, y_1, \cdots , y_t),
+\end{equation*}\]</span> then the density function of the random vector <span class="math inline">\(\ubar{\mathbf{Y}}_{t}\)</span> determines the likelihood function of the model parameters. By omitting the arguments of the density function, we can write using the definition of the conditional density function <span class="math display">\[\begin{eqnarray*}
+\nonumber
+    f_{\ubar{\mathbf{Y}}_T} &amp;=&amp; f_{y_T \mid \ubar{\mathbf{Y}}_{T-1}} \cdot f_{\ubar{\mathbf{Y}}_{T-1}} \\
+\nonumber
+    &amp;=&amp; f_{y_T\mid \ubar{\mathbf{Y}}_{T-1}} \cdot f_{y_{T-1}\mid \ubar{\mathbf{Y}}_{T-2}} \cdot f_{\ubar{\mathbf{Y}}_{T-2}}\\
+\nonumber
+    &amp;\vdots&amp; \\
+    &amp;=&amp; \prod_{t=1}^T f_{y_t\mid \ubar{\mathbf{Y}}_{t-1}} \cdot f_{y_{0}}.
+\end{eqnarray*}\]</span> We can denote <span class="math display">\[\begin{equation*}
+\boldsymbol{x}_t = [1 \quad y_{t-1} \, \cdots \, y_{t-p}]^{\prime} \quad \mathrm{and} \quad \boldsymbol{\beta} =[\nu \quad \phi_1 \, \cdots \, \phi_p]^{\prime},
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{x}_t\)</span> is now the vector of predictive/explanatory variables, which includes the lags of <span class="math inline">\(y_{t}\)</span> in the AR(<span class="math inline">\(p\)</span>) case. Since <span class="math inline">\(\boldsymbol{x}_t \perp \! \! \! \perp u_{t}\)</span>, it follows from the assumptions made that <span class="math display">\[\begin{equation*}
+y_t \mid \ubar{\mathbf{Y}}_{t-1} \sim \mathsf{N}(\boldsymbol{x}_t^{\prime} \boldsymbol{\beta},\sigma^2).
+\end{equation*}\]</span> Thus, <span class="math display">\[\begin{equation*}
+f_{y_t\mid \ubar{\mathbf{Y}}_{t-1}}(y_t \mid \boldsymbol{x}_t) = (2\pi)^{-1/2} (\sigma^2)^{-1/2}\exp\Big(-\frac{1}{2\sigma^2}(y_t - \boldsymbol{x}_t^{\prime} \boldsymbol{\beta})^2 \Big).
+\end{equation*}\]</span> Assuming that the initial values <span class="math inline">\(y_{-p+1},\ldots,y_{0}\)</span> are available, the expressions for the factors of the density function <span class="math inline">\(f_{\mathbf{\ubar{Y}}_T}\)</span> can be obtained from this, except for the factor <span class="math inline">\(f_{y_0}\)</span>.</p>
+<ul>
+<li>In the exact maximum likelihood estimation method, the exact expression for this factor is also used. Since the corresponding possibility is rather complex, we consider the conditional maximum likelihood estimation conditional on the impact of the initial values <span class="math inline">\(f_{y_0}\)</span>.</li>
+</ul>
+<p>The conditional log-likelihood function is then obtained as <span class="math display">\[\begin{equation*}
+l(\boldsymbol{\beta},\sigma^2)=-\frac{T}{2}\log(2\pi)-\frac{T}{2}\log(\sigma^2)-\frac{1}{2\sigma^2}\sum_{t=1}^T(y_t-\boldsymbol{x}_t^{\prime}\boldsymbol{\beta})^2.
+\end{equation*}\]</span> Since conditioning only loses the information of the first <span class="math inline">\(p\)</span> observations, it has no effect in large samples (asymptotically). Conditional maximum likelhood estimation thus clearly reduces to least squares (LS) estimation, yielding the maximum likelihood estimators as <span class="math display">\[\begin{equation*}
+\widehat{\boldsymbol{\beta}}=\left(\sum_{t=1}^T \boldsymbol{x}_t \boldsymbol{x}_t^{\prime} \right)^{-1} \sum_{t=1}^T \boldsymbol{x}_t y_{t}
+\end{equation*}\]</span> and <span class="math display">\[\begin{equation*}
+\widehat{\sigma}^2=\frac{1}{T}\sum_{t=1}^T (y_{t}-\boldsymbol{x}_t^{\prime}\widehat{\boldsymbol{\beta}})^2.
+\end{equation*}\]</span> Since <span class="math display">\[\begin{equation*}
+\frac{\partial l(\boldsymbol{\beta},\sigma^2)}{\partial \boldsymbol{\beta}}=\frac{1}{\sigma^2}\sum_{t=1}^T(y_{t}-\boldsymbol{x}_t^{\prime} \boldsymbol{\beta}) \boldsymbol{x}_t,
+\end{equation*}\]</span> it holds that <span class="math display">\[\begin{equation*}
+\mathsf{E} \left(\partial^2 l(\boldsymbol{\beta},\sigma^2)/\partial \boldsymbol{\beta} \partial \sigma^2 \right) = \boldsymbol{0}
+\end{equation*}\]</span> and <span class="math display">\[\begin{equation*}
+-\mathsf{E}\left(\partial^2 l(\boldsymbol{\beta},\sigma^2)/\partial \boldsymbol{\beta} \partial \boldsymbol{\beta}^{\prime}\right)=\sigma^{-2}\sum_{t=1}^T \mathsf{E} (\boldsymbol{x}_t \boldsymbol{x}_t^{\prime})=T\sigma^{-2}\mathsf{E} (\boldsymbol{x}_t \boldsymbol{x}_t^{\prime})
+\end{equation*}\]</span> (stationarity!). Referring to the general maximum likelihood estimation theory, the asymptotic results are thus obtained as <span class="math display">\[\begin{equation*}
+\widehat{\boldsymbol{\beta}}\underset{\mathrm{as.}}{\sim} \mathsf{N} \Big(\boldsymbol{\beta},T^{-1}\sigma^2(\mathsf{E}(\boldsymbol{x}_t \boldsymbol{x}_t^{\prime}))^{-1} \Big)
+\end{equation*}\]</span> and <span class="math display">\[\begin{equation*}
+\widehat{\boldsymbol{\beta}}\underset{\mathrm{as.}}{\perp \! \! \! \perp}\widehat{\sigma}^2.
+\end{equation*}\]</span></p>
+<p>Hypotheses concerning the parameters <span class="math inline">\(\phi_1,\ldots,\phi_p\)</span> can be tested using conventional likelihood theory tests.</p>
+<ul>
+<li><p>In particular, the hypothesis <span class="math inline">\(\phi_p=0\)</span> can be tested by comparing the estimate <span class="math inline">\(\widehat{\phi}_p\)</span> to its (approximate) standard error, which is obtained by calculating the square root of the <span class="math inline">\(p\)</span>th (i.e., in this case, the last) diagonal element of the matrix <span class="math inline">\(\widehat{\sigma}^2\left(\sum_{t=1}^T \boldsymbol{x}_t \boldsymbol{x}_t^{\prime}\right)^{-1}\)</span>.</p></li>
+<li><p>If <span class="math inline">\(\left\vert\widehat{\phi}_p \right\vert\)</span> is greater than <span class="math inline">\(1.96 \cdot \widehat{\phi}_p\)</span>’s standard error, the hypothesis is rejected at approximately the 5% significance level.</p></li>
+</ul>
+<p>The aforementioned estimate <span class="math inline">\(\widehat{\phi}_p\)</span> can be interpreted as the estimate of the PACF of the process <span class="math inline">\(y_t\)</span> at the lag <span class="math inline">\(p\)</span>.</p>
+<ul>
+<li>For an AR(<span class="math inline">\(p\)</span>) process, the PACF has a cutoff at lag <span class="math inline">\(p\)</span>, which can be used to determine the order of the AR(<span class="math inline">\(p\)</span>) model or to examine whether the AR model is appropriate.</li>
+</ul>
+<p>&nbsp;</p>
+</section>
+<section id="armamodelselection" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="armamodelselection"><span class="header-section-number">4.4</span> Model selection of the ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) model</h2>
+<p><strong>Sample autocorrelations and partial autocorrelations</strong>. After visualizing the series, a logical next step is to investigate the autocorrelation structure using the estimated (sample) autocorrelation and partial autocorrelation functions. In many cases, these functions provide clues regarding the suitable lag lengths <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> for an ARMA(<span class="math inline">\(p,q\)</span>) model.</p>
+<p>In particular, <strong>given what we have learned</strong> about the (theoretical) properties of AR, MA and ARMA processes, <strong>one should look for potential breaks (“sudden drops to zero”) in the sample autocorrelation and sample partial autocorrelation functions</strong>.</p>
+<ul>
+<li><p>A break (cutoff) in the sample autocorrelation function, but not in the sample partial autocorrelation function, suggests that an MA model may be a suitable candidate model.</p></li>
+<li><p>In the AR case, the properties are reversed. That is, we observe a break in the sample partial autocorrelation function but not in the sample autocorrelation function.</p></li>
+<li><p>If there are no clear breaks in either function (i.e., both tail off gradually), an ARMA model appears to be a likely candidate.</p></li>
+</ul>
+<p>This is the so-called <strong>Box-Jenkins model selection procedure</strong>. Although this procedure often does not point to a single unique candidate model, it helps rule out certain alternatives and serves as a valuable tool when used in conjunction with the model selection criteria introduced below.</p>
+<p>&nbsp;</p>
+<p><strong>Sequential tests</strong>. One way to choose the AR(<span class="math inline">\(p\)</span>) or ARMA(<span class="math inline">\(p,q\)</span>) model is based on sequential tests. In what follows, we will consider an AR(<span class="math inline">\(p\)</span>) model for simplicity, but the following procedure can be generalized into ARMA models too.</p>
+<ul>
+<li><p>Start by choosing a relatively large model (that is, long lag length <span class="math inline">\(p*\)</span>).</p></li>
+<li><p>Estimate an AR(<span class="math inline">\(p*\)</span>) model <span class="math display">\[\begin{equation*}
+       y_t = \nu + \phi_1 y_{t-1} + \cdots + \phi_{p^*-1} y_{t- p^* +1} + \phi_{p^*} y_{t-p^*} + u_t.
+  \end{equation*}\]</span></p></li>
+<li><p>Test (evaluate) constraint <span class="math inline">\(H_0:\phi_{p*}=0\)</span></p></li>
+<li><p>If the null hypothesis cannot be rejected, estimate AR(<span class="math inline">\(p*-1\)</span>) model, and test for <span class="math inline">\(H_0:\phi_{p*-1}=0\)</span></p></li>
+<li><p>This sequential testing procedure is carried out until we can reject the null hypothesis (get the first rejection).</p></li>
+</ul>
+<p>The sequential testing is often used quite mechanically. Notice the obvious multiple testing problem and its impact on p-values, but this is often ignored in this context on <span class="math inline">\(t\)</span>-test statistics, the Wald test or using information criteria.</p>
+<p>&nbsp;</p>
+<p><strong>Information criteria</strong>. In modern practice, model selection criteria are widely used. The most common of these take the form <span class="math display">\[\begin{equation*}
+C(m) = -\frac{2}{T} l(\widehat{\boldsymbol{\beta}}(m),\widehat{\sigma}^2(m)) + \frac{(m+1) g(T)}{T},
+\end{equation*}\]</span> where <span class="math inline">\(\widehat{\boldsymbol{\beta}}(m)\)</span> and <span class="math inline">\(\widehat{\sigma}^2(m)\)</span> are the estimators (estimates) of the parameters <span class="math inline">\(\boldsymbol{\beta}\)</span> and <span class="math inline">\(\sigma^2\)</span> based on the AR(<span class="math inline">\(m\)</span>) model (including constant term), and <span class="math inline">\(g(T)\)</span> is a so-called penalty function that penalizes the use of “unnecessary” parameters. “Good” models have a small value of <span class="math inline">\(C(m)\)</span>. Note that these criteria can sometimes be represented as <span class="math display">\[\begin{equation*}
+C(m)-\log(2\pi)-1 = \log (\widehat{\sigma}^2(m)) + \frac{(m+1) g(T)}{T}.
+\end{equation*}\]</span> Three commonly used penalty functions are (i.e., <strong>Akaike</strong> (<strong>AIC</strong>), <strong>Schwarz</strong> (<strong>BIC</strong>, also Bayesian Information Criterion), and Hannan-Quinn (HQ) information criteria) <span class="math display">\[\begin{eqnarray*}
+g(T) &amp;=&amp; 2\text{ (AIC) }, \\
+g(T) &amp;=&amp; \log (T) \text{ (BIC)}, \mathrm{and} \\
+g(T) &amp;=&amp; 2\log\log (T) \text{ (HQ)}.
+\end{eqnarray*}\]</span> Occasionally, the expression for the information criteria is multiplied by a factor, such as <span class="math inline">\(T\)</span>. This does not change the relative ranking of the models, which is the only factor of interest for model selection.</p>
+<p>&nbsp;</p>
+<p><strong>Residuals and diagnostic checking</strong>. In addition to the above, we can examine the estimated autocorrelation function (ACF) of the residuals <span class="math inline">\(\widehat{u}_{t}\)</span> (defined as <span class="math inline">\(\widehat{u}_{t} = y_{t}-\boldsymbol{x}_t^{\prime}\widehat{\boldsymbol{\beta}}\)</span> in the context and above notation of AR models). Ideally, no significantly large values should appear. Note that while the standard error is often roughly approximated as <span class="math inline">\(1/\sqrt{T}\)</span>, this is not strictly correct for residuals.</p>
+<p>Additionally, the Ljung-Box test statistic can be used to test for remaining residual autocorrelation, provided that the lag length <span class="math inline">\(H\)</span> is sufficiently large. In this context, the appropriate asymptotic distribution is <span class="math inline">\(\chi_{H-p-1}^2\)</span>, where <span class="math inline">\(p+1\)</span> represents the number of estimated parameters in the AR(<span class="math inline">\(p\)</span>) model.</p>
+<ul>
+<li>Note that for ARMA(<span class="math inline">\(p,q\)</span>) models, the degrees of freedom must be adjusted accordingly to account for all estimated parameters (that is, <span class="math inline">\(p+q+1\)</span>).</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Example (continued)</strong>. Let us continue with the interest rate differential and exchange rate example. In this part, we specify univariate AR and ARMA models for each time series separately.</p>
+<p>Starting with the (differenced) exchange rate series, we observe that it is clearly less persistent than the interest rate differential. For instance, the reported Ljung-Box test p-values for various lag lengths <span class="math inline">\(H\)</span> are typically around the 0.05 level (5%), but not lower. The sample autocorrelation function was reported previously in Section 3; below, we depict the sample partial autocorrelation function:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="PACF-dexch.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<center>
+Figure: Sample partial autocorrelation function for <span class="math inline">\(dexch_t\)</span>.
+</center>
+<p>&nbsp;</p>
+<p>This, considered alongside the sample autocorrelation function, suggests that an AR(1) or MA(1) model might be appropriate. Specifically, the cutoff point in both the sample ACF and PACF appears to occur after the first lag. If we interpret the break as occurring in the PACF but not the ACF, we would select an AR(1) model. Conversely, if we interpret the cutoff as being distinct only in the sample ACF, this implies an MA(1) process.</p>
+<ul>
+<li>Information criteria: When restricting the analysis to AR models, the AIC suggests an AR(2) specification, whereas the BIC suggests an AR(1). However, when considering ARMA models (i.e., allowing for an MA component), both information criteria favor an MA(1) model.</li>
+</ul>
+<p>For the interest rate differential, as previously noted, the autocorrelation is substantially stronger; the p-values of the Ljung-Box test are <span class="math inline">\(0.000\)</span> across various lag lengths. A comparison of the estimated partial autocorrelation function with the sample ACF strongly suggests that an AR(1)—or perhaps an AR(2)—model is adequate.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="PACF-rdif.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<center>
+Figure: Sample partial autocorrelation function for <span class="math inline">\(rdif_t\)</span>.
+</center>
+<p>&nbsp;</p>
+<p>Automatic information criteria (for <span class="math inline">\(rdif_t\)</span>) suggest taking the first difference of the time series—that is, moving to an ARIMA(<span class="math inline">\(p,1,q\)</span>) model, as described in more detail in the following section. While the relatively strong persistence implies that this might be reasonable, given the relatively short time series, we can still consider an AR(2) model for the series without differencing.</p>
+<p>When restricting the analysis to autoregressive models—specifically an AR(1) for <span class="math inline">\(dexch_t\)</span> and an AR(2) for <span class="math inline">\(rdif_t\)</span>—we obtain the following estimation results:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dexch</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>          Estimate Std. Error t value  Pr(&gt;|t|)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>constant -0.0009    0.002    -0.48     0.633</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ar1       0.318     0.082     3.86     0.000</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Ljung-Box tests:</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a> Lag Q.statistic p.value</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>   8       6.134   0.408</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  12       9.622   0.474</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  16      12.110   0.597</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  20      19.527   0.360</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">======</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>rdif</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>          Estimate Std. Error  t value  Pr(&gt;|t|)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>constant -0.007    0.012     -0.643      0.520</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>ar1       1.151    0.085     13.482      0.000</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>ar2      -0.187    0.086     -2.175      0.030</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>Ljung-Box tests:</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  Lag Q.statistic p.value</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>1   8      10.450   0.063</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>2  12      16.617   0.055</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>3  16      17.036   0.198</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>4  20      18.371   0.366</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Resid-ACF-AR1-dexch.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Resid-ACF-AR2-rdif.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<center>
+Figure: Sample autocorrelations for residuals of the estimated AR(1) and AR(2) models for <span class="math inline">\(dexch_t\)</span> and <span class="math inline">\(rdif_t\)</span>, respectively.
+</center>
+<p>&nbsp;</p>
+<p>In both cases—and particularly for <span class="math inline">\(dexch\)</span>—the selected models appear adequate, as evidenced by the absence of remaining residual autocorrelation. Furthermore, the AR coefficients are statistically significant at the 5% level.</p>
+<ul>
+<li>The question of whether the interest rate differential series should be first differenced is discussed further in the next section</li>
+</ul>
+<p>&nbsp;</p>
+<p>Note that we do not consider possible residual autocorrelation in the squared residuals. If such dependency is present, this may indicate nonlinear dependencies such as conditional heteroskedasticity. The TSE material contains details on ARCH and GARCH models (combined with an AR model for the conditional mean)</p>
+<p><a href="https://utueconometrics.github.io/TSE/789b88ee1973bf77cb3b31fd81c828867ba139a0/TSE-ch9.html" target="_blank">Link to the TSE material</a></p>
+<p>&nbsp;</p>
+</section>
+<section id="armaforecasting" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="armaforecasting"><span class="header-section-number">4.5</span> Forecasting with AR and ARMA models</h2>
+<p>Let us consider the forecasting formulas for the AR(<span class="math inline">\(p\)</span>) model. First, we recall the general properties of the conditional expectation (see also the Appendix A). In the following, we aim to predict the value of the random variable <span class="math inline">\(Y\)</span> using the value <span class="math inline">\(X=x\)</span> obtained by the random variable, or random vector, <span class="math inline">\(X\)</span>:</p>
+<ul>
+<li><p><strong>CEV1</strong>: <span class="math inline">\(\mathsf{E}\left(aY_{1}+bY_{2}\left\vert X\right.\right)=a\mathsf{E}\left(Y_{1}\left\vert X\right.\right) +b\mathsf{E}\left(Y_{2}\left\vert X\right.\right)\)</span>, when <span class="math inline">\(a\)</span> are <span class="math inline">\(b\)</span> constants.</p></li>
+<li><p><strong>CEV2</strong>: <span class="math inline">\(\mathsf{E}\left(Y\left\vert X\right.  \right)=\mathsf{E}\left(Y\right)\)</span>, when <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span> are independent random variables.</p></li>
+<li><p><strong>CEV3</strong>: <span class="math inline">\(\mathsf{E}\left(Y\right)=\mathsf{E}\left[\mathsf{E}\left(Y\left\vert X\right.\right)\right]\)</span> (so-called law of iterated expectations)</p></li>
+<li><p><strong>CEV4</strong>: <span class="math inline">\(\mathsf{E}\left[h\left(X\right)Y\left\vert X\right.\right]=h\left(X\right)\mathsf{E}\left(Y\left\vert X\right.\right)\)</span> for any function <span class="math inline">\(h\)</span> (assuming the expected value of <span class="math inline">\(h\left(X\right)Y\)</span> exists and is finite).</p></li>
+</ul>
+<p>When applied to time series processes, in terms of the mean squared forecast error, the best (and otherwise natural) forecast for the observation <span class="math inline">\(y_{t+1}\)</span> at time <span class="math inline">\(t\)</span> is the conditional expectation <span class="math display">\[\begin{eqnarray*}
+    \mathsf{E}_t(y_{t+1}) &amp;\overset{\mathrm{}}{=}&amp; \mathsf{E}(y_{t+1}\mid y_{t-j},\, j\geq 0)\\
+    &amp;=&amp; \mathsf{E}(y_{t+1}\mid \mathcal{F}_t)\\
+    &amp; \overset{\mathrm{notation}}{=} &amp; y_t(1),
+\end{eqnarray*}\]</span> where <span class="math inline">\(\mathcal{F}_t=\{y_{t},\ldots,y_{t-p+1}\}\)</span> is the <strong>information set</strong> used for forecasting at time <span class="math inline">\(t\)</span> (including, among other things, the lags of <span class="math inline">\(y_{t}\)</span>).</p>
+<p>For the AR(<span class="math inline">\(p\)</span>) model, it follows that <span class="math display">\[\begin{align*}
+    y_{t}(1) &amp; = \nu + \phi_1 \mathsf{E}_t(y_{t})+ \cdots +\phi_p \mathsf{E}_t(y_{t-p+1}) + \mathsf{E}_t(u_{t+1})\\
+    &amp;= \nu + \phi_1 y_{t}+ \cdots+ \phi_p y_{t-p+1},
+\end{align*}\]</span> where <strong>based on the CEV2</strong> (and, e.g., the MA(<span class="math inline">\(\infty\)</span>) presentation of AR(MA) model), we get <span class="math inline">\(\mathsf{E}_t(u_{t+1}) = \mathsf{E}(u_{t+1})=0\)</span>. - This generalizes also to the case of <span class="math inline">\(\mathsf{E}_t(u_{t+h}) = \mathsf{E}(u_{t+h}) = 0\)</span>.</p>
+<p>For more general, when the forecast horizon <span class="math inline">\(h &gt; 1\)</span>, we get <span class="math display">\[\begin{equation*}
+    \mathsf{E}_t(y_{t+h}) = \nu + \phi_1 \mathsf{E}_t(y_{t+h-1}) + \cdots + \phi_p \mathsf{E}_t(y_{t+h-p}),
+\end{equation*}\]</span> that is <span class="math display">\[\begin{equation*}
+    y_{t}(h) = \nu + \phi_1 y_{t}(h-1) + \cdots +\phi_p y_{t}(h-p),
+\end{equation*}\]</span> where <span class="math inline">\(y_{t}(h-j)=\mathsf{E}_t(y_{t+h-j})\)</span> and <span class="math inline">\(y_{t}(h-j)=y_{t+h-j}\)</span>, when <span class="math inline">\(h\leq j\)</span>. That is, which values of <span class="math inline">\(y_t\)</span> are already included in the information set and which ones need to be predicted as a part of this iterative multiperiod forecasting.</p>
+<p>From the MA(<span class="math inline">\(\infty\)</span>) representation of the model (process), it can be seen that <span class="math display">\[\begin{equation*}
+    y_{t}(h) = \mu + \sum_{j=l}^{\infty}\psi_j u_{t+h-j} \qquad(\psi_0=1)
+\end{equation*}\]</span> and when assuming <span class="math inline">\(u_{t}\sim\mathsf{nid}(0,\sigma^2)\)</span>, we get the result <span class="math display">\[\begin{equation*}
+    y_{t+h}-y_{t}(h)\sim \mathsf{N}\left(0,\sigma^2\sum_{j=0}^{h-1}\psi_j^2 \right).
+\end{equation*}\]</span> This result can be used to construct confidence intervals. For example, a 95% confidence interval is obtained as <span class="math inline">\(y_{t}(h)\pm 1.96\left(\sigma^2\sum_{j=0}^{h-1}\psi_j^2\right)^{1/2}\)</span>.</p>
+<ul>
+<li><p>In practice, unknown parameters are, of course, replaced by estimates, so the above applies only approximately.</p></li>
+<li><p>Note also that in the confidence interval, <span class="math inline">\(h\)</span> was assumed to be fixed. When examining multiple such confidence intervals simultaneously, one encounters the usual problems of combined confidence intervals.</p></li>
+</ul>
+<p>Forecasts can naturally be computed also for the ARMA models in analogous way. However, the fact that the past error terms (i.e.&nbsp;the MA part) are not observable somewhat complicates the forecast construction.</p>
+<p>&nbsp;</p>
+<p><strong>Example</strong> (continued). As illustrations, below we report (point) forecasts 12-months-ahead (<span class="math inline">\(h=12\)</span>) from the end of the <span class="math inline">\(dexch\)</span> and <span class="math inline">\(rdif\)</span> time series (Dec 2009). Furthermore, we depict the constructed point forecasts with 80% and 95% confidence intervals:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dexch</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Month       Point Forecast  Lo 80     Hi 80   Lo 95    Hi 95</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>Jan 2010     0.0039     -0.0230     0.0309  -0.0373 0.0451</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Feb 2010     0.0004     -0.0279     0.0286  -0.0429 0.0436</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Mar 2010    -0.0008     -0.0291     0.0276  -0.0442 0.0427</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>Apr 2010    -0.0011     -0.0295     0.0273  -0.0446 0.0423</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>May 2010    -0.0012     -0.0296     0.0272  -0.0447 0.0422</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>Jun 2010    -0.0013     -0.0297     0.0272  -0.0447 0.0422</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>Jul 2010    -0.0013     -0.0297     0.0271  -0.0447 0.0422</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>Aug 2010    -0.0013     -0.0297     0.0271  -0.0447 0.0422</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>Sep 2010    -0.0013     -0.0297     0.0271  -0.0447 0.0422</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>Oct 2010    -0.0013     -0.0297     0.0271  -0.0447 0.0422</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>Nov 2010    -0.0013     -0.0297     0.0271  -0.0447 0.0422</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>Dec 2010    -0.0013     -0.0297     0.0271  -0.0447 0.0422</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">======</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>rdif</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>Month       Point Forecast  Lo 80     Hi 80   Lo 95 Hi 95</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>Jan 2010    0.2363        0.0414    0.4311  -0.0617 0.5342</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>Feb 2010    0.2116        -0.0855   0.5087  -0.2428 0.6660</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>Mar 2010    0.1919        -0.1788   0.5626  -0.3750 0.7588</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>Apr 2010    0.1739        -0.2537   0.6015  -0.4801 0.8278</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>May 2010    0.1568        -0.3169   0.6305  -0.5676 0.8812</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>Jun 2010    0.1405        -0.3716   0.6527  -0.6427 0.9238</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>Jul 2010    0.1250        -0.4199   0.6698  -0.7083 0.9582</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>Aug 2010    0.1101        -0.4629   0.6832  -0.7663 0.9865</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>Sep 2010    0.0960        -0.5016   0.6936  -0.8180 1.0099</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>Oct 2010    0.0824        -0.5367   0.7016  -0.8645 1.0293</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>Nov 2010    0.0695        -0.5687   0.7077  -0.9065 1.0455</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>Dec 2010    0.0572        -0.5979   0.7122  -0.9446 1.0589</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Forecasts-dexch.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Forecasts-rdif.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+</section>
+<section id="oosforecasting" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="oosforecasting"><span class="header-section-number">4.6</span> Out-of-sample forecasting</h2>
+<p>In various fields, particularly in economics and finance, it is crucial to assess the reliability and accuracy of forecasts generated by estimated time series models. A popular approach for this evaluation is (pseudo) out-of-sample forecasting aiming to mimic a real-time forecasting scenario as closely as possible, using only information that would have been available at the time the forecast was made.</p>
+<p>The fundamental idea is to evaluate forecast performance by systematically reserving a portion of the data—withheld from the model during estimation—to serve as a “future” data against which forecasts are compared. This method is at times termed “pseudo” out-of-sample forecasting because, while we simulate real-time forecasting, we typically possess full knowledge of the entire dataset beforehand. In “true” real-time forecasting, future observations are, by definition, unknown.</p>
+<p>See details in the TSE course material:</p>
+<p><a href="https://utueconometrics.github.io/TSE/789b88ee1973bf77cb3b31fd81c828867ba139a0/TSE-ch8.html" target="_blank">Link to the TSE material</a></p>
+<p>The principles of out-of-sample forecasting are valid, not just for univariate models, but also for multivariate/multiple-equation models such as VAR models to be considered in the coming sections.</p>
+<p>&nbsp;</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ATSE-ch3.html" class="pagination-link" aria-label="Multivariate stationary processes">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ATSE-ch5.html" class="pagination-link" aria-label="Univariate nonstationary processes">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Univariate nonstationary processes</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

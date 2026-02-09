@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Multivariate stationary processes – Advanced Time Series Econometrics (ATSE)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ATSE-ch4.html" rel="next">
+<link href="./ATSE-ch2.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<!-- Use JavaScript to Disable Right-Click -->
+<script>
+document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+
+<!-- Custom JavaScript for toggling code visibility -->
+<script>
+function toggleCode(id) {
+  var x = document.getElementById(id);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
+
+
+<!-- Visibility selections. display: none;? 
+  <style>
+
+/* Initially hide elements */
+.marginnotevideo {
+  display: none;
+}
+
+.marginnote {
+  display: none;
+}
+
+  </style>
+-->
+</head><body class="nav-sidebar docked">$$
+\newcommand{\ubar}[1]{\mkern3mu\underline{\mkern-3mu#1\mkern-3mu}\mkern3mu}
+$$
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles-ATSE.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Advanced Time Series Econometrics (ATSE)</a> 
+        <div class="sidebar-tools-main">
+    <a href="./msATSE2026.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch3.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Univariate time series processes and models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Univariate nonstationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>) process</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Estimation and hypothesis testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Model selection and diagnostic checking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch10-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch11-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch12-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch13-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-Appendices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appendix</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#multistochasticprocesses" id="toc-multistochasticprocesses" class="nav-link active" data-scroll-target="#multistochasticprocesses"><span class="header-section-number">3.1</span> Multivariate stochastic process</a></li>
+  <li><a href="#multivstationarity" id="toc-multivstationarity" class="nav-link" data-scroll-target="#multivstationarity"><span class="header-section-number">3.2</span> Stationarity</a></li>
+  <li><a href="#multiviidwn" id="toc-multiviidwn" class="nav-link" data-scroll-target="#multiviidwn"><span class="header-section-number">3.3</span> IID and white noise processes</a></li>
+  <li><a href="#sampleestimators" id="toc-sampleestimators" class="nav-link" data-scroll-target="#sampleestimators"><span class="header-section-number">3.4</span> Sample mean and sample autocovariances</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="multivprocesses" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="multistochasticprocesses" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="multistochasticprocesses"><span class="header-section-number">3.1</span> Multivariate stochastic process</h2>
+<p>As above for univariate processes, a multiple (vector-valued) time series can be interpreted as a realization of a corresponding <strong>(multivariate) stochastic process</strong>, that is a collection of random vectors <span class="math display">\[\begin{equation*}
+\boldsymbol{y}_t = (y_{1t},\ldots,y_{Kt}).
+\end{equation*}\]</span></p>
+<ul>
+<li><p>At times this column vector is denoted (see Notation) as <span class="math inline">\(\boldsymbol{y}_t = [y_{1t}\, \cdots \, y_{Kt}]^{\prime}\)</span>.</p></li>
+<li><p>In practice, the dataset to be analyzed is then denoted as <span class="math inline">\(\boldsymbol{y}_1,\ldots, \boldsymbol{y}_T\)</span>.</p></li>
+<li><p>In what follows, we often denote a (multivariate) time series process by <span class="math inline">\(\{\boldsymbol{y}_{t}\}\)</span> or just <span class="math inline">\(\boldsymbol{y}_{t}\)</span>. The notation <span class="math inline">\(\{\boldsymbol{y}_{t}\}\)</span> emphasizes that a stochastic process is generally an infinite-dimensional random variable. Throughout this material we consider real-valued discrete time series processes.</p></li>
+</ul>
+<div class="toggle-button" onclick="toggleCode('Extra31')">
+Extra: Some additional details on such stochastic process
+</div>
+<div id="Extra31" style="display:none;">
+<p>For example, a real-valued discrete time process <span class="math inline">\(\{\boldsymbol{y}_{t}\}=\{...,\boldsymbol{y}_{-1},\boldsymbol{y}_{0},\boldsymbol{y}_{1},...\}\)</span> takes values on the set <span class="math inline">\(\mathbb{R}^\infty = \mathbb{R}\times \mathbb{R}\times \dots\)</span>. A continuous-time process in turn might take values on <span class="math inline">\(C[0,1]\)</span>, the set of continuous functions defined on the interval <span class="math inline">\([0,1]\)</span>. In practice, an observed multiple time series is just one realization or value of such an infinite-dimensional process or usually a part of such value (like a sample <span class="math inline">\(\boldsymbol{y}_{1},...,\boldsymbol{y}_{T},\,\, T&lt;\infty\)</span>).</p>
+<p>Given a stochastic process, an infinite-dimensional random variable, one may ask what is meant by its probability distribution, which is defined on a set like <span class="math inline">\(\mathbb{R}^\infty\)</span> or <span class="math inline">\(C[0,1]\)</span>.</p>
+<!-- - This distribution is needed in probability theoretical considerations that involve events that cannot be expressed by means of a finite-dimensional probability distribution 
+\begin{equation}
+    \Pr \left\{ \boldsymbol{y}_{t_{1}}\in A_{1},...,y_{t_{m}}\in A_{m}\right\} ,\ \ 1\leq m<\infty
+    (#eq:fidi)
+\end{equation}-->
+<p>The question about the distribution of a stochastic process is a topic of advanced probability theory and is not treated thoroughly here. It suffices to us to know that the theory says, to put it simple, that the distribution of an infinite-dimensional process can be defined on the basis of finite-dimensional distributions.</p>
+<ul>
+<li><p>It is obvious that the converse holds, i.e., all the finite-dimensional distributions follow uniquely from an infinite-dimensional distribution. Hence, we can characterize the distribution of the infinite-dimensional process by using finite-dimensional distributions.</p></li>
+<li><p>For example, a process <span class="math inline">\(\{\boldsymbol{y}_{t}\}\)</span> is normal when all of its <em>finite dimensional distributions</em> are normal, that is, <span class="math inline">\((\boldsymbol{y}_{t_{1}},...,\boldsymbol{y}_{t_{m}})\)</span> are multivariate normal for all <span class="math inline">\(t_{1},...,t_{m}\)</span> and all <span class="math inline">\(m\geq 1\)</span> (here <span class="math inline">\(m\in \mathbb{Z}\)</span> while for a continuous-time process <span class="math inline">\(t_{1},...,t_{m}\)</span> need not be integers).</p></li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p>The first and second moments of a stochastic process are defined (assuming they exist and are finite) as follows. The <strong>mean (function)</strong> or <strong>expectation (function)</strong> of <span class="math inline">\(\boldsymbol{y}_t\)</span> is <span class="math display">\[\begin{equation*}
+    \boldsymbol{\mu}_{t}=\mathsf{E}\left(\boldsymbol{y}_{t}\right), \quad \left(K \times 1\right)
+\end{equation*}\]</span> and the <strong>covariance function</strong> is <span class="math display">\[\begin{equation*}
+    \boldsymbol{\Gamma}_{s,t}=\mathsf{Cov}\left(\boldsymbol{y}_{s},\boldsymbol{y}_{t}\right)=\mathsf{E}\left[ \left(\boldsymbol{y}_{s}-\boldsymbol{\mu}_{s}\right)\left( \boldsymbol{y}_{t}-\boldsymbol{\mu}_{t}\right)^{\prime }\right]. \quad \left(K \times K\right)
+\end{equation*}\]</span> By choosing <span class="math inline">\(s=t\)</span>, we obtain the <strong>covariance matrix</strong> <span class="math inline">\(\boldsymbol{\Sigma}_{t}=\boldsymbol{\Gamma}_{t,t}\)</span>, that is, <span class="math display">\[\begin{equation*}
+    \boldsymbol{\Sigma}_t=\mathsf{Cov}(\boldsymbol{y}_t)=\mathsf{E}\left[ (\boldsymbol{y}_t-\boldsymbol{\mu}_t)(\boldsymbol{y}_t-\boldsymbol{\mu}_t)^\prime\right]. \quad (K \times K)
+\end{equation*}\]</span> In practice, we often focus on analyzing these two moments (if <span class="math inline">\(\boldsymbol{y}_t\)</span> is normal, there is nothing else to analyze).</p>
+<ul>
+<li>In theoretical considerations we must nevertheless make assumptions on higher moments. Unless stated otherwise, the notations <span class="math inline">\(\boldsymbol{\mu}_{t}=\mathsf{E}(\boldsymbol{y}_{t})\)</span> and <span class="math inline">\(\boldsymbol{\Sigma}_t=\mathsf{Cov}(\boldsymbol{y}_t)\)</span> automatically assume that the underlying moments exist and are finite.</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Example: Bivariate case (<span class="math inline">\(K=2\)</span>)</strong></p>
+<p>To illustrate these definitions concretely, consider a bivariate process composed of two time series (components), <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span>. In this case, the random vector at time <span class="math inline">\(t\)</span> is: <span class="math display">\[\begin{equation*}
+\boldsymbol{y}_t = \left[\begin{array}{c} y_{1t} \\ y_{2t} \end{array}\right].
+\end{equation*}\]</span></p>
+<p><strong>Mean vector</strong>. The mean vector <span class="math inline">\(\boldsymbol{\mu}_t\)</span> collects the expected values of the individual series: <span class="math display">\[\begin{equation*}
+\boldsymbol{\mu}_t = \left[\begin{array}{c}  \mu_{1t} \\ \mu_{2t} \end{array}\right] = \left[\begin{array}{c} \mathsf{E}(y_{1t}) \\ \mathsf{E}(y_{2t}) \end{array}\right].
+\end{equation*}\]</span></p>
+<p><strong>Covariance matrix (at time <span class="math inline">\(t\)</span>)</strong>. The covariance matrix <span class="math inline">\(\boldsymbol{\Sigma}_t\)</span> captures the variance of each series and the contemporaneous covariance between them. It is obtained by the outer product of the centered vector: <span class="math display">\[\begin{align*}
+\boldsymbol{\Sigma}_t &amp;= \mathsf{E}\left[ \left[\begin{array}{c} y_{1t} - \mu_{1t} \\ y_{2t} - \mu_{2t} \end{array} \right] \left[\begin{array}{cc} y_{1t} - \mu_{1t} &amp; y_{2t} - \mu_{2t} \end{array} \right] \right] \\[10pt]
+&amp;= \left[\begin{array}{c}
+\mathsf{E}[(y_{1t} - \mu_{1t})^2] &amp; \mathsf{E}[(y_{1t} - \mu_{1t})(y_{2t} - \mu_{2t})] \\
+\mathsf{E}[(y_{2t} - \mu_{2t})(y_{1t} - \mu_{1t})] &amp; \mathsf{E}[(y_{2t} - \mu_{2t})^2]
+\end{array}\right] \\[10pt]
+&amp;= \left[\begin{array}{c}
+\mathsf{Var}(y_{1t}) &amp; \mathsf{Cov}(y_{1t}, y_{2t}) \\
+\mathsf{Cov}(y_{2t}, y_{1t}) &amp; \mathsf{Var}(y_{2t})
+\end{array}\right]
+\end{align*}\]</span> Here, the diagonal elements represent the variances of <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span>, while the off-diagonal elements represent the covariance between the two series at time <span class="math inline">\(t\)</span>. Note that the matrix is symmetric, so the off-diagonal elements <span class="math inline">\(\mathsf{Cov}(y_{1t}, y_{2t}) = \mathsf{Cov}(y_{2t}, y_{1t})\)</span>.</p>
+<p>&nbsp;</p>
+</section>
+<section id="multivstationarity" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="multivstationarity"><span class="header-section-number">3.2</span> Stationarity</h2>
+<p>In short and analogously to the univariate case, a stochastic process <span class="math inline">\(\boldsymbol{y}_{t}\)</span> <span class="math inline">\((K\times 1)\)</span> is (strictly) <strong>stationary</strong>, if the probability distribution of a stochastic process is time-invariant.</p>
+<div class="toggle-button" onclick="toggleCode('Extra32')">
+Extra: Strict stationarity in a multivariate context
+</div>
+<div id="Extra32" style="display:none;">
+<p>A stochastic process <span class="math inline">\(\boldsymbol{y}_{t}\)</span> <span class="math inline">\((K\times 1)\)</span> is (strictly) <strong>stationary</strong>, if <span class="math display">\[\begin{equation*}
+    \mathsf{P}\left\{\boldsymbol{y}_{t_{1}}\in \boldsymbol{A}_{1},...,\boldsymbol{y}_{t_{m}}\in \boldsymbol{A}_{m}\right\}=\mathsf{P}\left\{\boldsymbol{y}_{t_{1}+h}\in \boldsymbol{A}_{1},...,\boldsymbol{y}_{t_{m}+h}\in \boldsymbol{A}_{m}\right\}
+\end{equation*}\]</span> for all <span class="math inline">\(\boldsymbol{A}_{1},...,\boldsymbol{A}_{m}\)</span>, <span class="math inline">\(t_{1},...,t_{m}\)</span> and <span class="math inline">\(m\geq 1\)</span> (for a continuous time process only <span class="math inline">\(m\)</span> must be integer). In words, the probability distribution of a stochastic process is time-invariant.</p>
+<p>Under stationarity, <span class="math inline">\(\boldsymbol{y}_{t}\)</span> has the same distribution for all <span class="math inline">\(t\)</span> and also <span class="math inline">\((\boldsymbol{y}_{t},\boldsymbol{y}_{t+h})\)</span> and <span class="math inline">\((\boldsymbol{y}_{s},\boldsymbol{y}_{s+h})\)</span> have the same distribution for all <span class="math inline">\(t\)</span> and <span class="math inline">\(s\)</span> and all (fixed) <span class="math inline">\(h\)</span>. It is also convenient that transformations of strictly stationary time series remain strictly stationary.</p>
+<ul>
+<li>In particular, if <span class="math inline">\(\boldsymbol{z}_{t}\)</span> is strictly stationary (discrete time) process, then so is also <span class="math inline">\(\boldsymbol{y}_{t}=\boldsymbol{g}(\boldsymbol{z}_{t+h},...,\boldsymbol{z}_{t-l})\ (h,l\geq 0)\)</span> provided <span class="math inline">\(\boldsymbol{g}\)</span> is well-behaving (say, continuous, or more generally, measurable) function. Here, either <span class="math inline">\(h\)</span> or <span class="math inline">\(l\)</span> or both can be replaced by <span class="math inline">\(\infty\)</span>. When <span class="math inline">\(h\)</span> and <span class="math inline">\(l\)</span> are finite, the result follows directly from the definition of strict stationarity.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p>A vector-valued process <span class="math inline">\(\boldsymbol{y}_{t} ,\, (K\times 1)\)</span>&nbsp;is <strong>weakly stationary</strong>, or <strong>covariance stationary</strong>, if its second (hence also first) moments exist, are finite and time invariant, that is <span class="math display">\[\begin{equation*}
+    \mathsf{E}(\boldsymbol{y}_{t}) = \boldsymbol{\mu} \quad (K \times 1) \quad \mathrm{and} \quad \mathsf{Cov}(\boldsymbol{y}_{t},\boldsymbol{y}_{t+h})=\boldsymbol{\Gamma}_{h} \quad \mathrm{for \, all} \,\, t \,\, \mathrm{and} \,\,h,
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{\Gamma}_{h}\)</span> are <span class="math inline">\((K \times K)\)</span> matrices. As in the univariate case:</p>
+<ul>
+<li><p>Strict stationarity and the existence of finite-second moments imply weak stationary. The converse holds under normality but not in general. Transformations of weakly stationary processes are not generally weakly stationary.</p></li>
+<li><p>In what follows in this course, “stationarity” refers to strict stationarity (although this terminology is not generally applied).</p></li>
+</ul>
+<p>As we saw in the previous section, when <span class="math inline">\(\boldsymbol{y}_{t}\)</span> is univariate (<span class="math inline">\(K=1\)</span>), <span class="math inline">\(y_t\)</span>, the covariance function is symmetric with respect to the lag length <span class="math inline">\(h\)</span> (see below). This does not hold when <span class="math inline">\(\boldsymbol{y}_{t}\)</span> is vector-valued. Instead, it holds that <span class="math display">\[\begin{align*}
+    \boldsymbol{\Gamma}_{-h} &amp;= \mathsf{E}\left[(\boldsymbol{y}_t-\boldsymbol{\mu})(\boldsymbol{y}_{t-h}-\boldsymbol{\mu})^\prime\right]  \\
+    &amp;= \left(\mathsf{E}\left[(\boldsymbol{y}_{t-h}-\boldsymbol{\mu})(\boldsymbol{y}_t-\boldsymbol{\mu})^{\prime}\right]\right)^\prime \\
+    &amp;= \boldsymbol{\Gamma}_h^\prime
+\end{align*}\]</span> As in the univariate case, it suffices to know <span class="math inline">\(\boldsymbol{\Gamma}_{h}\)</span> for <span class="math inline">\(h\geq 0\)</span> (or <span class="math inline">\(h\leq 0\)</span>).</p>
+<p>The covariance function <span class="math inline">\(\boldsymbol{\Gamma}_h\)</span> contains the autocovariance and cross-covariance functions of the individual components of the process <span class="math inline">\(\boldsymbol{y}_t\)</span>. As <span class="math inline">\(\boldsymbol{y}_{t}=(y_{1t},...,y_{Kt})\)</span>, then <span class="math inline">\(\boldsymbol{\Gamma}_{h}=[\gamma _{ab,h}]\)</span> (<span class="math inline">\(a,b=1,...,K\)</span>), and the autocovariance function of the process <span class="math inline">\(y_{at}\)</span> (scalar-valued <span class="math inline">\(a\)</span>th process) is <span class="math display">\[\begin{equation*}
+\gamma_{a,h} = \mathsf{E}\Big((y_{at} - \mathsf{E}(y_{at}) (y_{a, t+h} - \mathsf{E}(y_{a, t+h})) \Big).
+\end{equation*}\]</span> Therefore, the <strong>autocorrelation function</strong> of the process <span class="math inline">\(y_{at}\)</span> is defined as <span class="math display">\[\begin{equation*}
+    \rho_{a,h}=\gamma _{a,h}/\gamma _{a,0}, \quad a=1,\ldots,K,
+\end{equation*}\]</span> and the <strong>cross-correlation function</strong> of the processes <span class="math inline">\(y_{at}\)</span> and <span class="math inline">\(y_{bt}\)</span> is <span class="math display">\[\begin{equation*}
+    \rho _{ab,h}=\gamma_{ab,h}/\sqrt{\gamma_{a,0}\gamma_{b,0}} \qquad a,b=1,\ldots,K.
+\end{equation*}\]</span> Here <span class="math inline">\(\gamma_{a,h}=\gamma_{aa,h}\)</span> and <span class="math inline">\(\gamma_{ab,h}\)</span> (<span class="math inline">\(a\neq b\)</span>) is the <strong>cross-autocovariance function</strong>, respectively.</p>
+<p>From a practical standpoint, and again analogously to the univariate case, a stationary time series can be assumed to satisfy the condition <span class="math display">\[\begin{equation*}
+    \boldsymbol{\Gamma}_{h}\rightarrow \boldsymbol{0} \text{, as } \left\vert h\right\vert \rightarrow\infty
+\end{equation*}\]</span> where convergence can be interpreted to hold for each component. In this case, <span class="math inline">\(\boldsymbol{y}_{t}\)</span> and <span class="math inline">\(\boldsymbol{y}_{t+h}\)</span> are nearly uncorrelated when <span class="math inline">\(\left\vert h\right\vert\)</span> is large.</p>
+<ul>
+<li><p>Note that <span class="math inline">\(\boldsymbol{\Gamma}_{h}\rightarrow \boldsymbol{0}\)</span> does not follow from stationarity as such.</p></li>
+<li><p>If one wants to estimate the first- and second-order moments of <span class="math inline">\(\boldsymbol{y}_{t}\)</span>, it suffices under <span class="math inline">\(\boldsymbol{\Gamma}_{h}\rightarrow \boldsymbol{0}\)</span> to estimate a finite number of parameters (that is, <span class="math inline">\(\boldsymbol{\mu}\)</span> and <span class="math inline">\(\boldsymbol{\Gamma}_{h}\)</span>, <span class="math inline">\(h=-H,...,H\)</span>, for some “large” <span class="math inline">\(H\)</span>).</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Example continues: Bivariate stationarity case (<span class="math inline">\(K=2\)</span>)</strong>. To make these matrix definitions concrete, let us again consider the bivariate case, that is two time series <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span>. For this vector process <span class="math inline">\(\boldsymbol{y}_t = (y_{1t}, y_{2t})\)</span> to be weakly stationary, two specific conditions must be “visible” in its moments:</p>
+<ul>
+<li><p><strong>Time invariance of the mean vector</strong>: The expected value of each series must be constant over time, not depending on <span class="math inline">\(t\)</span>: <span class="math display">\[\begin{equation*}
+\mathsf{E}(\boldsymbol{y}_t) = \boldsymbol{\mu} = \left[
+\begin{array}{c} \mu_1 \\ \mu_2 \end{array}\right], \quad \text{for all } t.
+\end{equation*}\]</span> Implication: Neither <span class="math inline">\(y_{1t}\)</span> nor <span class="math inline">\(y_{2t}\)</span> can have a trend. They must fluctuate around fixed levels <span class="math inline">\(\mu_1\)</span> and <span class="math inline">\(\mu_2\)</span>.</p></li>
+<li><p><strong>Time invariance of the covariance structure</strong>: The covariance matrix <span class="math inline">\(\boldsymbol{\Gamma}_h\)</span> must depend only on the lag <span class="math inline">\(h\)</span>, and not on the specific point in time <span class="math inline">\(t\)</span>: <span class="math display">\[\begin{equation*}
+\boldsymbol{\Gamma}_h = \left[
+\begin{array}{c}
+\gamma_{11,h} &amp; \gamma_{12,h} \\
+\gamma_{21,h} &amp; \gamma_{22,h}
+\end{array}\right].
+\end{equation*}\]</span></p></li>
+</ul>
+<p>This implies three time-invariant (stable) relationships simultaneously:</p>
+<ul>
+<li><p>Constant variance (<span class="math inline">\(h=0\)</span>): The volatility of <span class="math inline">\(y_{1t}\)</span> (<span class="math inline">\(\gamma_{11,0}\)</span>) and <span class="math inline">\(y_{2t}\)</span> (<span class="math inline">\(\gamma_{22,0}\)</span>) does not change over time.</p></li>
+<li><p>Stable cross-correlation (<span class="math inline">\(h=0\)</span>): The contemporaneous relationship between <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span> (e.g., do they move together?) is constant.</p></li>
+<li><p>Stable lead-lag dynamics (<span class="math inline">\(h \neq 0\)</span>): The way <span class="math inline">\(y_{1t}\)</span> predicts <span class="math inline">\(y_{2, t+h}\)</span> (and vice versa) remains consistent throughout the sample. Interpretation the off-diagonal elements:</p>
+<ul>
+<li><p><span class="math inline">\(\gamma_{12,h} = \mathsf{Cov}(y_{1t}, y_{2,t+h})\)</span>: Measures how <span class="math inline">\(y_1\)</span> at time <span class="math inline">\(t\)</span> covaries with <span class="math inline">\(y_2\)</span> at time <span class="math inline">\(t+h\)</span>.</p></li>
+<li><p><span class="math inline">\(\gamma_{21,h} = \mathsf{Cov}(y_{2t}, y_{1,t+h})\)</span>: Measures how <span class="math inline">\(y_2\)</span> at time <span class="math inline">\(t\)</span> covaries with <span class="math inline">\(y_1\)</span> at time <span class="math inline">\(t+h\)</span>.</p></li>
+</ul></li>
+</ul>
+<p><strong>Important asymmetry</strong>: Unlike the autocovariance of a single series, cross-covariances are not generally symmetric in lag <span class="math inline">\(h\)</span>. That is, usually <span class="math inline">\(\gamma_{12,h} \neq \gamma_{21,h}\)</span>. For example, if <span class="math inline">\(y_1\)</span> is a “<strong>leading indicator</strong>” for <span class="math inline">\(y_2\)</span>, then <span class="math inline">\(\gamma_{12,h}\)</span> (current <span class="math inline">\(y_1\)</span> vs future <span class="math inline">\(y_2\)</span>) might be large, while <span class="math inline">\(\gamma_{21,h}\)</span> (current <span class="math inline">\(y_2\)</span> vs future <span class="math inline">\(y_1\)</span>) might be zero. However, stationarity ensures that <span class="math inline">\(\boldsymbol{\Gamma}_{-h} = \boldsymbol{\Gamma}_h^\prime\)</span>, meaning: <span class="math display">\[\begin{equation*}
+\boldsymbol{\Gamma}_{-h} = \left[\begin{array}{c}
+\gamma_{11,h} &amp; \gamma_{21,h} \\
+\gamma_{12,h} &amp; \gamma_{22,h}
+\end{array}\right].
+\end{equation*}\]</span></p>
+<p>&nbsp;</p>
+</section>
+<section id="multiviidwn" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="multiviidwn"><span class="header-section-number">3.3</span> IID and white noise processes</h2>
+<p>A simple example of a stationary process is the sequence of independent and identically distributed vectors (stationarity can be deduced directly from the definition). If <span class="math inline">\(\boldsymbol{y}_{t} \,\, (K\times 1)\)</span> is such a sequence, <span class="math inline">\(\mathsf{E}(\boldsymbol{y}_{t})=\boldsymbol{\mu}\)</span> (<span class="math inline">\(K \times 1\)</span>) and <span class="math inline">\(\mathsf{Cov}(\boldsymbol{y}_{t})=\boldsymbol{\Sigma}\)</span> (<span class="math inline">\(K \times K\)</span>), and both are finite, we denote <span class="math display">\[\begin{equation*}
+\boldsymbol{y}_{t}\sim \mathsf{iid}(\boldsymbol{\mu},\boldsymbol{\Sigma}).
+\end{equation*}\]</span> This process is called (strict) <strong>white noise</strong>. If <span class="math inline">\(\boldsymbol{y}_{t}\)</span> is also normally distributed, we denote <span class="math display">\[\begin{equation*}
+\boldsymbol{y}_{t}\sim \mathsf{nid}(\boldsymbol{\mu},\boldsymbol{\Sigma}).
+\end{equation*}\]</span></p>
+<p>If we replace independence by the weaker condition of zero correlation, that is <span class="math inline">\(\mathsf{Cov}(\boldsymbol{y}_{t},\boldsymbol{y}_{s})=\boldsymbol{0}, t\neq s\)</span>, then <span class="math inline">\(\boldsymbol{y}_{t}\)</span> is weakly stationary and may be called (multivariate) <strong>weak white noise</strong>.</p>
+<p>&nbsp;</p>
+</section>
+<section id="sampleestimators" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="sampleestimators"><span class="header-section-number">3.4</span> Sample mean and sample autocovariances</h2>
+<p><strong>Consistency of sample mean</strong>. Let <span class="math inline">\(\boldsymbol{y}_{t}=(y_{1t},\ldots,y_{Kt})\)</span> be a stationary process with expectation <span class="math inline">\(\mathsf{E}(\boldsymbol{y}_{t})=\boldsymbol{\mu}\)</span> and covariance matrix <span class="math inline">\(\mathsf{Cov}(\boldsymbol{y}_{t},\boldsymbol{y}_{t+h})=\boldsymbol{\Gamma}_{k}=[\gamma_{ij,h}]\)</span>. Assume the following condition (compare with <span class="math inline">\(\boldsymbol{\Gamma}_{h}\rightarrow \boldsymbol{0}\)</span>) <span class="math display">\[\begin{equation*}
+    \sum_{h=-\infty}^{\infty}\left\Vert \boldsymbol{\Gamma}_{h}\right\Vert&lt;\infty.
+\end{equation*}\]</span> Denote <span class="math inline">\(\bar{\boldsymbol{y}}=(\bar{y}_{1},...,\bar{y}_{K})\)</span> and <span class="math inline">\(\boldsymbol{\mu}=(\mu_{1},...,\mu_{K})\)</span>. Consider the sample average <span class="math inline">\(\bar{\boldsymbol{y}}=T^{-1}\sum_{t=1}^{T}\boldsymbol{y}_{t}\)</span> as an estimator for <span class="math inline">\(\boldsymbol{\mu}\)</span>. The estimator is</p>
+<ul>
+<li><p>unbiased <span class="math display">\[\begin{equation*}
+  \mathsf{E}(\bar{\boldsymbol{y}})=T^{-1}\sum_{t=1}^{T} \mathsf{E}(\boldsymbol{y}_t)=\boldsymbol{\mu}.
+\end{equation*}\]</span></p></li>
+<li><p>consistent estimator for <span class="math inline">\(\boldsymbol{\mu}\)</span> and asymptotically normally distributed. See proof for consistency below</p></li>
+</ul>
+<p>Moreover, the sample covariance matrix can be obtained as <span class="math display">\[\begin{equation*}
+    \boldsymbol{C}_{h} = [c_{ij,h}] = (T-k)^{-1}\sum_{t=1}^{T-h}(\boldsymbol{y}_{t}-\bar{\boldsymbol{y}})(\boldsymbol{y}_{t+h}-\bar{\boldsymbol{y}})^{\prime },\qquad h=0,1,...,T-1,
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{C}_{h} = \boldsymbol{C}_{-h}^{\prime },\ h=-T+1,...,-1\)</span>. It also turns out that this estimator is consistent estimator of <span class="math inline">\(\boldsymbol{\Gamma}_h\)</span>.</p>
+<p>&nbsp;</p>
+<div class="toggle-button" onclick="toggleCode('Extra33')">
+Extra: Proofs (consistency and asymptotic normality)
+</div>
+<div id="Extra33" style="display:none;">
+<p>We have (for the time series <span class="math inline">\(i\)</span>) <span class="math display">\[\begin{align*}
+    \mathsf{Var}(\bar{y_i}) &amp;= \mathsf{E}\left[\left(T^{-1}\sum_{t=1}^{T}(y_{it}-\mu_i)\right)^2\right] \\
+    &amp;= T^{-2}\sum_{t=1}^{T}\sum_{s=1}^{T}\mathsf{E}\left[(y_{it}-\mu_i)(y_{is}-\mu_i)\right] \\
+    &amp;= T^{-1}\sum_{t-s=T}^{T}(T-|t-s|)\gamma_{i,t-s} \\
+    &amp;= T^{-1}\sum_{h=-T}^{T}\left(1-\frac{|h|}{T}\right)\gamma_{i,h}.
+\end{align*}\]</span> Here, the third equation can be verified by noting that the previous double sum is the sum of the elements of the matrix <span class="math inline">\([\gamma_{i,t-s}]_{t,s=1,...,T}\)</span>. The triangular inequality yields the result <span class="math display">\[\begin{equation*}
+\mathsf{Var}(\bar{y}_{i}) = \mathsf{E}\left[(\bar{y}_{i}-\mu_{i})^{2}\right]\leq T^{-1}\sum_{h=-T}^{T}\left( 1-\frac{\left\vert h\right\vert}{T}\right)\left\vert\gamma _{i,h}\right\vert\rightarrow 0,\text{ as } T\rightarrow\infty.
+\end{equation*}\]</span> Combining this with the above results, we can conclude (using the Markov inequality) that the sample mean <span class="math inline">\(\bar{y}_{i}\)</span> is a consistent estimator of the mean <span class="math inline">\(\mu_{i}\)</span> and further that the same holds for <span class="math inline">\(\overline{y}\)</span>. That is, we have the stochastic convergence <span class="math display">\[\begin{equation*}
+    \bar{\boldsymbol{y}}\overset{p}{\rightarrow}\boldsymbol{\mu}.  
+\end{equation*}\]</span> <!-- This result holds especially for VARMA($p,q$) processes, since geometrically $\boldsymbol{\Gamma}_h\rightarrow \boldsymbol{0}$ as $|h|\rightarrow\infty$. --></p>
+<p><strong>Consistency of Sample Covariance</strong>. Consider the sample covariance <span class="math display">\[\begin{equation*}
+    \boldsymbol{C}_{h} = [c_{ij,h}] = (T-h)^{-1}\sum_{t=1}^{T-h}(\boldsymbol{y}_{t}-\bar{\boldsymbol{y}})(\boldsymbol{y}_{t+h}-\bar{\boldsymbol{y}})^{\prime},\qquad h=0,1,...,T-1,
+\end{equation*}\]</span> <span class="math inline">\(\boldsymbol{C}_{h} = \boldsymbol{C}_{-h}^{\prime },\ h=-T+1,...,-1\)</span>. Fix the indices <span class="math inline">\(i,j\)</span> and <span class="math inline">\(h \geq 0\)</span> and define the variables <span class="math inline">\(x_{t} = y_{it}y_{j,t+h}\)</span>, which is the central term of the estimator <span class="math inline">\(c_{ij,h}\)</span>. Assume <span class="math inline">\(E(y_{it}^{4})&lt;\infty\)</span>, which implies that <span class="math inline">\(x_{t}\)</span> is stationary and has a finite second-order moment, and using arguments from the previous section, we have the result <span class="math display">\[\begin{equation*}
+    \overline{x}=(T-h)^{-1}\sum_{t=1}^{T-h}y_{it}y_{j,t+h}\overset{p}{\rightarrow } \mathsf{E}(y_{it}y_{j,t+h}),
+\end{equation*}\]</span> where by the definition of covariance <span class="math display">\[\begin{equation*}
+    \mathsf{E}(y_{it}y_{j,t+h})=\gamma_{ij,h}+\mathsf{E}(y_{it})\mathsf{E}(y_{j,t+h})=\gamma_{ij,h}+\mu_{i}\mu_{j}
+\end{equation*}\]</span> If the above assumptions hold for all <span class="math inline">\(i,j\)</span> and <span class="math inline">\(h\geq 0\)</span>, we can conclude from the consistency of <span class="math inline">\(\overline{x}\)</span> and the result that <span class="math inline">\(c_{ij,h} \overset{p}{\rightarrow}\gamma_{ij,h}\)</span>, and <span class="math display">\[\begin{equation*}
+    \boldsymbol{C}_{h}\overset{p}{\rightarrow }\boldsymbol{\Gamma} _{h}  
+\end{equation*}\]</span> <!-- Details that require applying the continuous mapping theorem (Appendix B) are handled in a problem set. --></p>
+<p>As seen, the sample covariance function is consistent with reasonable assumptions. (Note however, that above <span class="math inline">\(h\)</span> was fixed.) The necessary assumptions are easy to check from the special case <span class="math inline">\(\boldsymbol{y}_t\sim \mathsf{iid}(\boldsymbol{\mu}, \boldsymbol{\Sigma})\)</span> and then further with the case of a VMA(<span class="math inline">\(q\)</span>) process (<span class="math inline">\(q&lt;\infty\)</span>). With common VARMA(<span class="math inline">\(p,q\)</span>) processes the consistency result can be justified by using approximation VARMA(<span class="math inline">\(p,q\)</span>) <span class="math inline">\(\approx\)</span> VMA(<span class="math inline">\(l\)</span>) with <span class="math inline">\(l\)</span> “large enough”. The details are, however, a bit technical and will be ignored.</p>
+<!-- **Asymptotic normality**. Above we have seen that stationary times series obey the law of large numbers under fairly general conditions. The following illustrates that we obtain something similar for the central limit theorem. 
+
+Consider the ($n$-dimensional) linear process
+\begin{equation}
+    y_{t}=\mu +\Psi (\mathsf{B})u _{t}, \qquad u_{t}\sim \mathsf{iid}(0,\boldsymbol{\Sigma})  
+    (#eq:ymGBe)
+\end{equation}
+where $\Psi(\mathsf{B})=\sum_{j=0}^{\infty}\Psi_{j}\mathsf{B}^{j},\Psi_{0}=I_{n}$. Assume also the following slightly stronger condition than the one in Section 2.3 TSEK:
+\begin{equation*}
+    \sum_{j=0}^{\infty}j\left\Vert \Psi_{j}\right\Vert <\infty
+\end{equation*}
+Now, we can write $\Psi (\mathsf{B})=\Psi(1)+\Delta G(\mathsf{B})$, where $\Delta=1-\mathsf{B}$ is the difference operator and $G(\mathsf{B})=\sum_{j=0}^{\infty}G_{j}\mathsf{B}^{j}$ satisfies the condition $\sum_{j=0}^{\infty}\left\Vert G_{j}\right\Vert<\infty$ and hence $\sum_{j=0}^{\infty}\left\Vert G_{j}\right\Vert^{2}<\infty$ (see Appendix
+\ref{Matrixpoly} TSEK). Apply this to equation \@ref(eq:ymGBe) to obtain
+\begin{equation*}
+    y_{t}-\mu =\Psi(1)+\Delta u_{t},\ \ u_{t}=G(\mathsf{B})u_{t}
+\end{equation*}
+The above derivations show that $u_{t}$ is a linear process and its components satisfy $E(u^{2})<\infty $ (see Section \@ref(Linearprocess). Hence, we obtain for the sample mean that
+\begin{align*}
+    \sqrt{T}\left(\bar{y}-\mu\right) &= \Psi (1)\frac{1}{\sqrt{T}}\sum_{t=1}^{T}u _{t}+\frac{1}{\sqrt{T}}\sum_{t=1}^{T}\left(u_{t}-u_{t-1}\right) \\
+    &=\Psi (1)\frac{1}{\sqrt{T}}\sum_{t=1}^{T}u _{t}+\frac{1}{\sqrt{T}}\left(u_{T}-u_{0}\right)
+\end{align*}
+As $u_{t}\sim\mathsf{iid}(0,\boldsymbol{\Sigma})$, the usual (multivariate) central limit theorem implies $T^{-\frac{1}{2}}\sum_{t=1}^{T}u _{t}\overset{d}{\rightarrow }N(0,\boldsymbol{\Sigma})$. On the other hand, as $\mathsf{E}(u_{it})=0$ and $\mathsf{E}(u_{it}^{2})\leq c<\infty$ for all $i=1,...,n$ and $t\in \mathbb{Z}$, the Markov inequality implies $T^{-\frac{1}{2}}u_{T}\overset{p}{\rightarrow}0$ and $T^{-\frac{1}{2}}u_{0}\overset{p}{\rightarrow}0$ so that $T^{-\frac{1}{2}}(u_{T}-u_{0})\overset{p}{\rightarrow }0$. Then, by applying the continuous mapping theorem (Appendix \ref{Asymptotics}, Theorem B.3 TSEK) we can conclude that the random variables $\sqrt{T}\left(\bar{y}-\mu\right) $and$\Psi(1)T^{-\frac{1}{2}}\sum_{t=1}^{T}u_{t}$ have the same asymptotic distribution and
+\begin{equation}
+    \sqrt{T}\left(\bar{y}-\mu\right)\overset{d}{\rightarrow }N(0,\Psi(1)\boldsymbol{\Sigma}\Psi(1)^{\prime })  
+    (#eq:ymasyd)
+\end{equation}
+
+The CLT for the sample mean can also be shown to hold without \@ref(eq:ymGBe), but the arguments are not as straightforward as the ones here. The key requirement is that the random variables $y_{t}$ and $y_{t-k}$ "become independent", as $k\rightarrow\infty$. When $y_{t}$ is a linear process \@ref(eq:ymGBe) the variable $y_{t-k}$ is driven by the error terms $u_{t-k},u_{t-k-1},...$, while $y_{t}$ depends on these (and hence on $y_{t-k}$) only through the transformation $\Psi _{k}u _{t-k},\Psi_{k+1}u_{t-k-1},...$. As $\Psi _{k}\rightarrow 0$, when $k\rightarrow \infty $, $y_{t}$ and $y_{t-k}$ become "less and less dependent" as $k$ grows large.-->
+</div>
+<p>&nbsp;</p>
+<!-- The above arguments for the asymptotic normality of $\bar{\boldsymbol{y}}$ can be applied to the sample covariances $\boldsymbol{C}_{h}$ as well, but the required algebraic computations become tedious and are thus omitted here.  -->
+<p>In practice and as in the univariate case, covariances are replaced by correlations, that is, we typically consider the sample quantities <span class="math display">\[\begin{equation*}
+    r_{ab,h}=\frac{c_{ab,h}}{\sqrt{c_{a,0}c_{b,0}}}, \qquad c_{a,0}=c_{aa,0}.
+\end{equation*}\]</span> It can be proved that when <span class="math inline">\(\boldsymbol{y}_{t}\sim \mathsf{iid}(\boldsymbol{\mu},\boldsymbol{\Sigma})\)</span>, then we have the asymptotic result <span class="math display">\[\begin{equation*}
+    r_{ab,h}\overset{as}{\sim} \mathsf{N}(0,1/T), \quad k\neq 0
+\end{equation*}\]</span> In addition, if <span class="math inline">\(R_{h}=[r_{ab,h}]\)</span>, then <span class="math inline">\(\boldsymbol{R}_{h}\)</span> and <span class="math inline">\(\boldsymbol{R}_{l}\)</span> are asymptotically independent, when <span class="math inline">\(h\neq l\)</span>.</p>
+<p>&nbsp;</p>
+<p><strong>Example</strong>. Below we can see the autocorrelation and cross-correlation functions from the exchange rate-interest rate data as depicted in Section 1. The critical boundaries <span class="math inline">\(\pm 1.96/\sqrt{T}\)</span> inside which single correlations should stay with 95% likelihood if this was a realization of a <span class="math inline">\(\mathsf{iid}\)</span> process are displayed as well. Estimated autocorrelations confirm the clear autocorrelation we could see already in time series graphs. Estimated cross-correlations, however, seem to be relatively small. Notice, however, that due to the aurocorrelation exhibited by the component series, the critical boundaries cannot be applied to the cross-correlation estimates in the same way as above.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="series_eurusd_acf.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<center>
+Figure: The estimated auto- and cross-correlation functions of the monthly change in the exchange rate between the euro and the USD and the difference between the returns of the average 10-year bond yield in the US and the eurozone (1999:1–2009:12, <span class="math inline">\(T=132\)</span>). The figures are based on the acf-function in R.
+</center>
+<p>&nbsp;</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ATSE-ch2.html" class="pagination-link" aria-label="Some basic concepts for time series data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ATSE-ch4.html" class="pagination-link" aria-label="Univariate time series processes and models">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Univariate time series processes and models</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

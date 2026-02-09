@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Some basic concepts for time series data – Advanced Time Series Econometrics (ATSE)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ATSE-ch3.html" rel="next">
+<link href="./ATSE-ch1.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<!-- Use JavaScript to Disable Right-Click -->
+<script>
+document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+
+<!-- Custom JavaScript for toggling code visibility -->
+<script>
+function toggleCode(id) {
+  var x = document.getElementById(id);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
+
+
+<!-- Visibility selections. display: none;? 
+  <style>
+
+/* Initially hide elements */
+.marginnotevideo {
+  display: none;
+}
+
+.marginnote {
+  display: none;
+}
+
+  </style>
+-->
+</head><body class="nav-sidebar docked">$$
+\newcommand{\ubar}[1]{\mkern3mu\underline{\mkern-3mu#1\mkern-3mu}\mkern3mu}
+$$
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles-ATSE.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch2.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Advanced Time Series Econometrics (ATSE)</a> 
+        <div class="sidebar-tools-main">
+    <a href="./msATSE2026.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Univariate time series processes and models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Univariate nonstationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>) process</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Estimation and hypothesis testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Model selection and diagnostic checking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch10-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch11-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch12-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch13-alustava.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-Appendices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appendix</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#generalobjective" id="toc-generalobjective" class="nav-link active" data-scroll-target="#generalobjective"><span class="header-section-number">2.1</span> General objective in time series modelling</a></li>
+  <li><a href="#transformations" id="toc-transformations" class="nav-link" data-scroll-target="#transformations"><span class="header-section-number">2.2</span> Some relevant transformations</a></li>
+  <li><a href="#univstatprocesses" id="toc-univstatprocesses" class="nav-link" data-scroll-target="#univstatprocesses"><span class="header-section-number">2.3</span> Univariate stationary processes</a></li>
+  <li><a href="#acfsacf" id="toc-acfsacf" class="nav-link" data-scroll-target="#acfsacf"><span class="header-section-number">2.4</span> Theoretical and sample autocorrelation</a></li>
+  <li><a href="#univiidwn" id="toc-univiidwn" class="nav-link" data-scroll-target="#univiidwn"><span class="header-section-number">2.5</span> Univariate IID and white noise processes</a></li>
+  <li><a href="#testingautocorrelation" id="toc-testingautocorrelation" class="nav-link" data-scroll-target="#testingautocorrelation"><span class="header-section-number">2.6</span> Testing autocorrelation</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="part-basics" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This section is a summarization of Sections 1–3 of Time Series Econometrics (TSE) material. Some additional details and illustrations can hence be obtained from those sections of the TSE material.</p>
+<p><a href="https://utueconometrics.github.io/TSE/789b88ee1973bf77cb3b31fd81c828867ba139a0/TSE-ch1.html" target="_blank">Link to the TSE material</a></p>
+<p>&nbsp;</p>
+<section id="generalobjective" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="generalobjective"><span class="header-section-number">2.1</span> General objective in time series modelling</h2>
+<p><strong>The aim</strong> of time series analysis is often to build a <strong>statistical model</strong> that represents the observed time series and its fluctuation over time. This typically involves examining the dependence structure among consecutive observations.</p>
+<p><strong>Autocorrelation</strong> (serial correlation) is a key property of time series and must be accounted for. This contrasts with cross-sectional data introduced in basic statistics courses, where random sampling generally ensures mutually independent error terms.</p>
+<p>When analyzing time series data, <strong>a useful and natural first step is to plot the series and visually inspect its main characteristics</strong> alongside any underlying theory. Important questions to consider include:</p>
+<ul>
+<li>Is there a <strong>trend</strong> (do values tend to increase or decrease over time)?</li>
+<li>Are there <strong>seasonal effects</strong> (regularly repeating patterns related to calendar time)?</li>
+<li>Are there major <strong>outliers</strong> (observations far away from other data points)?</li>
+<li>Is the <strong>variability</strong> (variance) relatively <strong>constant over time</strong>?</li>
+<li>Are there any <strong>abrupt changes</strong>, such as <strong>breaks</strong> or <strong>regime switches</strong>?</li>
+</ul>
+<p>Overall, these visual findings suggest which <strong>time series model</strong> could be appropriate. Once the parameters are estimated and the model’s compatibility with the data is assessed, the model serves for the three primary purposes:</p>
+<ul>
+<li>Providing a <strong>summarized description</strong> of the underlying data-generating process.</li>
+<li><strong>Forecasting</strong> future values, potentially using information contained in other series (as later in this course).</li>
+<li>Exploring <strong>temporal and contemporaneous dependencies</strong> between time series (e.g., the relationship between inflation and stock market returns (examples in the TSE course) or the empirical illustrations above).</li>
+</ul>
+</section>
+<section id="transformations" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="transformations"><span class="header-section-number">2.2</span> Some relevant transformations</h2>
+<p>As described above, in time series modelling a good first step is always to plot the time series under investigation. This provides an initial view of its main characteristics. If the observed series exhibits trends or seasonal patterns, appropriate transformations—such as <strong>differencing</strong> or <strong>seasonal adjustment</strong>—should be applied to mitigate them.</p>
+<p>Common transformations in time series analysis include:</p>
+<ul>
+<li><p><strong>Lags</strong>: The first lag of <span class="math inline">\(y_t\)</span> is <span class="math inline">\(y_{t-1}\)</span>, and the <span class="math inline">\(k\)</span>th lag is <span class="math inline">\(y_{t-k}\)</span>.</p></li>
+<li><p><strong>Differencing</strong>: Perhaps the most vital transformation is the <strong>first difference</strong>, which represents the change between consecutive observations: <span class="math display">\[\begin{equation*}
+\Delta y_t = y_t - y_{t-1}.
+\end{equation*}\]</span></p></li>
+<li><p><strong>Logarithms and log changes</strong>: Differencing is often combined with natural logarithms to handle exponential growth or stabilizing variance. The <strong>logarithmic change</strong> approximates the relative change when changes are small (given <span class="math inline">\(y_t &gt; 0\)</span>): <span class="math display">\[\begin{equation*}
+\Delta \mathrm{log}(y_t) = \mathrm{log}(y_t) - \mathrm{log}(y_{t-1}) \approx \frac{y_t - y_{t-1}}{y_{t-1}}.
+\end{equation*}\]</span></p>
+<ul>
+<li><strong>Financial returns</strong>: A prominent application of differencing, particularly in finance, is in calculating returns of different assets. While the simple return is the percentage change in price <span class="math inline">\(P_t\)</span>, the <strong>continuously compounded return</strong> (or log return) is exactly the first difference of the log prices <span class="math inline">\(p_t = \mathrm{log}(P_t)\)</span>: <span class="math display">\[\begin{equation*}
+r_t = \mathrm{log} \Big(\frac{P_t}{P_{t-1}}\Big) = p_t - p_{t-1}.
+\end{equation*}\]</span> Log returns possess advantageous properties, such as time-additivity, though dividend payments require specific adjustments in advanced financial applications.</li>
+</ul></li>
+<li><p><strong>Annualization:</strong> Growth rates are often annualized for comparison. For quarterly data, the annualized rate is <span class="math inline">\(400 \Delta \mathrm{log}(y_t)\)</span>, and for monthly data, <span class="math inline">\(1200 \Delta \mathrm{log}(y_t)\)</span>.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Detrending and seasonal adjustment.</strong> Besides differencing, trends and seasonality can be removed by regressing the series against time or seasonal indicators. For example, a linear trend can be removed by estimating: <span class="math display">\[\begin{equation*}
+    \widehat{x}_{t}=y_{t}-\widehat{\alpha}-\widehat{\boldsymbol{\beta}}t.
+\end{equation*}\]</span> <strong>Seasonal adjustment</strong> can also be performed using seasonal dummy variables or trigonometric functions to isolate the non-seasonal component. Advanced detrending techniques, beyond these simple methods, are discussed in a separate and specialized econometrics literature.</p>
+</section>
+<section id="univstatprocesses" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="univstatprocesses"><span class="header-section-number">2.3</span> Univariate stationary processes</h2>
+<p>The aim is to build a statistical model for the observed time series <span class="math inline">\(y_{1},\ldots,y_{T}\)</span>.</p>
+<ul>
+<li>In this section, we assume that we have one, univariate, time series. Multiple time series case will be mainly considered in the next Sections and thereafter throughout the material.</li>
+</ul>
+<p>We view the observed series as <strong>a single realization</strong> of a random vector <span class="math inline">\(\boldsymbol{y}=\left(y_{1},\ldots,y_{T}\right)\)</span>. To build a model, we technically attempt to specify the <span class="math inline">\(T\)</span>–dimensional joint probability distribution of this vector. Since observations in a time series are typically dependent (cf.&nbsp;conventional linear regression for cross-sectional data), specifying marginal distributions is insufficient; we must characterize the whole dependence structure.</p>
+<p>A concrete and often used way to specify the joint distribution of <span class="math inline">\(\boldsymbol{y}\)</span> in time series analysis is to:</p>
+<ul>
+<li><p>specify a model equation that characterises the dependence structure of consecutive observations, and</p></li>
+<li><p>combine this with a “suitable” distributional assumption.</p></li>
+</ul>
+<p>Before we proceed to such concrete model equations in univariate and multivariate time series cases, it is useful to first briefly study some basic concepts of probability theory that form the foundation of time series analysis.</p>
+<p>&nbsp;</p>
+<p><strong>Stochastic process</strong></p>
+<p>From a theoretical standpoint, it is convenient to extend the random vector to a <strong>stochastic process</strong> <span class="math inline">\(\left\{y_{t};t=0,\pm1,\pm2,\ldots\right\}\)</span>, which is a collection of random variables indexed by time.</p>
+<ul>
+<li><p><strong>Crucial distinction:</strong> We effectively aim to learn the properties of the underlying process (the theoretical mechanism), but importantly <strong>we only have access to one and partial realization of that process</strong> (that is, the observed time series data at time points <span class="math inline">\(t=1,\ldots,T\)</span>).</p></li>
+<li><p>To make statistical inference possible from a single realization, we must make restrictive assumptions about the process, most notably regarding its stability over time.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Weak stationarity</strong></p>
+<p>A fundamental stability assumption is <strong>weak stationarity</strong> (covariance stationarity). A process <span class="math inline">\(y_{t}\)</span> is called weakly stationary if its first and second moments are time-invariant. Specifically:</p>
+<ol type="1">
+<li><strong>Constant mean:</strong> <span class="math inline">\(\mathsf{E}\left(y_{t}\right)=\mu &lt; \infty\)</span> for all <span class="math inline">\(t\)</span>.</li>
+<li><strong>Constant autocovariances:</strong> <span class="math inline">\(\mathsf{Cov}\left(y_{t},y_{t+h}\right)=\gamma_{h} &lt; \infty\)</span> depends only on the lag <span class="math inline">\(h\)</span>, not on the time index <span class="math inline">\(t\)</span>.</li>
+</ol>
+<p>To obtain autocovariances, recall the <strong>covariance function</strong> of the process <span class="math inline">\(y_{t}\)</span> is in general <span class="math display">\[\begin{equation*}
+\gamma_{s,t}=\mathsf{Cov}\left(y_{s},y_{t}\right)=\mathsf{E}\left[\left(y_{s}-\mu_{s}\right)\left(y_{t}-\mu_{t}\right)\right], \quad t=0,\pm1,\pm2,\ldots\text{.}
+\end{equation*}\]</span> In other words, a form of <strong>time invariance</strong> holds for weakly stationary processes: In addition to the constant expected value <span class="math inline">\(\mu\)</span> over time, and the covariance function <span class="math inline">\(\gamma_{s,t}\)</span> does not depend on the time indices <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> but only on their distance <span class="math inline">\(t-s\)</span>: <span class="math display">\[\begin{equation*}
+\mathsf{Cov}\left(y_{t},y_{t+h}\right)=\gamma_{t,t+h}=\gamma_{0,h} \equiv \gamma_h &lt; \infty \,\, \text{for all }\,\, h,\text{ }t=0,\pm1,\pm2,\ldots\text{ .}
+\end{equation*}\]</span></p>
+<p>Properties of the autocovariance function <span class="math inline">\(\gamma_h\)</span> under weak stationarity:</p>
+<ul>
+<li><span class="math inline">\(\gamma_{0}=\mathsf{Var}\left(y_{t}\right) \ge 0\)</span> (in principle only &gt; 0).</li>
+<li><span class="math inline">\(\left\vert \gamma_{h}\right\vert \leq\gamma_{0}\)</span>.</li>
+<li>Symmetry: <span class="math inline">\(\gamma_{h}=\gamma_{-h}\)</span>. That is, in this univariate (single time series process) case, we have (under weak stationary)<br>
+<span class="math display">\[\begin{equation*}
+\mathsf{Cov}\left(y_{t},y_{t+h}\right)=\mathsf{Cov}\left(  y_{t-h},y_{t}\right) = \mathsf{Cov}\left(y_t, y_{t-h}\right),
+\end{equation*}\]</span> which implies that <span class="math inline">\(\gamma_{h}=\gamma_{-h}\)</span>. This expression shows where the term “<strong>lag</strong>” (“<strong>lag length</strong>”) <span class="math inline">\(h\)</span> is coming from.</li>
+</ul>
+<p>A useful <strong>practical aspect</strong> of weak stationarity is that the plausibility of this assumption can be investigated by looking at a graph of the observed time series: If the observations vary with constant variance around a fixed level, then weak stationarity appears a plausible assumption.</p>
+<p>It is important to note that <strong>weak stationarity does not imply the absence of random variability</strong>. Even in a weakly stationary process, individual observations can vary substantially due to random variation (random shocks). What matters is that the statistical properties — the mean, variance, and autocovariance structure — remain constant over time.</p>
+<p>&nbsp;</p>
+</section>
+<section id="acfsacf" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="acfsacf"><span class="header-section-number">2.4</span> Theoretical and sample autocorrelation</h2>
+<p>While autocovariance measures linear dependence, the <strong>autocorrelation function (ACF)</strong> is often more convenient as it is scale-independent. The theoretical autocorrelation at lag <span class="math inline">\(h\)</span> is defined as: <span class="math display">\[\begin{equation*}
+\rho_{h} = \frac{\mathsf{Cov}\left(y_{t},y_{t+h}\right)}{\sqrt{\mathsf{Var}(y_t)\mathsf{Var}(y_{t+h})}} = \frac{\gamma_{h}}{\gamma_{0}}.
+\end{equation*}\]</span> The key properties include <span class="math inline">\(\rho_{0}=1\)</span>, <span class="math inline">\(\left\vert \rho_{h}\right\vert \leq1\)</span>, and symmetry <span class="math inline">\(\rho_{h}=\rho_{-h}\)</span>.</p>
+<p>Typically, we also assume (if present and realistic) that autocorrelations decay as the distance between observations increases: <span class="math display">\[\begin{equation*}
+\gamma_{h}\rightarrow0 \quad \mathrm{as} \quad h\rightarrow\infty.
+\end{equation*}\]</span> In this case, the random variables <span class="math inline">\(y_{t}\)</span> and <span class="math inline">\(y_{t+h}\)</span> become <strong>nearly uncorrelated when the distance <span class="math inline">\(h\)</span> is “large”</strong> – that is, when <span class="math inline">\(y_{t}\)</span> and <span class="math inline">\(y_{t+h}\)</span> are “far” from each other in time. Therefore, in practice it suffices to estimate the autocorrelation function <span class="math inline">\(\rho_{h}\)</span> when <span class="math inline">\(h=1,\ldots,H\)</span>, and <span class="math inline">\(H\)</span> is so large that <span class="math inline">\(\rho_{h}\approx0\)</span> for <span class="math inline">\(h&gt;H\)</span>.</p>
+<p>&nbsp;</p>
+<p><strong>Sample estimators</strong></p>
+<p>Since we cannot observe the true means and autocovariances (for some concrete time series), we estimate them using the realized data.</p>
+<ul>
+<li><p>The <strong>sample mean</strong> <span class="math inline">\(\bar{y}=\frac{1}{T}\sum_{t=1}^{T}y_{t}\)</span> estimates <span class="math inline">\(\mu\)</span>.</p></li>
+<li><p>The <strong>sample autocovariance</strong> <span class="math inline">\(\mathsf{c}_{h}\)</span> estimates <span class="math inline">\(\gamma_{h}\)</span>: <span class="math display">\[\begin{equation*}
+\mathsf{c}_{h}=\frac{1}{T-h}\sum_{t=1}^{T-h}(y_{t}-\bar{y})\left(y_{t+h}-\bar{y}\right), \quad h=1,\ldots,H.
+\end{equation*}\]</span></p></li>
+<li><p>The <strong>sample autocorrelation coefficient</strong> <span class="math inline">\(\mathsf{r}_{h}\)</span> estimates <span class="math inline">\(\rho_{h}\)</span>: <span class="math display">\[\begin{equation*}
+\mathsf{r}_{h}=\frac{\mathsf{c}_{h}}{\mathsf{c}_{0}}, \quad h=1,\ldots,H.
+\end{equation*}\]</span></p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Visual inspection and confidence bands</strong></p>
+<p>When plotting the sample autocorrelation function (correlogram) of the (single) time series (see an example in this section), statistical software typically includes two horizontal lines representing <strong>confidence bands</strong>.</p>
+<ul>
+<li>If <span class="math inline">\(\rho_{h}=0\)</span> for all <span class="math inline">\(h&gt;0\)</span> (i.e., no autocorrelation), then any individual estimator <span class="math inline">\(\mathsf{r}_{h}\)</span> has an approximately 95% probability of lying between the bands <span class="math inline">\((-1.96/\sqrt{T}, 1.96/\sqrt{T})\)</span>.</li>
+<li>If the individual sample autocorrelation coefficient <span class="math inline">\(\mathsf{r}_h\)</span> falls <strong>outside</strong> these bands, there is statistically significant autocorrelation at the 5% significance level at lag <span class="math inline">\(h\)</span>.</li>
+<li>Significant spikes at specific lags (e.g., <span class="math inline">\(h=12, 24\)</span> in monthly data) can suggest remaining seasonal patterns.</li>
+</ul>
+<p>&nbsp;</p>
+</section>
+<section id="univiidwn" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="univiidwn"><span class="header-section-number">2.5</span> Univariate IID and white noise processes</h2>
+<p>To formalize econometric/statistical models for time series and, for example, derive relevant test statistics, we often need to define specific types of stationary processes.</p>
+<p>The simplest building block in time series analysis/econometrics is the <strong>(weak) white noise process</strong>. A process <span class="math inline">\(u_{t}\)</span> is called (weak) white noise, denoted <span class="math inline">\(u_{t}\sim\mathsf{wn}\left( \mu,\sigma^{2}\right)\)</span>, if:</p>
+<ul>
+<li><span class="math inline">\(\mathsf{E}\left(u_{t}\right) =\mu\)</span> (constant mean, usually 0 when <span class="math inline">\(u_t\)</span> is used as an error or term or “shock”),</li>
+<li><span class="math inline">\(\mathsf{Var}\left(u_{t}\right)=\sigma^{2}\)</span> (constant variance),</li>
+<li><span class="math inline">\(\mathsf{Cov}\left(u_{s},u_{t}\right)=0\)</span> for all <span class="math inline">\(s\neq t\)</span> (no autocorrelation).</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Strict Stationarity</strong></p>
+<p>Weak stationarity only restricts the first two moments. A stronger condition, <strong>strict stationarity</strong>, requires that the <strong>entire probability structure</strong> of the process is time-invariant. Formally, the joint distribution of <span class="math inline">\((y_{t_{1}},\ldots,y_{t_{m}})\)</span> must be identical to that of <span class="math inline">\((y_{t_{1}+h},\ldots,y_{t_{m}+h})\)</span> for all time shifts <span class="math inline">\(h\)</span>.</p>
+<ul>
+<li><p>Strict stationarity implies weak stationarity when assuming finite variance (and means and autocovariances).</p></li>
+<li><p>Crucially, strict stationarity is preserved under transformations (e.g., if <span class="math inline">\(x_t\)</span> is strictly stationary, so is <span class="math inline">\(x_t^2\)</span>).</p></li>
+<li><p>Stationarity in this material: Unless otherwise stated, the term “stationarity” refers to strict stationarity. In practice, however, visual inspection focuses on the observable characteristics of weak stationarity. We examine the plot to assess whether the mean, variance, and autocovariances appear stable, time invariant, over time, as these are the practical implications of a stationary process.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>IID and NID processes</strong></p>
+<p>A specific, stronger form of white noise is the <strong>Independent and Identically Distributed (IID)</strong> process.</p>
+<ul>
+<li>If <span class="math inline">\(u_{t} \sim \mathsf{iid}(\mu, \sigma^2)\)</span>, the observations are statistically independent, not just uncorrelated. This implies strict stationarity.</li>
+<li>If we further assume that <span class="math inline">\(u_t\)</span> follows a normal distribution, we denote this as <strong>NID</strong> (Normally and Independently Distributed): <span class="math display">\[\begin{equation*}
+u_{t}\sim\mathsf{nid}\left(\mu,\sigma^{2}\right).
+\end{equation*}\]</span></li>
+</ul>
+<p>Below is a simulated realization of a <span class="math inline">\(\mathsf{nid}(0,1)\)</span> process. It exhibits purely random variation with no discernible patterns or trends.The length of the time series is 300 observations (<span class="math inline">\(T=300\)</span>).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="nidsimulmtsa.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<center>
+Figure: A simulated realization of <span class="math inline">\(\mathsf{nid}(0,1)\)</span> process (<span class="math inline">\(T=300\)</span>).
+</center>
+</section>
+<section id="testingautocorrelation" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="testingautocorrelation"><span class="header-section-number">2.6</span> Testing autocorrelation</h2>
+<p>For the important special case of <span class="math inline">\(y_{t}\sim\mathsf{iid}\left(\mu,\sigma^{2}\right)\)</span>, it holds that <span class="math display">\[\begin{equation*}
+\left(\mathsf{r}_{1},\ldots,\mathsf{r}_{H}\right)\underset{as}{\sim}\mathsf{N}\left(\boldsymbol{0},T^{-1}\boldsymbol{I}_{H}\right),
+\end{equation*}\]</span> with a <span class="math inline">\(H\)</span>-dimensional zero mean vector and <span class="math inline">\(\boldsymbol{I}_{H}\)</span> <span class="math inline">\(\left(H\times H\right)\)</span> denotes an identity matrix. This result can be used to test whether it is realistic to consider an observed time series as an uncorrelated time series process. Under the hypothesis to be tested (uncorrelatedness), the estimators <span class="math inline">\(\mathsf{r}_{1},\ldots.,\mathsf{r}_{H}\)</span> are approximately independent with distribution <span class="math inline">\(\mathsf{N}\left(0,T^{-1}\right)\)</span>. Based on this, we get <span class="math display">\[\begin{equation*}
+\mathsf{P}(\left\vert \mathsf{r}_{h}\right\vert \geq1.96/\sqrt{T})\approx 0.05,
+\end{equation*}\]</span> a result that can be used to evaluate the significance of individual sample autocorrelation coefficients.</p>
+<p>To obtain a joint test for several autocorrelation coefficients, that is to test the null hypothesis of no autocorrelation <span class="math inline">\(H_0= \rho_1 = \cdots = \rho_H = 0\)</span>, one can use the test statistic <span class="math display">\[\begin{equation*}
+Q=T\sum_{h=1}^{H}\mathsf{r}_{h}^{2}\underset{as}{\sim}\chi_{H}^{2},
+\end{equation*}\]</span> whose large values would lead to rejection. Note that the asymptotic <span class="math inline">\(\chi_{H}^{2}\)</span>–distribution follows from the distribution result above for <span class="math inline">\(\left(\mathsf{r}_{1},\ldots,\mathsf{r}_{H}\right)\)</span> and the definition of the chi-squared distribution. In practice, an alternative and slightly different test statistic <span class="math display">\[\begin{equation*}
+Q_{{\tiny LB}}=T\left(T+2\right)\sum_{h=1}^{H}\mathsf{r}_{h}^{2}/\left(T-h\right)\underset{as}{\sim}\chi_{H}^{2},
+\end{equation*}\]</span> called the <strong>Ljung-Box test statistic</strong> is preferred because in small samples its distribution has been found to be closer to the <span class="math inline">\(\chi_{H}^{2}\)</span>–distribution than that of the test statistic <span class="math inline">\(Q\)</span>. It should be clear that both tests need <span class="math inline">\(H\)</span> not to be too large compared to <span class="math inline">\(T\)</span> to work well.</p>
+<p>As an example, below we depict the sample autocorrelation function of the simulated and plotted <span class="math inline">\(\mathsf{nid}(0,1)\)</span> series above. As expected, the sample autocorrelation coefficients are systematically inside the confidence intervals. Furthermore, when testing, say, the first 20 autocorrelation coefficients (that is selecting <span class="math inline">\(H=20\)</span>), the value of the Ljung-Box test statistic is 16.597 with the p-value of 0.6789. Therefore, as in line with the assumed <span class="math inline">\(\mathsf{nid}(0,1)\)</span> process, we cannot reject the null hypothesis of no autocorrelation.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ACFnidsimulmtsa.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<center>
+Figure: Sample autocorrelation function of the simulated realization of <span class="math inline">\(\mathsf{nid}(0,1)\)</span> process (<span class="math inline">\(T=300\)</span>). Notice that this function depicts also the uninteresting case <span class="math inline">\(\mathsf{r}_0=1\)</span>.
+</center>
+<p>&nbsp;</p>
+<p>The autocorrelation function can be used to reveal linear dependences between the observations, but not nonlinear ones (with the exception of Gaussian processes). <!-- For example, the process in Example 2.2(ii) is uncorrelated, but not independent (if $\mathsf{E}\left(  y_{t}^{4}\right)<\infty$ is assumed, this can be seen concretely by computing the first autocovariance coefficient of the squared process $y_{t}^{2}$, which is nonzero except in the case $\alpha=0$). --> To investigate the presence of potential nonlinear dependence over time, one (somewhat limited) approach is to test for autocorrelation in the squared observations.</p>
+<ul>
+<li><p>Assuming <span class="math inline">\(y_{t}\sim\mathsf{iid}\left(\mu,\sigma^{2}\right)\)</span> and <span class="math inline">\(\mathsf{E}\left(  y_{t}^{4}\right)&lt;\infty\)</span>, what was said above about the sample autocorrelations also holds for sample autocorrelations computed from the squared observations <span class="math inline">\(y_{t}^{2}\)</span>. In particular, the asymptotic result(s) remain valid when the autocorrelations are computed from squared observations, and also the Ljung-Box test has its indicated asymptotic distribution. In this context, however, the test is usually called the <strong>McLeod-Li test</strong>.</p></li>
+<li><p>Investigating the autocorrelations between squared observations is of great interest, especially in the case of financial time series, which themselves often are (almost) uncorrelated.</p></li>
+</ul>
+<p>&nbsp;</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ATSE-ch1.html" class="pagination-link" aria-label="Introduction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ATSE-ch3.html" class="pagination-link" aria-label="Multivariate stationary processes">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
