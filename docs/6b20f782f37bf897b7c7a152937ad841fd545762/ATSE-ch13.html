@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Introduction – Advanced Time Series Econometrics (ATSE)</title>
+<title>13&nbsp; Predictive regressions with time series variables – Advanced Time Series Econometrics (ATSE)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ATSE-ch2.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./ATSE-Appendices.html" rel="next">
+<link href="./ATSE-ch12.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -149,7 +149,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch1.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch13.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -187,7 +187,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ATSE-ch1.html" class="sidebar-item-text sidebar-link active">
+  <a href="./ATSE-ch1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
@@ -259,7 +259,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ATSE-ch13.html" class="sidebar-item-text sidebar-link">
+  <a href="./ATSE-ch13.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></span></a>
   </div>
 </li>
@@ -279,9 +279,8 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background"><span class="header-section-number">1.1</span> Background</a></li>
-  <li><a href="#introexample" id="toc-introexample" class="nav-link" data-scroll-target="#introexample"><span class="header-section-number">1.2</span> Empirical example</a></li>
-  <li><a href="#relation-to-macroeconometrics" id="toc-relation-to-macroeconometrics" class="nav-link" data-scroll-target="#relation-to-macroeconometrics"><span class="header-section-number">1.3</span> Relation to macroeconometrics</a></li>
+  <li><a href="#Linregintegrated" id="toc-Linregintegrated" class="nav-link active" data-scroll-target="#Linregintegrated"><span class="header-section-number">13.1</span> Linear regressions containing I(1) variables</a></li>
+  <li><a href="#ForecastingML" id="toc-ForecastingML" class="nav-link" data-scroll-target="#ForecastingML"><span class="header-section-number">13.2</span> Forecasting with big dependent data</a></li>
   </ul>
 </nav>
     </div>
@@ -290,7 +289,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="part-intro" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></h1>
+<h1 class="title"><span id="Predictiveregressions" class="quarto-section-identifier"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></span></h1>
 </div>
 
 
@@ -307,101 +306,220 @@ window.Quarto = {
 </header>
 
 
-<section id="background" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="background"><span class="header-section-number">1.1</span> Background</h2>
-<p>In this course, we will consider statistical models for time series data. We concentrate, for example, the following questions:</p>
+<p>In this section, we focus on predicting (univariate) <span class="math inline">\(y_{t+h}\)</span> at the time <span class="math inline">\(t\)</span> (forecast origin) given the collection of <span class="math inline">\(K\)</span> predictive variables in <span class="math inline">\(\boldsymbol{x}_t = (x_{1t},\ldots,x_{Kt})\)</span>, which may also contain some lagged values of <span class="math inline">\(y_t\)</span>. The general predictive regression model is given by: <span class="math display">\[\begin{equation*}
+y_{t+h} = \boldsymbol{x}^{\prime}_t \boldsymbol{\beta} + u_{t+h} = \sum_{i=1}^{K} x_{it} \beta_i + u_{t+h}, \quad t=1,\ldots, T-h.
+\end{equation*}\]</span> where the forecast horizon <span class="math inline">\(h\)</span> is given and fixed, <span class="math inline">\(\boldsymbol{\beta}\)</span> is the vector of parameters and <span class="math inline">\(u_{t+h}\)</span> is the error term with typical assumptions (such as an <span class="math inline">\(\mathsf{iid}\)</span> error term).</p>
 <ul>
-<li><p>How such models can be applied to describe and forecast time series data?</p></li>
-<li><p>How are the model parameters estimated?</p></li>
-<li><p>How are hypotheses tested?</p></li>
+<li><p>Notice that in this section <span class="math inline">\(K\)</span> is the number of predictive variables to predict univariate time series <span class="math inline">\(y_t\)</span>. This holds also for the introductory machine learning section (next subsection).</p></li>
+<li><p>In other words, we do not consider VAR-type of cases in this section.</p></li>
 </ul>
-<p>We start with a review of univariate time series models and methods. <strong>The main objective is</strong>, however, <strong>in multiple time series case where multiple time series are analyzed simultaneously</strong>. In addition to typical multivariate (multiple-equation) models, we also consider some essential tools for large (big) dependent data and introduce some ideas and machine learning-based techniques for time series.</p>
-<p>Time series data are analyzed in various fields, including economics and finance, as well as social, natural, engineering, and medical sciences.</p>
+<p><strong>Standard assumption</strong>: Stationarity. <strong>Unless otherwise specified</strong>, in the general predictive regression framework, we assume that the variables included in <span class="math inline">\(\boldsymbol{x}_t\)</span> and the dependent variable <span class="math inline">\(y_t\)</span> are <strong>stationary</strong>.</p>
+<ul>
+<li><p>The variables can be (relatively) strongly persistent (i.e., even relatively strong serial correlation), but they are assumed not to be integrated processes (i.e., not <span class="math inline">\(I(1)\)</span> processes).</p></li>
+<li><p>Under these conditions, standard asymptotic theory generally applies.</p></li>
+</ul>
+<p>We consider two major deviations from this standard framework below</p>
+<ul>
+<li><p><strong>Section 13.1</strong> considers the usual low-dimensional case where some variables are integrated (<span class="math inline">\(I(1)\)</span>).</p></li>
+<li><p><strong>Section 13.2</strong> considers the case of “Big Dependent Data” where the number of predictors <span class="math inline">\(K\)</span> is large, but the dependent variable is still univariate.</p></li>
+</ul>
 <p>&nbsp;</p>
-<p><strong>A (univariate) time series</strong> is a collection of data where observations correspond to consecutive time periods. A common notation for time series data is <span class="math inline">\(y_{t}\)</span>, <span class="math inline">\(t=1,\ldots,T\)</span>, where <span class="math inline">\(t\)</span> denotes the time period and <span class="math inline">\(T\)</span> is the total number of observations. The interval between observations <span class="math inline">\(y_{t-1}\)</span> and <span class="math inline">\(y_{t}\)</span>, or <span class="math inline">\(y_{t}\)</span> and <span class="math inline">\(y_{t+1}\)</span>, represents a unit of time, for example, an hour, a month, a quarter or one year. In many cases, it is natural to use more concrete labels for the time periods, such as <span class="math inline">\(t=2000,\ldots,2024\)</span> for yearly data, or <span class="math inline">\(t=2000:1, 2000:2,\ldots,2024:12\)</span> for monthly observations. Therefore, occasionally <span class="math inline">\(T\)</span> may also refer to the final time label, such as 2024:12 (December 2024).</p>
+<section id="Linregintegrated" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="Linregintegrated"><span class="header-section-number">13.1</span> Linear regressions containing I(1) variables</h2>
+<p>Consider the linear regression <span class="math display">\[\begin{equation*}
+y_t= \boldsymbol{x}^{\prime}_t \boldsymbol{\beta} + u_t,
+\end{equation*}\]</span> and the two assumptions <span class="math inline">\(\mathrm{(i)}\)</span>–<span class="math inline">\(\mathrm{(ii)}\)</span>:</p>
+<ul>
+<li><span class="math inline">\(\mathrm{(i)}\)</span> The error term <span class="math inline">\(u_t\)</span> is serially uncorrelated and uncorrelated with the regressors included in <span class="math inline">\(\boldsymbol{x}_t\)</span>.</li>
+<li><span class="math inline">\(\mathrm{(ii)}\)</span> All the regressors in <span class="math inline">\(\boldsymbol{x}_t\)</span> are either deterministic or stationary random variables.</li>
+</ul>
+<p><strong>Assume now that only <span class="math inline">\(\mathrm{(i)}\)</span> holds</strong>, that is the error term <span class="math inline">\(u_t\)</span> is serially uncorrelated and uncorrelated with the regressors included in <span class="math inline">\(\boldsymbol{x}_t\)</span>.</p>
+<ul>
+<li>Even if the model cannot be written in this way, the OLS estimator of the coefficients of the <span class="math inline">\(I(1)\)</span> regressors <span class="math inline">\(\boldsymbol{x}_t\)</span> is consistent. However, its asymptotic distribution is, in general, nonstandard such that usual inference does not apply.</li>
+<li>If the model can be written such that all the parameters of interest are coefficients of mean zero stationary variables, their OLS estimator is consistent and asymptotically normal.</li>
+</ul>
+<p>To examine these points in more detail, let us consider again the following relatively simple regression model <span class="math display">\[\begin{equation*}
+y_t= \beta_0 + \beta_1 x_{t-1} + \beta_2 x_{t-2} + u_t,
+\end{equation*}\]</span> where <span class="math inline">\(x_t \thicksim I(1)\)</span>. The model can be rewritten as <span class="math display">\[\begin{equation*}
+y_t= \beta_0 + (\beta_1+\beta_2) x_{t-1} - \beta_2 (x_{t-1} - x_{t-2}) + u_t,
+\end{equation*}\]</span> or <span class="math display">\[\begin{equation*}
+y_t= \beta_0 + \beta_1 (x_{t-1}-x_{t-2}) + (\beta_1 + \beta_2) x_{t-2} + u_t.
+\end{equation*}\]</span> As <span class="math inline">\((x_{t-1} - x_{t-2}) \thicksim I(0)\)</span>, and hence, standard inference on <span class="math inline">\(\beta_2\)</span> (or <span class="math inline">\(\beta_1\)</span>) holds. Therefore, both <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> cannot simultaneously be written as coefficients of <span class="math inline">\(I(0)\)</span> variables (unless higher lags are included in the model).</p>
+<ul>
+<li>The OLS estimator of <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> is not, in general, jointly asymptotically normal.</li>
+<li>The test statistic on a hypothesis concerning both coefficients (for instance <span class="math inline">\(H_0: \beta_1 = \beta_2\)</span>), in general, does not have the usual asymptotic <span class="math inline">\(\chi^2\)</span>-distribution.</li>
+</ul>
 <p>&nbsp;</p>
-<p><strong>A vector-valued time series</strong> or <strong>multiple time series</strong> constitutes observations on a vector-valued variable in subsequent periods. We denote such a series by <span class="math display">\[\begin{equation*}
-    \boldsymbol{y}_{t}=(y_{1t},...,y_{Kt}), \quad t=1,\ldots,T,
-\end{equation*}\]</span> where <span class="math inline">\(t\)</span> indicates period or date, <span class="math inline">\(K\)</span> is the number of variables and <span class="math inline">\(T\)</span> is the number of observations.</p>
+<p>Let us continue with the above linear regression where now also the assumption <span class="math inline">\(\mathrm{(i)}\)</span> does not hold and the dependent variable is <span class="math inline">\(I(1)\)</span>.</p>
 <ul>
-<li><p>In this material, the bolded font in mathematical notations implies vectors and matrices (for the text it emphasizes important parts and concepts).</p></li>
-<li><p>For example, a classic three-variable (that is, <span class="math inline">\(K=3\)</span>) monetary policy model contains the (real) GDP (Gross Domestic Product) or unemployment rate, inflation and interest rate.</p></li>
-<li><p>If <span class="math inline">\(K=1\)</span>, then <span class="math inline">\(y_{t}\)</span> is a <strong>univariate</strong> time series. Hereafter, when analysing the <span class="math inline">\(k\)</span>th time series of the vector-valued <span class="math inline">\(\boldsymbol{y}_t\)</span>, we may also denote it as <span class="math inline">\(y_{kt}\)</span>.</p></li>
-<li><p>We assume throughout the course that the variables <span class="math inline">\(y_{1t},\ldots,y_{Kt}\)</span> are real-valued time series processes or can be at least treated like that. That is, observations are real numbers. In particular, this means that we do not allow clearly discrete such as binary-valued time series in this course. These discrete-valued cases are considered more detail in Nonlinear Time Series Analysis (University of Turku, TILM3589).</p></li>
+<li><p>If the dependent variable is not cointegrated with any of the regressors, the OLS estimator of the coefficients of the <span class="math inline">\(I(1)\)</span> regressors is inconsistent.</p></li>
+<li><p>If the dependent variable is cointegrated with at least one of the regressors, the OLS estimator of the parameters of interest</p>
+<ul>
+<li>that can be written as coefficients of stationary variables, is inconsistent.</li>
+<li>that cannot be written as coefficients of stationary variables, is consistent, but not asymptotically normal.</li>
 </ul>
-<p>As described at the beginning in Notation, We use the same notation on random variables and their realized/observed values. One must understand the difference from the context. Moreover, <strong>vectors are interpreted as column vectors</strong>: A vector <span class="math inline">\(\boldsymbol{y}_t = (y_{1t}, \ldots, y_{Kt})\)</span> can be written using matrix notation as <span class="math display">\[\begin{equation*}
-\boldsymbol{y}_t = [y_{1t} \, \cdots \, y_{Kt}]^{\prime} = \left[\begin{array}{c} y_{1t} \\ \vdots \\ y_{Kt} \end{array} \right], \qquad (K \times 1)
-\end{equation*}\]</span> where the symbol <span class="math inline">\(^{\prime}\)</span> indicates a vector transpose (later also matrix transpose).</p>
-<p>Basics of modelling stationary univariate time series are briefly considered at first. In the univariate case <span class="math inline">\(y_t\)</span>, the time series is scalar-valued, i.e.&nbsp;only one time series is analyzed at a time.</p>
+<p>For instance, consider the following regression model: <span class="math display">\[\begin{equation*}
+y_t = \beta_0 + \beta_1 x_{1t} + \beta_2 x_{2t} + u_t,
+\end{equation*}\]</span> where all variables are <span class="math inline">\(I(1)\)</span>, and <span class="math inline">\(y_t\)</span> and <span class="math inline">\(x_{2t}\)</span> are cointegrated and assumption <span class="math inline">\(\mathrm{(i)}\)</span> does not hold.</p>
+<ul>
+<li>If <span class="math inline">\(x_{1t}\)</span> and <span class="math inline">\(x_{2t}\)</span> are cointegrated such that <span class="math inline">\((x_{1t} - \gamma x_{2t}) \thicksim ~ I(0)\)</span>, the model can be written as <span class="math display">\[\begin{equation*}
+y_t = \beta_0 + \beta_1 (x_{1t} - \gamma x_{2t}) + (\beta_1 \gamma + \beta_2) x_{2t} + u_t,
+\end{equation*}\]</span> and the OLS estimator of <span class="math inline">\(\beta_1\)</span> is inconsistent.</li>
+<li>If <span class="math inline">\(x_{1t}\)</span> is not cointegrated with <span class="math inline">\(x_{2t}\)</span>, <span class="math inline">\(\beta_1\)</span> cannot be written as a coefficient of an <span class="math inline">\(I(0)\)</span> variable, and hence, its OLS estimator is consistent, but not asymptotically normal.</li>
+</ul></li>
+</ul>
 <p>&nbsp;</p>
-</section>
-<section id="introexample" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="introexample"><span class="header-section-number">1.2</span> Empirical example</h2>
-<p>An example of a multivariate time series could be a collection of stocks from the Helsinki stock exchange in certain day or month in 2026. Another example and data that we will also later take a closer look on is a <strong>bivariate model</strong> with the <strong>monthly change in the exchange rate of the euro and the USD</strong> (<span class="math inline">\(dexch_{t}\)</span>) between 1999:1–2009:12 as the other variable. The another variable is build upon the interest rates of the corresponding currencies (eurozone/US), which can be measured as <strong>the difference in the average returns on the 10-year bonds in the eurozone and the US</strong> (<span class="math inline">\(rdif_{t}\)</span>).</p>
-<p>Some economic motivation and remarks behind this application and data:</p>
-<ul>
-<li><p>According to Uncovered Interest Rate Parity (UIP), the expected future change in the exchange rate (<span class="math inline">\(\mathsf{E}_t(dexch_{t+1})\)</span>) should be driven by the interest rate differential. For empirical testing, assuming rational expectations, we typically replace the unobservable expectation with the realized future change (<span class="math inline">\(dexch_{t+1}\)</span>) plus a random error term. However, in this course, we examine the dynamic interdependence between the current exchange rate change (<span class="math inline">\(dexch_t\)</span>) and the interest differential (<span class="math inline">\(rdif_t\)</span>) to analyze both predictive power and contemporaneous co-movement.</p></li>
-<li><p>While UIP provides a baseline theoretical condition for equilibrium, the relationship between exchange rates and long-term bond yields is theoretically multifaceted. The Sticky-Price Monetary Model suggests that interest rate shocks may cause immediate exchange rate overshooting (appreciation), generating short-run dynamics that contradict UIP. Furthermore, the Portfolio Balance Approach is particularly relevant for 10-year yields, as it accounts for risk premiums and imperfect asset substitutability. Finally, we must remember possible reverse causality driven by endogenous monetary policy, where central banks (e.g., the ECB or Fed) may adjust interest rates in response to significant exchange rate fluctuations to stabilize inflation</p></li>
-<li><p>Additionally, we utilize 10-year government bond yields rather than the theoretically standard short-term rates. While this implies a maturity mismatch regarding, e.g., strict UIP testing, long-term yields are used here to capture broader structural economic expectations (such as inflation and economic growth), providing a robust signal for demonstrating multivariate techniques.</p></li>
-</ul>
-<p><strong>The central point of interest here and for this course</strong>, as a general example of a multivariate time series, is the dependence between the examined series to each other (as motivated above), implying that their co-movements are not merely coincidental.</p>
-<ul>
-<li><p>As in the univariate case, stationarity and “trend-like” non-stationarity play a significant role in the analysis and techniques used for multivariate time series. In what follows, we will consider general topics relating to this in the case of multivariate time series. Later, we will consider the analysis of non-stationary time series.</p></li>
-<li><p>This bivariate example is selected partly because the two time series are visually clearly different, as we will see in Figure below and in the coming sections.</p></li>
-</ul>
+<p>The complete <em>cheat sheet</em> on linear regression with <span class="math inline">\(I(0)\)</span> and <span class="math inline">\(I(1)\)</span> variables is summarized hereby:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="series_eurusd.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<p><img src="OLSregI1variables.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <center>
-Figure: The change in the euro-USD exchange rate (EUR/USD) on the top and the difference of the 10-year bond yields in the eurozone and the US (bottom) between the time period (monthly data) 1999:1–2009:12.
+Figure: Complete cheat sheet on inference in OLS regression models with <span class="math inline">\(I(1)\)</span> variables.
 </center>
 <p>&nbsp;</p>
-</section>
-<section id="relation-to-macroeconometrics" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="relation-to-macroeconometrics"><span class="header-section-number">1.3</span> Relation to macroeconometrics</h2>
-<p>The purpose of this course is to <strong>introduce</strong> some important statistical models and methods used in modern multiple (multivariate) time series analysis. The topics of this course are also closely related to the ones examined in a typical macroeconometrics (empirical macroeconomics) course. However, we introduce the methods <strong>without} structural economic interpretations and identification assumptions</strong>. These questions are left for the specific macroeconometrics courses such as <strong>Macroeconometrics (TILM3609)</strong>.</p>
+<p><strong>A spurious regression</strong> emerges when a statistically significant relationship between two <span class="math inline">\(I(1)\)</span> variables <span class="math inline">\(y_t\)</span> and <span class="math inline">\(x_t\)</span> is found although those are completely unrelated. Assume that a researcher estimates a linear regression <span class="math display">\[\begin{equation*}
+y_t = \beta_0 + \beta_1 x_t + u_t,
+\end{equation*}\]</span> but assuming wrongly that the variables <span class="math inline">\(y_t\)</span> and <span class="math inline">\(x_t\)</span> are stationary. Instead, they are generated by two independent random walks (i.e., <span class="math inline">\(y_t\)</span> and <span class="math inline">\(x_t\)</span> are <span class="math inline">\(I(1)\)</span> variables) <span class="math display">\[\begin{eqnarray*}
+y_t &amp;=&amp; y_{t-1} + u_{1t}, \quad u_{1t} \thicksim \mathsf{iid}(0, \sigma^2_1), \\
+x_t &amp;=&amp; x_{t-1} + u_{2t}, \quad u_{2t} \thicksim \mathsf{iid}(0, \sigma^2_2).
+\end{eqnarray*}\]</span> This typically leads to the estimation result of the above linear regression characterized by a fairly high <span class="math inline">\(R^2\)</span> (the coefficient of determination), highly autocorrelated residuals <span class="math inline">\(\widehat{u}_t\)</span> and a (highly) statistically significant estimate of <span class="math inline">\(\beta_1\)</span>. This result is clearly spurious given that the variables are completely independent!</p>
 <ul>
-<li><p>The methods of this course are often used in the modern (applied) macroeconomic research, including, e.g., policy analysis and forecasting.</p></li>
-<li><p>The methods are also commonly used, e.g., in financial econometrics (empirical/applied finance).</p></li>
+<li>Estimation results like this should not be taken seriously.</li>
+<li>The reason is that with <span class="math inline">\(y_t\)</span> and <span class="math inline">\(x_t\)</span> being <span class="math inline">\(I(1)\)</span> variables, the error term <span class="math inline">\(u_t\)</span> will also be <span class="math inline">\(I(1)\)</span>, not stationary (<span class="math inline">\(I(0)\)</span>).</li>
 </ul>
-<p>Especially (applied) macroeconomic research can essentially be divided into two different areas:</p>
-<ul>
-<li><p>Long-run: Attempt to understand the determinants of long-run economic growth (<span class="math inline">\(\Rightarrow\)</span> increases in national income)</p></li>
-<li><p>Short-run: Understanding the causes and consequences of short-run fluctuations in economic activity (<span class="math inline">\(\Rightarrow\)</span> business cycles)</p></li>
-</ul>
-<!-- The concepts of long-run and short-run modelling will be present during this course, especially concerning the modelling of nonstationary time series. 
-
-Quantitative univariate and multivariate methods are needed (at least) for:
-
-- Describing the relations between different variables
-
-- Forecasting
-
-- Implementing (testing) macroeconomic and financial theories
-
-- Economic policy analysis
-
-- Extracting trend and cyclical components of the time series
-
-The main multivariate approaches to macroeconometric modeling include:
-
-- System-of-equations models (Cowles Commission approach)
-
-- Direct implementation of theoretical models such as dynamic stochastic general equilibrium (DSGE) models
-
-- Vector autoregressive (VAR) models  -->
-<p>In this course, <strong>we will focus primarily on Vector Autoregressive (VAR) models</strong>, specifically examining statistical inference, forecasting techniques, and variable interdependence, as well as broader methodologies for handling large-scale time series</p>
-<ul>
-<li>Especially so called <strong>structural VAR (SVAR) models</strong> are considered more detail in the above mentioned <strong>Macroeconometrics</strong> course (not yet in this course).</li>
-</ul>
-<p>Finally, even though the above emphasize (macro)economic and financial applications, multiple time series models (and methods in macroeconometrics) are also highly relevant in completely different areas of applications where (large) time series datasets are analyzed.</p>
+<p>Solution to this problem is to include the lags of <span class="math inline">\(y_t\)</span> and <span class="math inline">\(x_t\)</span> as predictors in the model. In other words, we end up a model <span class="math display">\[\begin{equation*}
+y_t = \beta_0 + \beta_1 x_t + \beta_2 y_{t-1} + \beta_3 x_{t-1} +  u_t.
+\end{equation*}\]</span> In this case the OLS estimator is consistent. Thus, in general, including lagged values in the regression is sufficient to solve many of the problems associated with possibly spurious regressions.</p>
 <p>&nbsp;</p>
+</section>
+<section id="ForecastingML" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="ForecastingML"><span class="header-section-number">13.2</span> Forecasting with big dependent data</h2>
+<p>In this section, let us focus on predicting (univariate) <span class="math inline">\(y_{t+h}\)</span> at time <span class="math inline">\(t\)</span> (forecast origin) given the collection of <span class="math inline">\(K\)</span> predictive variables in <span class="math inline">\(\boldsymbol{x}_t = (x_{1t},\ldots,x_{Kt})\)</span>, which may also contain some lagged values of <span class="math inline">\(y_t\)</span> (as discussed above).</p>
+<ul>
+<li>This section strongly follows (notation and presentation) Chapter 7 of Peña and Tsay (2021).</li>
+</ul>
+<p>In this section, we allow the possibility that the vector <span class="math inline">\(\boldsymbol{x}_t\)</span> can be high-dimensional, that is we have a large set of potential predictive variables. This means deviations from the traditional econometric methods as we focus on possibly <strong>big dependent data</strong> emphasizing the case where <span class="math inline">\(K\)</span>, the number of predictors, is large, even larger than the sample length <span class="math inline">\(T\)</span>.</p>
+<ul>
+<li><p>In this type of data-rich environment, several interesting insights have been developed in recent times.</p></li>
+<li><p>In this course, we concentrate only on a brief introduction to <strong>regularized estimators</strong>, specifically <strong>ridge</strong>, <strong>lasso</strong> and <strong>elastic net</strong>, for such predictive regressions where the predictor space can be (very) large.</p></li>
+</ul>
+<p>It is important to note that most modern statistical and machine learning methods introduced in this section were developed for independent (cross-sectional) data. Consequently, they may not be directly or fully applicable to time series without appropriate handling, even though they are frequently used in this manner.</p>
+<ul>
+<li><p>This research area, focusing on “big dependent data,” is still very much evolving.</p></li>
+<li><p>We will discuss the justifications for and modifications to these methods for time series applications where relevant.</p></li>
+<li><p>In short, overlooking serial dependence and high multicollinearity can lead to erroneous inferences. For data with short-range dependence, where serial correlation decays quickly (e.g., exponentially) and the series is not highly persistent, tools designed for independent data can often be used with minimal adjustment. However, in the presence of strong serial dependence (highly persistent time series), more significant complications should be expected</p></li>
+</ul>
+<p>&nbsp;</p>
+<p>We concentrate on the regularized estimation of the following predictive regression model introduced at the beginning of this chapter: <span class="math display">\[\begin{equation*}
+y_{t+h} = \boldsymbol{x}^{\prime}_t \boldsymbol{\beta} + e_{t+h} = \sum_{i=1}^{K} x_{it} \beta_i + e_{t+h}, \quad t=1,\ldots, T-h,
+\end{equation*}\]</span> with a given and fixed forecast horizon <span class="math inline">\(h\)</span>, <span class="math inline">\(\boldsymbol{\beta}\)</span> is the vector of parameters and <span class="math inline">\(e_t\)</span> is the error term with typical assumptions (such as white noise or iid error term)).</p>
+<ul>
+<li>For simplicity, and importantly, in notation it is understood that <span class="math inline">\(\boldsymbol{x}_t\)</span> may contain the constant term. In the forthcoming shrinkage-based estimators the handling of constant is somewhat different than in the conventional models.</li>
+<li>In these regularized estimations and their applications (that is, in this section), each predictor <span class="math inline">\(x_{it}\)</span> is mean-adjusted and standardized to have unit variance. This assumption is quite natural for independent data, but for time series may encounter some additional difficulties.</li>
+</ul>
+<p>The above predictive regression can be rewritten using vectors and matrices as <span class="math display">\[\begin{equation*}
+\boldsymbol{Y} = \boldsymbol{X} \boldsymbol{\beta} + \boldsymbol{E},
+\end{equation*}\]</span> where the vectors <span class="math inline">\(\boldsymbol{Y}\)</span> and <span class="math inline">\(\boldsymbol{E}\)</span> and the matrix <span class="math inline">\(\boldsymbol{X}\)</span> have suitable dimensions <span class="math display">\[\begin{equation*}
+\boldsymbol{Y} = \begin{bmatrix}
+y_{1+h}  \\
+y_{2+h} \\
+\vdots  \\
+y_{T}
+\end{bmatrix} \quad (T-h \times 1),
+\qquad \boldsymbol{X} = \begin{bmatrix}
+\boldsymbol{x}^{\prime}_1  \\
+\boldsymbol{x}^{\prime}_2 \\
+\vdots  \\
+\boldsymbol{x}^{\prime}_{T-h}
+\end{bmatrix} \quad (T-h \times K) \quad \mathrm{and} \quad
+\boldsymbol{E} = \begin{bmatrix}
+e_{1+h}  \\
+e_{2+h} \\
+\vdots  \\
+e_{T}
+\end{bmatrix} \quad (T-h \times 1).
+\end{equation*}\]</span> As discussed above, under traditional linear regression analysis, ordinary least squares (OLS) can be used to estimate the parameters when <span class="math inline">\(K\)</span> is sufficiently (much) smaller than the number of observations <span class="math inline">\(T\)</span>: <span class="math display">\[\begin{equation*}
+\widehat{\boldsymbol{\beta}}_{OLS} = \Big(\sum_{t=1}^{T-h} \boldsymbol{x}_t \boldsymbol{x}^{\prime}_t \Big)^{-1}  \sum_{t=1}^{T-h} \boldsymbol{x}_t y_{t+h}.
+\end{equation*}\]</span></p>
+<ul>
+<li>The sum may also run from 1 to <span class="math inline">\(T\)</span> if the necessary <span class="math inline">\(h\)</span> initial values with negative time indices are available</li>
+</ul>
+<p><strong>However</strong>, if <span class="math inline">\(K \ge T-h\)</span>, then the OLS estimator is not unique and will overfit the data. This emphasizes the need for <strong>regularization</strong> and <strong>shrinkage-based estimators</strong>.</p>
+<p>&nbsp;</p>
+<p>One possible approach and algorithm to obtain a regularized estimator is to build upon <strong>lasso estimator</strong> <span class="math display">\[\begin{equation*}
+\widehat{\boldsymbol{\beta}}_L(\lambda) = \mathrm{arg}\,\underset{\boldsymbol{\beta}}{\mathrm{min}} \Bigg(\frac{||\boldsymbol{Y}-\boldsymbol{X} \boldsymbol{\beta}||^2_2}{T-h} + \lambda ||\boldsymbol{\beta}||_1\Bigg),
+\end{equation*}\]</span> where <span class="math inline">\(||\boldsymbol{Y}-\boldsymbol{X} \boldsymbol{\beta}||^2_2 = \sum_{t=1}^{T-h} (y_{t+h} - \boldsymbol{x}^{\prime}_t \boldsymbol{\beta})^2\)</span> and <span class="math inline">\(||\boldsymbol{\beta}||_1 = \sum_{i=1}^{K} |\beta_i|\)</span>.</p>
+<ul>
+<li><p>Here <span class="math inline">\(|| \boldsymbol{z} ||_2\)</span> refers to Euclidean norm <span class="math inline">\(\mathcal{l}_2\)</span>, that is for the general vector <span class="math inline">\(\boldsymbol{z}=(z_1,\ldots,z_K)\)</span> is <span class="math inline">\(||\boldsymbol{z}||_2 = \sqrt{\sum_{i=1}^K z^2_i}\)</span>. Furthermore, <span class="math inline">\(\mathcal{l}_1\)</span>-norm is defined as <span class="math inline">\(||\boldsymbol{z}||_1 = \sum_{i=1}^K |z_i|\)</span>.</p></li>
+<li><p>Note that, for convenience, in the Lasso estimator (in general in lasso literature) the predictors are often standardized so that <span class="math inline">\(\sum_{t=1}^{T-h} x_{it}\)</span> = 0 and <span class="math inline">\(\sum_{t=1}^{T-h} x^2_{it}=1\)</span> for <span class="math inline">\(i=1,\ldots,K\)</span>. The dependent variable is mean-adjusted, i.e.&nbsp;<span class="math inline">\(\frac{1}{T-h} \sum_{t=1}^{T-h} y_{t+h} = 0\)</span>.</p></li>
+</ul>
+<p>Lasso uses <span class="math inline">\(\mathcal{l}_1\)</span>-penalty (i.e.&nbsp;absolute values of the coefficients).</p>
+<ul>
+<li><p>It can be shown that this <strong>enables variable selection</strong>. That is, some resulting estimates <span class="math inline">\(\widehat{\beta}_i\)</span> will be exactly zero and hence excluded from the final model.</p></li>
+<li><p>The fact that only a few coefficients <span class="math inline">\(\beta_i\)</span> are nonzero implies the <strong>sparsity</strong> of the resulting model (model is <strong>sparse</strong> in the sense that some predictors are excluded).</p></li>
+</ul>
+<p>&nbsp;</p>
+<p>An alternative regularization-based estimator is the well-known <strong>ridge estimator</strong> (ridge regression). Ridge estimator is obtained when <span class="math inline">\(\mathcal{l}_2\)</span>-penalty is used <span class="math display">\[\begin{equation*}
+\widehat{\boldsymbol{\beta}}_R(\lambda) = \mathrm{arg}\,\underset{\boldsymbol{\beta}}{\mathrm{min}} \Bigg(\frac{||\boldsymbol{Y}-\boldsymbol{X} \boldsymbol{\beta}||^2_2}{T-h} + \lambda ||\boldsymbol{\beta}||^2_2\Bigg).
+\end{equation*}\]</span> In other words, the difference to the lasso estimator is the penalty term. The use of <span class="math inline">\(\mathcal{l}_2\)</span>-penalty means that the ridge estimator provides resulting estimates which are <strong>dense</strong> that is there won’t be exactly zero estimates in the same way as with lasso estimator.</p>
+<p>&nbsp;</p>
+<p>An important part of using regularized estimators is the determination of the value of the penalty term via parameter <span class="math inline">\(\lambda\)</span>. A small penalty might result in overfitting, whereas a large penalty would lead stronger shrinkage in coefficients <span class="math inline">\(\beta_i\)</span> towards 0.</p>
+<ul>
+<li><p>An ultimate case is of course <span class="math inline">\(\lambda=\infty\)</span>, which would yield (or closeby in the ridge estimator) <span class="math inline">\(\beta_i=0\)</span> for all <span class="math inline">\(i\)</span>.</p></li>
+<li><p>In contrast, if <span class="math inline">\(\lambda=0\)</span> implies no penalty at all, which may result in severe multicollinearity problems as the resulting ordinary least squares estimator is not necessarily even applicable in such circumstances.</p></li>
+<li><p>An interesting case is also obtained when <span class="math inline">\(\lambda\)</span> is close to zero but nonzero. This leads so called <strong>overparametrized models</strong>.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p>For independent (cross-sectional) data, <strong>cross-validation (CV)</strong> is typically used to determine the value of penalty parameter <span class="math inline">\(\lambda\)</span>.</p>
+<ul>
+<li><p>For time series data, it is somewhat questionable to use CV due to its construction (observations are not independent as in cross-sectional datasets) as seen below.</p></li>
+<li><p>Despite this it seems that CV is also quite often used for time series and research in this respect is still ongoing.</p></li>
+</ul>
+<p>One and typical implementation of CV, as introduced in Peña and Tsay (2021, Chapter 7.1), is the following.</p>
+<ul>
+<li><p>Divide the dataset <span class="math inline">\(S=\{(y_{t+h}, \boldsymbol{x}_t)|t=1,\ldots,T-h\}\)</span> randomly into, say, 10 subsamples, say <span class="math inline">\(S_1,\ldots,S_{10}\)</span>.</p></li>
+<li><p>Let <span class="math inline">\(S_{(i)}\)</span> be all the data but the subsample <span class="math inline">\(S_i\)</span>. That is <span class="math inline">\(S_{(i)} = \cup_{j \neq i}^{10} S_j\)</span> (i.e.&nbsp;the subsample <span class="math inline">\(S_i\)</span> is excluded). Let <span class="math inline">\(\{\lambda_j|j=1,\ldots,m\}\)</span> be the set of possible values of <span class="math inline">\(\lambda\)</span> and let <span class="math inline">\(\mathrm{SSE}(\lambda_j)\)</span> be the sum of squared prediction errors defined below for parameter <span class="math inline">\(\lambda_j\)</span>.</p></li>
+</ul>
+<p>The CV procedure (as in Peña and Tsay (2021, Chapter 7.1) is carried out as follows:</p>
+<ol type="1">
+<li>For each <span class="math inline">\(\lambda_j \quad (j=1,\ldots,m)\)</span>
+<ol type="a">
+<li>Initialize <span class="math inline">\(\mathrm{SSE}(\lambda_j)=0\)</span></li>
+<li>For <span class="math inline">\(i=1,\ldots,10\)</span></li>
+</ol>
+<ul>
+<li>Fit the Lasso, or Ridge, model with penalty <span class="math inline">\(\lambda_j\)</span> using data <span class="math inline">\(S_{(i)}\)</span></li>
+<li>Predict the response using the fitted parameters and the predictors in <span class="math inline">\(S_i\)</span></li>
+<li>Compute the prediction errors for the subsample <span class="math inline">\(S_i\)</span></li>
+<li>Update <span class="math inline">\(\mathrm{SSE}(\lambda_j)\)</span> by adding the sum of squared prediction errors of subsample <span class="math inline">\(S_i\)</span>.</li>
+</ul></li>
+<li>Select <span class="math inline">\(\lambda\)</span> by <span class="math inline">\(\lambda = \mathrm{arg}\, \underset{\lambda_j}{\mathrm{min}} \, \mathrm{SSE} (\lambda_j)\)</span></li>
+</ol>
+<p>This type of 10-fold CV procedure is commonly used in most software packages. However, as already discussed, the validity of such CV is questionable when the data are serially dependent. The above random division to subsamples does not respect serial correlation between observations and can invalidate results for time series data.</p>
+<ul>
+<li>Following, e.g., Peña and Tsay (2021), one alternative approach to CV is to select <span class="math inline">\(\lambda\)</span> using some information criteria such as BIC or AIC.</li>
+</ul>
+<p>&nbsp;</p>
+<p>Finally, the use of a combination of the <span class="math inline">\(\mathcal{l}_1\)</span> and <span class="math inline">\(\mathcal{l}_2\)</span> penalties leads to <strong>elastic net</strong> (EN) estimator <span class="math display">\[\begin{equation*}
+\widehat{\boldsymbol{\beta}}_{EL}(\alpha, \lambda_1, \lambda_2) = \mathrm{arg}\,\underset{\boldsymbol{\beta}}{\mathrm{min}} \Bigg(\frac{||\boldsymbol{Y}-\boldsymbol{X} \boldsymbol{\beta}||^2_2}{T-h} + \lambda_1 \alpha ||\boldsymbol{\beta}||_1 + \lambda_2 (1-\alpha) ||\boldsymbol{\beta}||^2_2\Bigg),
+\end{equation*}\]</span> where <span class="math inline">\(0 \le \alpha \le 1\)</span>. The elastic net estimator reduces to the lasso estimator when <span class="math inline">\(\alpha=1\)</span> and to the ridge estimator if <span class="math inline">\(\alpha=0\)</span>. In this formulation of the elastic net, two penalties <span class="math inline">\(\lambda_1\)</span> and <span class="math inline">\(\lambda_2\)</span> are used, resulting in the need to select two tuning parameters. If we do not prespecify <span class="math inline">\(\alpha\)</span>, one possible way forward is to consider a few possible values of <span class="math inline">\(\alpha\)</span> and compare their predictive performance.</p>
+<!-- &nbsp; 
+
+**Empirical illustration**. Let us consider the well-known large macroeconomic dataset of MacCracken and Ng (2018)...
+
+TARK. PÄIV.
+
+- EHKÄ JÄTTÄÄ R-KOODIN VARAAN?
+
+&nbsp;
+
+&nbsp;-->
 
 
 </section>
@@ -809,13 +927,13 @@ The main multivariate approaches to macroeconometric modeling include:
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link" aria-label="Preface">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      <a href="./ATSE-ch12.html" class="pagination-link" aria-label="Big Dependent Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ATSE-ch2.html" class="pagination-link" aria-label="Some basic concepts for time series data">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./ATSE-Appendices.html" class="pagination-link" aria-label="Appendix">
+        <span class="nav-page-text">Appendix</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>10&nbsp; Granger and instantaneous causality – Advanced Time Series Econometrics (ATSE)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ATSE-ch11.html" rel="next">
+<link href="./ATSE-ch9.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fd4fa0468f5fc6a923bfcdd77bb147af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<!-- Use JavaScript to Disable Right-Click -->
+<script>
+document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+
+<!-- Custom JavaScript for toggling code visibility -->
+<script>
+function toggleCode(id) {
+  var x = document.getElementById(id);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
+
+
+<!-- Visibility selections. display: none;? 
+  <style>
+
+/* Initially hide elements */
+.marginnotevideo {
+  display: none;
+}
+
+.marginnote {
+  display: none;
+}
+
+  </style>
+-->
+</head><body class="nav-sidebar docked quarto-light">$$
+\newcommand{\ubar}[1]{\mkern3mu\underline{\mkern-3mu#1\mkern-3mu}\mkern3mu}
+$$
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles-ATSE.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch10.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Advanced Time Series Econometrics (ATSE)</a> 
+        <div class="sidebar-tools-main">
+    <a href="./msATSE2026.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Univariate time series processes and models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Univariate nonstationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>) process</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Estimation and hypothesis testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Model selection and diagnostic checking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch10.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-Appendices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appendix</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#GCidea" id="toc-GCidea" class="nav-link active" data-scroll-target="#GCidea"><span class="header-section-number">10.1</span> General idea of Granger causality</a></li>
+  <li><a href="#GCVARs" id="toc-GCVARs" class="nav-link" data-scroll-target="#GCVARs"><span class="header-section-number">10.2</span> Granger causality in VAR models</a></li>
+  <li><a href="#Instantenouscausality" id="toc-Instantenouscausality" class="nav-link" data-scroll-target="#Instantenouscausality"><span class="header-section-number">10.3</span> Instantaneous (contemporaneous) causality</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="GrangerCausality" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="GCidea" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="GCidea"><span class="header-section-number">10.1</span> General idea of Granger causality</h2>
+<p>Consider two real-valued random variables <span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span>. How should one define causality from the former to the latter variable? Without delving deeper to the philosophical implications, one can think that a necessary condition for causality is that the “cause” does not occur after the “consequence”. If <span class="math inline">\(x\)</span> is a cause for <span class="math inline">\(z\)</span>, then one expects that <span class="math inline">\(x\)</span> has predictive content for <span class="math inline">\(z\)</span>.</p>
+<p>Let us formalize this intuition. Let <span class="math inline">\(x_{t}\)</span> and <span class="math inline">\(z_{t}\)</span> be real-valued stochastic processes and consider predicting the future values of <span class="math inline">\(z_{t}\)</span> at time <span class="math inline">\(t\)</span>.</p>
+<ul>
+<li><p>Let <span class="math inline">\(\mathcal{F}_{t}\)</span> denote the <strong>information set</strong> (as already described in forecasting sections above) hypothetical variables set, which includes <span class="math inline">\(x_{t}\)</span> and all other variables that are observed at time <span class="math inline">\(t\)</span> and could be used to predict the future values <span class="math inline">\(z_{t+h},\ h\geq 1\)</span>.</p></li>
+<li><p>The optimal (minimum mean square error) prediction of <span class="math inline">\(z_{t+h}\)</span> given <span class="math inline">\(\mathcal{F}_{t}\)</span> is denoted <span class="math inline">\(z_{t}(h|\mathcal{F}_{t})\)</span>.</p></li>
+<li><p>Correspondingly, let <span class="math inline">\(z_{t}(h|\mathcal{F}_{t}\backslash \mathcal{F}_{t}^{x})\)</span> be the optimal prediction of <span class="math inline">\(z_{t+h}\)</span> when the history of <span class="math inline">\(x\)</span>, denoted by <span class="math inline">\(\mathcal{F}_{t}^{x}=\left\{ x_{s},s\leq t\right\}\)</span>, is removed from the information set.</p></li>
+</ul>
+<p>Let <span class="math inline">\(\Sigma_{z}(h|\mathcal{F}_{t})\)</span> and <span class="math inline">\(\Sigma_{z}(h|\mathcal{F}_{t}\backslash \mathcal{F}_{t}^{x})\)</span> be the corresponding mean square errors (MSE). We say that <span class="math inline">\(x_{t}\)</span> <strong>Granger causes</strong> <span class="math inline">\(z_{t}\)</span> if <span class="math display">\[\begin{equation*}
+    \Sigma_{z}(h|\mathcal{F}_{t})&lt;\Sigma _{z}(h|\mathcal{F}_{t}\backslash \mathcal{F}_{t}^{x})
+\end{equation*}\]</span> for at least one <span class="math inline">\(t\)</span> and <span class="math inline">\(h\in\{1,2,...\}\)</span>. That is, <strong>under Granger causality, we can obtain more accurate predictions for</strong> <span class="math inline">\(z_{t+h}\)</span> (for some <span class="math inline">\(h&gt;0\)</span>) by exploiting information on the process <span class="math inline">\(x_{t}\)</span>.</p>
+<p>If <span class="math inline">\(\boldsymbol{x}_{t}\)</span> and <span class="math inline">\(\boldsymbol{z}_{t}\)</span> are vector-valued processes, the mean square errors become matrices. In this case, we say that <span class="math inline">\(\boldsymbol{x}_{t}\)</span> Granger causes <span class="math inline">\(\boldsymbol{z}_{t}\)</span> if <span class="math display">\[\begin{equation*}
+    \boldsymbol{\Sigma}_{\boldsymbol{z}}(h|\mathcal{F}_{t}\backslash\mathcal{F}_{t}^{\boldsymbol{x}})\neq \boldsymbol{\Sigma}_{\boldsymbol{z}}(h|\mathcal{F}_{t})
+\end{equation*}\]</span> for at least for one <span class="math inline">\(h &gt; 0\)</span>. The interpretation remains essentially similar: the history of <span class="math inline">\(\boldsymbol{x}_t\)</span> improves the prediction of <span class="math inline">\(\boldsymbol{z}_t\)</span>.</p>
+<p>&nbsp;</p>
+</section>
+<section id="GCVARs" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="GCVARs"><span class="header-section-number">10.2</span> Granger causality in VAR models</h2>
+<p>The information set <span class="math inline">\(\mathcal{F}_{t}\)</span> applied in the general definition above is often infeasible in practice. In applied work, the information set is restricted to selected observed variables. Granger causality is most often studied in the context of <strong>VAR models</strong>, where the relevant information set consists of the components of the vector process and their lags.</p>
+<p><strong>Bivariate VAR model (<span class="math inline">\(K=2\)</span>)</strong>: Granger causality can be easily tested within a VAR model. Consider first, for simplicity, a bivariate VAR(<span class="math inline">\(p\)</span>) process <span class="math display">\[\begin{eqnarray*}
+\left[ \begin{array}{c}
+y_{1t} \\
+y_{2t} \end{array} \right] =
+\left[ \begin{array}{c}
+\nu_{1} \\
+\nu_{2} \end{array} \right]
++
+\sum_{j=1}^{p}
+\left[ \begin{array}{cc}
+a_{11,j} &amp; a_{12,j}  \\
+a_{21,j} &amp; a_{22,j}  \end{array} \right]
+\left[ \begin{array}{c}
+y_{1, t-j} \\
+y_{2, t-j} \end{array} \right] +
+\left[ \begin{array}{c}
+u_{1t} \\
+u_{2t} \end{array} \right].
+\end{eqnarray*}\]</span> If <span class="math display">\[\begin{equation*}
+a_{12,j}=0, \, j=1,2, \ldots, p,
+\end{equation*}\]</span> then the lags of <span class="math inline">\(y_{2t}\)</span> do not help to predict <span class="math inline">\(y_{1t}\)</span> and <strong>there is no Granger causality from</strong> <span class="math inline">\(y_{2t}\)</span> <strong>to</strong> <span class="math inline">\(y_{1t}\)</span> (that is, <span class="math inline">\(y_{2t}\)</span> is not Granger-causal for <span class="math inline">\(y_{1t}\)</span>).</p>
+<ul>
+<li>That is, the restriction <span class="math inline">\(a_{12,1} = a_{12,2} = \cdots = a_{12,p} = 0\)</span> implies the absence of such a Granger causality relationship.</li>
+</ul>
+<p>When working with an estimated VAR model (for the empirical data), this hypothesis can be tested by the Wald or likelihood ratio (LR) test, following a <span class="math inline">\(\chi^2_p\)</span>-distribution under the null hypothesis.</p>
+<ul>
+<li>At times, such as in the <code>vars</code> package in R, the <span class="math inline">\(F\)</span>-test statistic is used instead of the Wald test statistic, but the logic is the same.</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Larger VAR models (<span class="math inline">\(K &gt; 2\)</span>) and indirect effects</strong>: When the VAR model contains more than two variables, Granger causality between two specific variables cannot always be tested by testing zero-restrictions in a simple pairwise manner. Consider the following three-variable VAR process: <span class="math display">\[\begin{eqnarray*}
+\left[ \begin{array}{c}
+y_{1t} \\
+y_{2t} \\
+y_{3t}
+\end{array} \right] =
+\left[ \begin{array}{c}
+\nu_{1} \\
+\nu_{2} \\
+\nu_{3} \end{array} \right]
++
+\sum_{j=1}^{p}
+\left[ \begin{array}{ccc}
+a_{11,j} &amp; a_{12,j} &amp; a_{13,j}  \\
+a_{21,j} &amp; a_{22,j} &amp; a_{23,j} \\
+a_{31,j} &amp; a_{32,j} &amp; a_{33,j} \\
+\end{array} \right]
+\left[ \begin{array}{c}
+y_{1, t-j} \\
+y_{2, t-j} \\
+y_{3, t-j}
+\end{array} \right] +
+\left[ \begin{array}{c}
+u_{1t} \\
+u_{2t} \\
+u_{3t}
+\end{array} \right].
+\end{eqnarray*}\]</span> If, for instance, <span class="math inline">\(a_{12,1}= \cdots = a_{12,p} = 0\)</span>, the lags of <span class="math inline">\(y_{2t}\)</span> do not help forecasting <span class="math inline">\(y_{1t}\)</span> one period ahead. However, because the lags of <span class="math inline">\(y_{2t}\)</span> may affect <span class="math inline">\(y_{3t}\)</span>, which in turn affects <span class="math inline">\(y_{1t}\)</span>, the lags of <span class="math inline">\(y_{2t}\)</span> may help forecasting <span class="math inline">\(y_{1,t+1}\)</span>, <span class="math inline">\(y_{1,t+2}\)</span> etc. In other words, there may be Granger causality through <strong>indirect effects</strong>.</p>
+<p>&nbsp;</p>
+<p><strong>General condition</strong>. Generally, we can consider Granger causality from one <strong>group of variables</strong> to another. Consider a stationary VAR(<span class="math inline">\(p\)</span>) process and partition <span class="math inline">\(\boldsymbol{y}_t = [\boldsymbol{y}_{1t}^{\prime} \quad \boldsymbol{y}_{2t}^{\prime}]^{\prime}\)</span>, where <span class="math inline">\(\boldsymbol{y}_{1t}\)</span> is <span class="math inline">\(K_1 \times 1\)</span> and <span class="math inline">\(\boldsymbol{y}_{2t}\)</span> is <span class="math inline">\(K_2 \times 1\)</span> , (<span class="math inline">\(K_1+K_2= K\)</span>), and write the VAR(<span class="math inline">\(p\)</span>) process <span class="math display">\[\begin{eqnarray*}
+\left[ \begin{array}{c}
+\boldsymbol{y}_{1t} \\
+\boldsymbol{y}_{2t} \end{array} \right] =
+\left[ \begin{array}{c}
+\boldsymbol{\nu}_1 \\
+\boldsymbol{\nu}_2 \end{array} \right]
++
+\sum_{j=1}^{p}
+\left[ \begin{array}{cc}
+\boldsymbol{A}_{11,j} &amp; \boldsymbol{A}_{12,j}  \\
+\boldsymbol{A}_{21,j} &amp; \boldsymbol{A}_{22,j}  \end{array} \right]
+\left[ \begin{array}{c}
+\boldsymbol{y}_{1, t-j} \\
+\boldsymbol{y}_{2, t-j} \end{array} \right] +
+\left[ \begin{array}{c}
+\boldsymbol{\zeta}_{1t} \\
+\boldsymbol{\zeta}_{2t} \end{array} \right].
+\end{eqnarray*}\]</span> Here <span class="math inline">\(\boldsymbol{A}_{\cdot \cdot,j}\)</span> are matrices. It intuitively seems that Granger causality from <span class="math inline">\(\boldsymbol{y}_{2t}\)</span> to <span class="math inline">\(\boldsymbol{y}_{1t}\)</span> relates to whether <span class="math inline">\(\boldsymbol{A}_{12,j}\neq \boldsymbol{0}\)</span> for some <span class="math inline">\(j\)</span>. In other words, variables in <span class="math inline">\(\boldsymbol{y}_{2t}\)</span> <strong>does not</strong> Granger cause <span class="math inline">\(\boldsymbol{y}_{1t}\)</span>, if and only if <span class="math inline">\(\boldsymbol{A}_{12,j}=\boldsymbol{0}\)</span> for all <span class="math inline">\(j=1,...,p\)</span>.</p>
+<p>&nbsp;</p>
+<div class="toggle-button" onclick="toggleCode('Extra101')">
+Extra: More details for Granger causality
+</div>
+<div id="Extra101" style="display:none;">
+<p>For simplicity assume <span class="math inline">\(p=1\)</span> and denote <span class="math inline">\(\boldsymbol{A}_{ij,1}=\boldsymbol{A}_{ij}\)</span>. The general version follows similar logic.</p>
+<p>Assume <span class="math inline">\(\boldsymbol{A}_{12}=\boldsymbol{0}\)</span>. Then the equation above implies a stationary VAR(1) presentation for <span class="math inline">\(\boldsymbol{z}_{t}\)</span>: <span class="math display">\[\begin{equation*}
+    \boldsymbol{z}_{t}=\boldsymbol{A}_{11}\boldsymbol{z}_{t-1}+\boldsymbol{\zeta}_{t}.
+\end{equation*}\]</span> It follows that the conditional expectation depends only on the history of <span class="math inline">\(\boldsymbol{z}\)</span>: <span class="math display">\[\begin{equation*}
+    \mathsf{E}(\boldsymbol{z}_{t+h}|\boldsymbol{z}_{s},\ s\leq t)=\boldsymbol{A}_{11}\mathsf{E}(\boldsymbol{z}_{t+h-1}|\boldsymbol{z}_{s},\ s\leq t),\ \ h\geq 1.
+\end{equation*}\]</span> On the other hand, when <span class="math inline">\(\boldsymbol{A}_{12}=\boldsymbol{0}\)</span>, the full model implies: <span class="math display">\[\begin{equation*}
+    \mathsf{E}(\boldsymbol{z}_{t+h}|\boldsymbol{y}_{s},\ s\leq t)=\boldsymbol{A}_{11}\mathsf{E}(\boldsymbol{z}_{t+h-1}|\boldsymbol{y}_{s},\ s\leq t),\ \ h\geq 1.
+\end{equation*}\]</span> Comparing these two recursions (starting from <span class="math inline">\(\mathsf{E}(\boldsymbol{z}_{t+1}|\cdot) = \boldsymbol{A}_{11}\boldsymbol{z}_t\)</span>), one observes by induction that the predictions are identical for all <span class="math inline">\(h\)</span> and <span class="math inline">\(t\)</span>. Hence, there is no Granger causality.</p>
+<p>Now, assume <span class="math inline">\(\boldsymbol{A}_{12}\neq \boldsymbol{0}\)</span>. As <span class="math inline">\(\boldsymbol{u}_{t+1}\)</span> and <span class="math inline">\(\boldsymbol{y}_{s},s\leq t\)</span>, are independent, we have <span class="math inline">\(\mathsf{E}(\boldsymbol{u}_{t+1}|\boldsymbol{y}_{s},\ s\leq t)=\boldsymbol{0}\)</span> and the model yields: <span class="math display">\[\begin{align*}
+    \boldsymbol{z}_{t+1}-\mathsf{E}(\boldsymbol{z}_{t+1}|\boldsymbol{y}_{s},\ s\leq t) &amp;= \boldsymbol{z}_{t+1}-\boldsymbol{A}_{11}\boldsymbol{z}_{t}-\boldsymbol{A}_{12}\boldsymbol{x}_{t} \\
+    &amp;= \boldsymbol{\zeta}_{t+1}.
+\end{align*}\]</span> However, projecting only on the history of <span class="math inline">\(z\)</span>: <span class="math display">\[\begin{align*}
+    \boldsymbol{z}_{t+1}-\mathsf{E}(\boldsymbol{z}_{t+1}|\boldsymbol{z}_{s},\ s\leq t) &amp;= \boldsymbol{z}_{t+1}-\boldsymbol{A}_{11}\boldsymbol{z}_t-\boldsymbol{A}_{12}\mathsf{E}(\boldsymbol{x}_t|\boldsymbol{z}_t, \ s \leq t) \\
+    &amp;= \boldsymbol{\zeta}_{t+1}+\boldsymbol{A}_{12}[\boldsymbol{x}_t-\mathsf{E}(\boldsymbol{x}_t|\boldsymbol{z}_s, \ s\leq t)].
+\end{align*}\]</span> The last term is non-zero because <span class="math inline">\(\boldsymbol{A}_{12}\boldsymbol{x}_{t}\)</span> is not a function of the history of <span class="math inline">\(\boldsymbol{z}\)</span> alone. Thus, the mean square error (covariance matrix of the prediction error) differs between the two information sets. It follows that <span class="math inline">\(\boldsymbol{x}\)</span> Granger causes <span class="math inline">\(\boldsymbol{z}\)</span>. <span class="math inline">\(\square\)</span></p>
+</div>
+<p>&nbsp;</p>
+<p>The “no Granger causality” hypothesis corresponds to <span class="math inline">\(K_1 K_2 p\)</span> zero restrictions: <span class="math display">\[\begin{equation*}
+H_0: \boldsymbol{A}_{12,1} = \boldsymbol{A}_{12,2} = \cdots = \boldsymbol{A}_{12,p} = \boldsymbol{0}.
+\end{equation*}\]</span> This hypothesis can be tested using Wald or Likelihood Ratio (LR) tests.</p>
+<ul>
+<li><p>Under the null hypothesis, these test statistics are asymptotically <span class="math inline">\(\chi^2_{K_1 K_2 p}\)</span>-distributed.</p></li>
+<li><p>Large values of the test statistic lead to rejection of the null hypothesis (i.e., finding evidence of Granger causality).</p></li>
+<li><p>As mentioned, the <span class="math inline">\(F\)</span>-test is also commonly used in finite samples (e.g., in R/RStudio).</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Example: Three-variable process</strong>. Consider the VAR(1) process: <span class="math display">\[\begin{equation*}
+\boldsymbol{y}_t = \left[ \begin{array}{c}
+y_{1t} \\ y_{2t} \\ y_{3t}   \end{array} \right] =
+\left[ \begin{array}{c}
+0 \\ 2 \\ 1   \end{array} \right] +
+\left[ \begin{array}{ccc}
+0.5 &amp; 0 &amp; 0 \\
+0.1 &amp; 0.1 &amp; 0.3 \\
+0 &amp; 0.2 &amp; 0.3
+\end{array} \right] \boldsymbol{y}_{t-1} +\boldsymbol{u}_t.
+\end{equation*}\]</span> Partitioning <span class="math inline">\(\boldsymbol{y}_t = [y_{1t} \quad \boldsymbol{y}^{\prime}_{2t}]^{\prime}\)</span> so that <span class="math inline">\(\boldsymbol{y}_{2t} = [y_{2t} \quad y_{3t}]^{\prime}\)</span>.</p>
+<ul>
+<li><p>Here, the sub-matrix <span class="math inline">\(\boldsymbol{A}_{12}\)</span> corresponds to the top-right block <span class="math inline">\([0 \quad 0]\)</span>. Since this is zero, <span class="math inline">\(\boldsymbol{y}_{2t}\)</span> (variables <span class="math inline">\(y_{2t}\)</span> and <span class="math inline">\(y_{3t}\)</span>) <strong>does not Granger cause</strong> <span class="math inline">\(y_{1t}\)</span>.</p></li>
+<li><p>On the other hand, looking at the coefficients affecting <span class="math inline">\(y_{2t}\)</span> (the second row), the coefficient for <span class="math inline">\(y_{1,t-1}\)</span> is <span class="math inline">\(0.1 \neq 0\)</span>. Thus, <span class="math inline">\(y_{1t}\)</span> <strong>Granger causes</strong> <span class="math inline">\(\boldsymbol{y}_{2t}\)</span>.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Granger causality when involving <span class="math inline">\(I(1)\)</span> variables</strong>. Standard Granger causality tests (such as using F or Wald tests in a standard VAR), as above, rely on the assumption that variables are stationary (<span class="math inline">\(I(0)\)</span>).</p>
+<ul>
+<li><p>If you apply standard tests to non-stationary <span class="math inline">\(I(1)\)</span> variables, the test statistics will <strong>not</strong> follow standard asymptotic distributions (like <span class="math inline">\(\chi^2\)</span> or <span class="math inline">\(F\)</span> distributions).</p></li>
+<li><p>This often leads to “spurious causality”—finding relationships where none exist.</p></li>
+</ul>
+<p>Different scenarios:</p>
+<ul>
+<li><p>Scenario A: Variables are <span class="math inline">\(I(1)\)</span> and cointegrated. If variables share a long-run equilibrium (cointegration), you must use a Vector Error Correction Model (VECM). Cointegration and VECM will be introduced in the next section.</p></li>
+<li><p>Scenario B: Variables are <span class="math inline">\(I(1)\)</span> and not cointegrated. If variables are non-stationary and have no long-run relationship, you must difference them. Using differenced time series, the limitation is that tests test short-run causality only. Long-run information is removed by differencing (but this is acceptable since no long-run relationship exists).</p></li>
+<li><p>Scenario C: The robust and preferred solution is the Toda-Yamamoto (TY) procedure, which is valid regardless of whether the variables are <span class="math inline">\(I(0)\)</span>, <span class="math inline">\(I(1)\)</span>, or cointegrated. It avoids the potential biases associated with pre-testing for cointegration. The core idea is to estimate a VAR in levels (not differences) but add extra lags to “fix” the asymptotic distribution of the Wald test statistics. Steps:</p>
+<ol type="1">
+<li><p><strong>Select lag length (<span class="math inline">\(p\)</span>)</strong>: Determine the optimal lag length <span class="math inline">\(p\)</span> for the VAR using, for example, information criteria (AIC, SC, or HQ).</p></li>
+<li><p><strong>Determine integration order (<span class="math inline">\(d_{max}\)</span>)</strong>: Identify the maximum order of integration for the variables in the system (usually <span class="math inline">\(d_{max}=1\)</span> for (economic) time series).</p></li>
+<li><p><strong>Estimate augmented VAR</strong>: Estimate a VAR in levels with a total lag length of <span class="math inline">\(p + d_{max}\)</span>.</p></li>
+<li><p><strong>Perform Wald Test:</strong> Test the Granger causality restrictions <strong>only on the first <span class="math inline">\(p\)</span> lags</strong>. The coefficients for the extra <span class="math inline">\(d_{max}\)</span> lags are ignored; they function essentially as nuisance parameters to ensure the test statistic follows a standard <span class="math inline">\(\chi^2\)</span> distribution. Therefore, the test regression for a bivariate system where we test if <span class="math inline">\(\boldsymbol{x}\)</span> Granger-causes <span class="math inline">\(\boldsymbol{y}\)</span>:</p></li>
+</ol>
+<p><span class="math display">\[\begin{equation*}
+  \boldsymbol{y}_t = \boldsymbol{\nu} + \sum_{i=1}^{p} \boldsymbol{A}_i \boldsymbol{y}_{t-i} + \underbrace{\sum_{j=p+1}^{p+d_{max}} \boldsymbol{A}_j \boldsymbol{y}_{t-j}}_{\text{ignored lags}} + \sum_{i=1}^{p} \boldsymbol{B}_i \boldsymbol{x}_{t-i} +   \underbrace{\sum_{j=p+1}^{p+d_{max}} \boldsymbol{B}_j \boldsymbol{x}_{t-j}}_{\text{ignored lags}} + u_t
+\end{equation*}\]</span> and test the hypothesis <span class="math display">\[\begin{equation*}
+H_0: \boldsymbol{B}_1 = \boldsymbol{B}_2 = \cdots = \boldsymbol{B}_p = \boldsymbol{0}.
+\end{equation*}\]</span></p></li>
+</ul>
+<p>&nbsp;</p>
+</section>
+<section id="Instantenouscausality" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="Instantenouscausality"><span class="header-section-number">10.3</span> Instantaneous (contemporaneous) causality</h2>
+<p>The definition of Granger causality discussed above strictly concerns <strong>predictive</strong> causality: whether past values of a variable help predict future values of another. It does not address <strong>instantaneous</strong> (or <strong>contemporaneous</strong>) causality—that is, whether knowing the value of <span class="math inline">\(x_{t+1}\)</span> helps to more accurately forecast <span class="math inline">\(z_{t+1}\)</span> given the history <span class="math inline">\(\mathcal{F}_t\)</span>.</p>
+<p>Formally, there exists instantaneous Granger causality between processes <span class="math inline">\(x_t\)</span> and <span class="math inline">\(z_t\)</span> if: <span class="math display">\[\begin{equation*}
+    \Sigma_z(1|\mathcal{F}_t) \neq \Sigma_z(1|\mathcal{F}_t \cup \{x_{t+1}\}).
+\end{equation*}\]</span> Here, the variable set <span class="math inline">\(\mathcal{F}_t \cup \{x_{t+1}\}\)</span> includes the future realization <span class="math inline">\(x_{t+1}\)</span> in addition to the history <span class="math inline">\(\mathcal{F}_t\)</span>. In other words, adding the contemporaneous value of <span class="math inline">\(x\)</span> to the information set improves the forecast of <span class="math inline">\(z\)</span>.</p>
+<p>&nbsp;</p>
+<p><strong>Symmetry and interpretation</strong>. A crucial property of instantaneous causality is <strong>symmetry</strong>. It can be shown that if <span class="math inline">\(x_t\)</span> is instantaneously causal for <span class="math inline">\(z_t\)</span>, then <span class="math inline">\(z_t\)</span> is also instantaneously causal for <span class="math inline">\(x_t\)</span>.</p>
+<ul>
+<li><p>Consequently, this statistical definition does not determine the “direction” of causality.</p></li>
+<li><p>The direction must be inferred from other sources, such as economic theory. For instance, if theory suggests causality runs only from <span class="math inline">\(x\)</span> to <span class="math inline">\(z\)</span>, a significant instantaneous relationship can be interpreted in favor of that causal link.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Instantaneous causality in VAR models</strong>. In the context of VAR models, instantaneous causality is directly linked to the correlation of the error terms.</p>
+<ul>
+<li><p><strong>Bivariate case</strong> (<span class="math inline">\(K=2\)</span>): In a bivariate VAR, there is <strong>no instantaneous causality</strong> between <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span> if and only if the errors <span class="math inline">\(u_{1t}\)</span> and <span class="math inline">\(u_{2t}\)</span> are <strong>uncorrelated</strong>. If the errors are correlated, knowing the realization of <span class="math inline">\(y_{1t}\)</span> (and thus <span class="math inline">\(u_{1t}\)</span>) provides information about <span class="math inline">\(u_{2t}\)</span>, thereby improving the forecast of <span class="math inline">\(y_{2t}\)</span>.</p></li>
+<li><p><strong>General case</strong> (<span class="math inline">\(K &gt; 2\)</span>): In systems with more than two variables, the absence of instantaneous causality corresponds to the structure of the error covariance matrix <span class="math inline">\(\boldsymbol{\Sigma}_u\)</span>. There is no instantaneous causality between two groups of variables if <span class="math inline">\(\boldsymbol{\Sigma}_u\)</span> is <strong>block diagonal</strong> with respect to those groups.</p>
+<p><strong>Example:</strong> Consider a VAR process for <span class="math inline">\(\boldsymbol{y}_t = (y_{1t}, y_{2t}, y_{3t})\)</span> with the following error covariance matrix: <span class="math display">\[\begin{equation*}
+\boldsymbol{\Sigma}_u = \left[
+\begin{array}{ccc}
+2.0 &amp;  0  &amp;  0 \\
+0 &amp; 1.5  &amp; 0.4 \\
+0 &amp; 0.4  &amp; 1.0 \\
+\end{array} \right].
+\end{equation*}\]</span> Here, the covariance between the error of <span class="math inline">\(y_{1t}\)</span> and the errors of the other variables is zero (the top row and left column off-diagonal elements are 0). However, the errors for <span class="math inline">\(y_{2t}\)</span> and <span class="math inline">\(y_{3t}\)</span> are correlated (<span class="math inline">\(0.4\)</span>). Conclusion: There is no instantaneous causality between <span class="math inline">\(y_{1t}\)</span> and the group <span class="math inline">\(\boldsymbol{y}_{2t} = (y_{2t}, y_{3t})\)</span>.</p></li>
+</ul>
+<p><strong>Testing</strong>: Instantaneous causality can be tested statistically using a Wald-type test for zero restrictions on the corresponding off-diagonal elements of the error covariance matrix <span class="math inline">\(\boldsymbol{\Sigma}_u\)</span>.</p>
+<p>&nbsp;</p>
+<p><strong>Example (continued)</strong>. The estimates from the VAR(2) model indicate clearly, that the data does not support Granger causality in direction <span class="math inline">\(dexch_t\rightarrow rdif_t\)</span> (compare the relevant estimates to their standard errors). By using a formal likelihood ratio (LR) test we get the value of test statistic of 1.08 and a (approximate) p-value of 0.583. As a part of the LR test, we need and get the following estimates for the constrained model (that is, an example of constrained/restricted estimation result) <span class="math display">\[\begin{equation*}
+    \left[
+    \begin{array}{c}
+        \underset{}{rdif_{t}}   \\
+        \underset{}{dexch_{t}}
+    \end{array}
+    \right] =\left[
+    \begin{array}{c}
+        \underset{(0.014)}{0.002}  \\
+        \underset{(0.002)}{-0.002}
+    \end{array}
+    \right] +\left[
+    \begin{array}{cc}
+        \underset{(0.087)}{1.144} &amp; \underset{}{0} \\
+        \underset{(0.012)}{0.024} &amp; \underset{(0.089)}{0.405}
+    \end{array}
+    \right] \left[
+    \begin{array}{c}
+        \underset{}{rdif_{t-1}}  \\
+        \underset{}{dexch_{t-1}}
+    \end{array}
+    \right] \\
+    +\left[
+    \begin{array}{cc}
+        \underset{(0.087)}{-0.183} &amp; \underset{}{0}  \\
+        \underset{(0.012)}{-0.028} &amp; \underset{(0.087)}{-0.181}
+    \end{array}
+    \right] \left[
+    \begin{array}{c}
+        \underset{}{rdif_{t-2}} \\
+        \underset{}{dexch_{t-2}}
+    \end{array}
+    \right] +\left[
+    \begin{array}{c}
+        \underset{}{\widetilde{u}_{1t}} \\
+        \underset{}{\widetilde{u}_{2t}}
+    \end{array}
+    \right].
+\end{equation*}\]</span> Compared to the unconstrained model and its estimation result, the estimation accuracy has improved slightly (as one could expect), as seen by comparing the standard errors.</p>
+<p>Granger causality in direction <span class="math inline">\(rdif_t\rightarrow dexch_t\)</span> seems to be realistic based on the estimates.</p>
+<ul>
+<li><p>This requires the estimation of another constrained model,</p></li>
+<li><p>The resulting p-value of the LR test statistic of 6.54 is 0.038.</p></li>
+</ul>
+<p>Furthermore, when using R’s causality-function, leading to the F-test statistics (instead of asymptotic Wald test) to the corresponding null hypotheses as above (with the LR test), we obtain the p-values of 0.618 and 0.052. These lead, as expected, similar conclusions to the above LR test-based results. That is, in line with most (theoretical) economic arguments, we can conclude stronger predictive relation from interest rate differential to changes in the exchange rate than other way round.</p>
+<p>&nbsp;</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ATSE-ch9.html" class="pagination-link" aria-label="Forecasting with VAR model">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ATSE-ch11.html" class="pagination-link" aria-label="Cointegration">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

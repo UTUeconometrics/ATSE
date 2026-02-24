@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>11&nbsp; Cointegration – Advanced Time Series Econometrics (ATSE)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ATSE-ch12.html" rel="next">
+<link href="./ATSE-ch10.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fd4fa0468f5fc6a923bfcdd77bb147af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<!-- Use JavaScript to Disable Right-Click -->
+<script>
+document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+
+<!-- Custom JavaScript for toggling code visibility -->
+<script>
+function toggleCode(id) {
+  var x = document.getElementById(id);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
+
+
+<!-- Visibility selections. display: none;? 
+  <style>
+
+/* Initially hide elements */
+.marginnotevideo {
+  display: none;
+}
+
+.marginnote {
+  display: none;
+}
+
+  </style>
+-->
+</head><body class="nav-sidebar docked quarto-light">$$
+\newcommand{\ubar}[1]{\mkern3mu\underline{\mkern-3mu#1\mkern-3mu}\mkern3mu}
+$$
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles-ATSE.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch11.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Advanced Time Series Econometrics (ATSE)</a> 
+        <div class="sidebar-tools-main">
+    <a href="./msATSE2026.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Some basic concepts for time series data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multivariate stationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Univariate time series processes and models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Univariate nonstationary processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>) process</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Estimation and hypothesis testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Model selection and diagnostic checking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch11.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ATSE-Appendices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appendix</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#IntroCI" id="toc-IntroCI" class="nav-link active" data-scroll-target="#IntroCI"><span class="header-section-number">11.1</span> Introduction to cointegration</a></li>
+  <li><a href="#VECM" id="toc-VECM" class="nav-link" data-scroll-target="#VECM"><span class="header-section-number">11.2</span> Cointegrated VAR and VECM model</a></li>
+  <li><a href="#cointegration-relations-and-identification" id="toc-cointegration-relations-and-identification" class="nav-link" data-scroll-target="#cointegration-relations-and-identification"><span class="header-section-number">11.3</span> Cointegration relations and identification</a></li>
+  <li><a href="#TestingCI" id="toc-TestingCI" class="nav-link" data-scroll-target="#TestingCI"><span class="header-section-number">11.4</span> Testing cointegration</a></li>
+  <li><a href="#empirical-example" id="toc-empirical-example" class="nav-link" data-scroll-target="#empirical-example"><span class="header-section-number">11.5</span> Empirical example</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="Cointegration" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="IntroCI" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="IntroCI"><span class="header-section-number">11.1</span> Introduction to cointegration</h2>
+<p>Instead of stationary variables, let us now assume that we have two variables, <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span>, where either or both are nonstationary—specifically <strong>integrated of order one</strong>, denoted as <span class="math inline">\(I(1)\)</span>.</p>
+<p><strong>Cointegration in the bivariate case</strong>. An important special case of linear regression between nonstationary <span class="math inline">\(I(1)\)</span> variables arises when they share a <strong>common stochastic trend</strong>. Suppose there exists a linear relationship such that for some parameter <span class="math inline">\(\delta\)</span>, the linear combination <span class="math display">\[\begin{equation*}
+z_t = y_{1t} - \delta y_{2t} = [1 \quad -\delta] \boldsymbol{y}_t
+\end{equation*}\]</span> is stationary, <span class="math inline">\(I(0)\)</span>, even though <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span> are individually nonstationary <span class="math inline">\(I(1)\)</span>. In such a case, <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span> are said to be <strong>cointegrated</strong>.</p>
+<ul>
+<li><p>The vector <span class="math inline">\([1 \quad -\delta]^{\prime}\)</span> is called the <strong>cointegration vector</strong>.</p></li>
+<li><p><strong>Long-run equilibrium</strong>: Cointegration is often interpreted as a long-run relationship. If the equilibrium is defined by <span class="math inline">\(y_{1t} = \tilde{\delta} y_{2t}\)</span>, then <span class="math inline">\(z_t\)</span> represents the “equilibrium error”—the extent to which <span class="math inline">\(y_t\)</span> deviates from its equilibrium value.</p></li>
+<li><p>Because <span class="math inline">\(z_t \sim I(0)\)</span>, this error fluctuates around zero with constant variance. On average, the system remains in equilibrium.</p></li>
+</ul>
+<p><strong>Why not just difference the data?</strong> An alternative way to analyze variables that are non-stationary (or integrated of order one) is to use their first differences, <span class="math inline">\(\Delta x_t\)</span> and <span class="math inline">\(\Delta y_t\)</span>, which are stationary. However, if a cointegration relationship exists, differencing is not an optimal strategy because it discards the long-run level relationship (the “common trend”) between the series.</p>
+<p><strong>The problem of overdifferencing</strong>. To understand why simply differencing all <span class="math inline">\(I(1)\)</span> variables can be problematic, consider a two-dimensional example where <span class="math inline">\(y_{1t} \sim I(1)\)</span> and <span class="math inline">\(y_{2t} \sim I(0)\)</span>.</p>
+<ul>
+<li>The vector <span class="math inline">\(\boldsymbol{y}_{t}\)</span> is effectively <span class="math inline">\(I(1)\)</span>, but differencing the entire vector is unnecessary for the second component.</li>
+</ul>
+<p>Assume <span class="math inline">\((\Delta y_{1t}, y_{2t})\)</span> follows a stable VAR(1) process: <span class="math display">\[\begin{equation*}
+    \begin{bmatrix}
+        1-a_{11}\mathsf{B} &amp; 0 \\
+        0 &amp; 1-a_{22}\mathsf{B}
+    \end{bmatrix}
+    \begin{bmatrix}
+        \Delta y_{1t} \\
+        y_{2t}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        \nu_1 \\
+        \nu_2
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+        u_{1t} \\
+        u_{2t}
+    \end{bmatrix},
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{u}_{t}\)</span> is white noise. If we base our analysis on the fully differenced series <span class="math inline">\(\Delta \boldsymbol{y}_t\)</span>, the second equation becomes: <span class="math display">\[\begin{equation*}
+(1-a_{22}\mathsf{B})\Delta y_{2t}=(1-\mathsf{B})u_{2t}.
+\end{equation*}\]</span> Here, the error term has an MA(1) component <span class="math inline">\((1-\mathsf{B})u_{2t}\)</span> with a unit root. This means the model for the differenced series becomes a VARMA(1,1) where the MA part is <strong>non-invertible</strong>. This misuse of differencing (“overdifferencing”) leads to misspecified models that are difficult to estimate.</p>
+<p>&nbsp;</p>
+<p><strong>General definition of cointegration</strong>. The situation described above can be formalized for <span class="math inline">\(\boldsymbol{y}_t = (y_{1t},\ldots, y_{Kt})\)</span>. If <span class="math inline">\(\boldsymbol{y}_{t} \sim I(1)\)</span>, but there is a linear combination <span class="math inline">\(\boldsymbol{\beta}^{\prime} \boldsymbol{y}_{t}\)</span>, which is <span class="math inline">\(I(0)\)</span>. then an <span class="math inline">\(I(1)\)</span> process <span class="math inline">\(\{\boldsymbol{y}_{t},\ t=1,2,...\}\)</span> <span class="math inline">\((K\times 1)\)</span> is said to be cointegrated if there exists a nonzero parameter vector <span class="math inline">\(\boldsymbol{\beta}\)</span> <span class="math inline">\((K \times 1)\)</span> such that: <span class="math display">\[\begin{equation*}
+\boldsymbol{\beta}^{\prime } \boldsymbol{y}_{t}\sim I(0).
+\end{equation*}\]</span> The parameter <span class="math inline">\(\boldsymbol{\beta}\)</span> is called the <strong>cointegrating</strong> (<strong>cointegration</strong>) <strong>vector</strong> (CI-vector).</p>
+<ul>
+<li>Note that this definition allows for trivial cases (like the overdifferencing example above) where <span class="math inline">\(\boldsymbol{\beta} =(0,...,1,...0)\)</span>, meaning one variable is already stationary.</li>
+<li>There can be several linearly independent CI-vectors. If there are <span class="math inline">\(r\)</span> such vectors, they form the <strong>cointegrating matrix</strong> <span class="math inline">\(\boldsymbol{\beta} = [\boldsymbol{\beta}_{1}\ \cdots \ \boldsymbol{\beta}_{r}]\)</span>, and <span class="math inline">\(r\)</span> is the <strong>cointegration rank</strong>.</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Bivariate example and intuition</strong>. To illustrate, consider the process: <span class="math display">\[\begin{equation*}
+    \left[
+    \begin{array}{c}
+        y_{1t} \\
+        y_{2t}
+    \end{array}
+    \right] = \left[
+    \begin{array}{c}
+        \mu_1 \\
+        \mu_2
+    \end{array}
+    \right] + \left[
+    \begin{array}{c}
+        b \\
+        1
+    \end{array}
+    \right] \tau_t + \left[
+    \begin{array}{c}
+        \xi_{1t} \\
+        \xi_{2t}
+    \end{array}
+    \right],
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{\xi}_{t} =(\xi_{1t}, \xi_{2t})\)</span> is stationary, such as <span class="math inline">\(\boldsymbol{\xi}_{t} =(\xi_{1t}, \xi_{2t}) \thicksim \mathsf{iid}(\boldsymbol{0}, \boldsymbol{\Sigma}_{\xi})\)</span>, <span class="math inline">\(\tau_{t} = \sum_{j=1}^t \eta_j\)</span> is a random walk process (containing the stochastic trend, with a fixed initial value <span class="math inline">\(\tau_0\)</span>) where <span class="math inline">\(\eta_t \thicksim \mathsf{iid}(0,\sigma^2)\)</span>.</p>
+<ul>
+<li><p>Individually, <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span> are <span class="math inline">\(I(1)\)</span> because they both contain <span class="math inline">\(\tau_t\)</span>. Therefore, the time series they generate wandering behavior over time with increasing variance.</p></li>
+<li><p>The non-stationarity of the processes <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span> is driven by a one-dimensional random walk <span class="math inline">\(\tau_t\)</span>. However, the linear combination: <span class="math display">\[\begin{equation*}
+y_{1t} - b y_{2t} = (\mu_{1}-b\mu_{2}) + (\xi_{1t}-b\xi_{2t})
+\end{equation*}\]</span> eliminates the random walk <span class="math inline">\(\tau_t\)</span>. The result is stationary (even iid), and it does not behave like <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span>. Instead, it is fluctuating around the constant mean <span class="math inline">\(\mu_{1}-b\mu_{2}\)</span>. Thus, the process is cointegrated with the cointegration vector <span class="math inline">\((1, -b)\)</span>.</p></li>
+<li><p>This implies that the linear combination <span class="math inline">\(y_{1t} - b y_{2t}\)</span> (where <span class="math inline">\(b \neq 0\)</span>) establishes a very strong linear dependence between the processes <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span>, forcing them to move ‘’hand in hand’’. This is perhaps most evident when <span class="math inline">\(b = 1\)</span> and <span class="math inline">\(\mu_1 = \mu_2\)</span>, in which case the linear combination <span class="math inline">\(y_{1t} - y_{2t}\)</span> is stationary with an expected value of zero.</p></li>
+<li><p>Although the processes <span class="math inline">\(y_{1t}\)</span> and <span class="math inline">\(y_{2t}\)</span> wander wildly over time, cointegration prevents them from drifting too far apart.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="YIexample.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<center>
+Figure: A simulated cointegrated process (as above) where <span class="math inline">\(T=200\)</span>, <span class="math inline">\(\mu_1=\mu_2=0\)</span>, <span class="math inline">\(b=0.9\)</span>, <span class="math inline">\(\sigma^2=1\)</span>, the (independent) AR(1) processes <span class="math inline">\(\xi_{1t}\)</span> and <span class="math inline">\(\xi_{2t}\)</span> with AR(1)-coefficients of 0.9 and 0.6, respectively.
+</center>
+<p>&nbsp;</p>
+<!-- This stationarity induces a strong correlation: even if the time paths of $y_{1t}$ and $y_{2t}$ look "wild" individually, they are forced to move "hand in hand." -->
+<p><strong>Empirical example and interpretation</strong>. Consider the aggregate income (<span class="math inline">\(Y_t\)</span>) and consumption (<span class="math inline">\(C_t\)</span>) of an economy. Empirically, both series are typically non-stationary. However, the Permanent Income Hypothesis suggests a long-run equilibrium relationship where a stable fraction of income is consumed, implying <span class="math inline">\(C_t = a Y_t, \, 0 &lt; a &lt; 1\)</span>. In logarithmic terms, this linearizes to: <span class="math display">\[\begin{equation*}
+\log(C_t) - \log(Y_t) = \log(a)
+\end{equation*}\]</span> This theoretical equilibrium provides the foundation for a cointegration model. While the individual series <span class="math inline">\(\log(C_t)\)</span> and <span class="math inline">\(\log(Y_t)\)</span> may wander indefinitely (stochastic trends), the linear combination <span class="math inline">\(u_t = \log(C_t) - \log(Y_t) - \log(a)\)</span> is expected to be stationary. Here, the residual <span class="math inline">\(u_t\)</span> represents the transient deviation from the long-run equilibrium. If consumption drifts too far from income, economic forces will eventually pull it back.</p>
+<p>&nbsp;</p>
+<p><strong>Non-uniqueness of CI-vectors</strong>. In the absence of restrictions, cointegrating (cointegration) vectors are not unique.</p>
+<ul>
+<li><p>As an example, in the bivariate example above, if <span class="math inline">\((1, -b)\)</span> is a CI-vector, then any multiple <span class="math inline">\((c, -cb)\)</span> is also a CI-vector, as the linear combination remains stationary.</p></li>
+<li><p>Why this matters? Because of this non-uniqueness, software (like R or EViews) usually reports ‘’normalized’’ cointegrating vectors. They typically set the first coefficient to 1 (just as we did with above for <span class="math inline">\(y_{1t}\)</span>) to make the results interpretable.</p></li>
+</ul>
+<p>While the vectors themselves are not unique, the <strong>cointegrating space</strong> (the subspace spanned by these vectors) is unique.</p>
+<!-- Generally, if $\boldsymbol{\beta}$ is a matrix of CI-vectors, then any non-singular linear transformation $\boldsymbol{\beta} \boldsymbol{\zeta}$ is also a valid CI-matrix.  -->
+<p>&nbsp;</p>
+</section>
+<section id="VECM" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="VECM"><span class="header-section-number">11.2</span> Cointegrated VAR and VECM model</h2>
+<p>Consider the <span class="math inline">\(K\)</span>-dimensional VAR(<span class="math inline">\(p\)</span>) process <span class="math display">\[\begin{equation*}
+    \boldsymbol{x}_{t} = \boldsymbol{A}_{1} \boldsymbol{x}_{t-1}+\cdots+ \boldsymbol{A}_{p} \boldsymbol{x}_{t-p} + \boldsymbol{u}_{t}, \quad t=1,2,...
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{u}_{t}\sim\mathsf{iid}(\boldsymbol{0},\boldsymbol{\Sigma}_u)\)</span>.</p>
+<p>First rewrite the model using the lag polynomial <span class="math inline">\(\boldsymbol{A}(\mathsf{B}) = \boldsymbol{I}_{K} - \boldsymbol{A}_{1}\mathsf{B}-\cdots-\boldsymbol{A}_{p}\mathsf{B}^{p}\)</span>. Using the algebraic result on lag polynomials (see Appendix A) similar to the univariate unit root case, we can decompose it as: <span class="math display">\[\begin{equation*}
+    \boldsymbol{A}\left(\mathsf{B}\right) = \boldsymbol{A} \left(1\right)\mathsf{B} + \left(\boldsymbol{I}_{K}-\sum_{j=1}^{p-1} \boldsymbol{\Lambda}_{j}\mathsf{B}^{j}\right)\Delta,
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{\Lambda}_{j} = -\boldsymbol{A}_{j+1}-\cdots - \boldsymbol{A}_{p}\)</span>. Substituting this back allows us to write the VAR(<span class="math inline">\(p\)</span>) as a <strong>Vector Error Correction Model (VECM) presentation</strong>: <span class="math display">\[\begin{equation*}
+    \Delta \boldsymbol{x}_{t} = \boldsymbol{\Theta} \boldsymbol{x}_{t-1} + \sum_{j=1}^{p-1} \boldsymbol{\Lambda}_{j} \Delta \boldsymbol{x}_{t-j} + \boldsymbol{u}_{t}, \quad t=1,2,...  
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{\Theta} =-\boldsymbol{A}(1)\)</span>.</p>
+<p>&nbsp;</p>
+<p><strong>The reduced rank condition</strong>. Now, assume that the standard stationarity condition (<span class="math inline">\(\det(\boldsymbol{A}(z))\neq 0\)</span> for all <span class="math inline">\(\left\vert z\right\vert\leq 1\)</span>) <strong>does not hold</strong>. Instead, assume the polynomial <span class="math inline">\(\det(\boldsymbol{A}(z))\)</span> has roots at <span class="math inline">\(z=1\)</span> (unit roots).</p>
+<ul>
+<li>Consequently, <span class="math inline">\(\det(\boldsymbol{A}(1))=0\)</span>, which implies that the matrix <span class="math inline">\(\boldsymbol{\Theta}\)</span> is singular (reduced rank). Let the rank of <span class="math inline">\(\boldsymbol{\Theta}\)</span> be <span class="math inline">\(r &lt; K\)</span>, that is, <span class="math inline">\(\mathsf{rank}(\boldsymbol{\Theta})=r\)</span>.</li>
+</ul>
+<p>Using a standard result from matrix algebra, any (<span class="math inline">\(K \times K\)</span>) matrix of rank <span class="math inline">\(r\)</span> can be decomposed into the product of two <span class="math inline">\(K \times r\)</span> matrices of rank <span class="math inline">\(r\)</span>: <span class="math display">\[\begin{equation*}
+    \boldsymbol{\Theta} = \boldsymbol{\alpha} \boldsymbol{\beta}^{\prime},
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{\alpha}\)</span> and <span class="math inline">\(\boldsymbol{\beta}\)</span> are <span class="math inline">\((K\times r)\)</span> matrices with <span class="math inline">\(\mathsf{rank}(\boldsymbol{\alpha})=\mathsf{rank}(\boldsymbol{\beta})=r\)</span>. Plugging this into the above model equation yields the <strong>VECM model</strong>: <span class="math display">\[\begin{equation*}
+    \Delta \boldsymbol{x}_{t} = \boldsymbol{\alpha} \boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t-1} + \sum_{j=1}^{p-1} \boldsymbol{\Lambda}_{j} \Delta \boldsymbol{x}_{t-j} + \boldsymbol{u}_{t}, \quad t=1,2,...  
+\end{equation*}\]</span></p>
+<p><strong>Interpretation</strong>: If we assume that <span class="math inline">\(\boldsymbol{x}_{t} \sim I(1)\)</span>, and <span class="math inline">\(\mathsf{E}(\boldsymbol{x}_{t})= \boldsymbol{0}\)</span>, then the term <span class="math inline">\(\Delta \boldsymbol{x}_{t}\)</span> is stationary (<span class="math inline">\(I(0)\)</span>). Since the error term <span class="math inline">\(\boldsymbol{u}_{t}\)</span> is also <span class="math inline">\(I(0)\)</span>, for the equation to balance, the term <span class="math inline">\(\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t-1}\)</span> must also be stationary (<span class="math inline">\(I(0)\)</span>). This implies that the process <span class="math inline">\(\boldsymbol{x}_{t}\)</span> is <strong>cointegrated</strong>.</p>
+<p><strong>Cointegrating vectors</strong>. The columns of the matrix <span class="math inline">\(\boldsymbol{\beta}\)</span> are the cointegrating vectors. The linear combinations <span class="math inline">\(\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t-1}\)</span> represent deviations from the long-run equilibrium relationships between the components of <span class="math inline">\(\boldsymbol{x}_{t}\)</span>.</p>
+<ul>
+<li><p>These deviations are called “equilibrium errors”.</p></li>
+<li><p>Since equilibrium errors are stationary, they fluctuate randomly around zero with constant variance. Once the system deviates from equilibrium, it tends to return to it.</p></li>
+</ul>
+<p><strong>Adjustment matrix</strong>. The parameter <span class="math inline">\(\boldsymbol{\alpha}\)</span> is often called the <strong>adjustment matrix</strong> (or loading/weight matrix).</p>
+<ul>
+<li><p>It describes how the errors <span class="math inline">\(\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t-1}\)</span> feed back into the system to affect the changes <span class="math inline">\(\Delta \boldsymbol{x}_{t}\)</span>.</p></li>
+<li><p>Essentially, <span class="math inline">\(\boldsymbol{\alpha}\)</span> determines the speed and direction of the correction mechanism that forces the non-stationary variables back toward their equilibrium relationship.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Example case</strong>: A simple VECM presentation of the VAR(2) model. The bivariate cointegrated VAR(2) model with one cointegrating vector (<span class="math inline">\(r = 1\)</span>) has the following VECM representation <span class="math display">\[\begin{eqnarray*}
+\left[ \begin{array}{c}
+\Delta x_{1t} \\
+\Delta x_{2t} \end{array} \right] &amp;=&amp;
+\left[ \begin{array}{c}
+\alpha_1   \\
+\alpha_2   \end{array} \right]
+\left[ \begin{array}{cc}
+\beta_1   &amp; \beta_2 \\
+\end{array} \right] \left[ \begin{array}{c}
+x_{1, t-1} \\
+x_{2, t-1} \end{array} \right] +
+\left[ \begin{array}{cc}
+\lambda_{11,1} &amp; \lambda_{12,1}  \\
+\lambda_{21,1} &amp; \lambda_{22,1}  \end{array} \right]
+\left[ \begin{array}{c}
+\Delta x_{1, t-1} \\
+\Delta x_{2, t-1} \end{array} \right] +
+\left[ \begin{array}{c}
+u_{1t} \\
+u_{2t} \end{array} \right] \\
+&amp;=&amp;
+\left[ \begin{array}{c}
+\alpha_1 (\beta_1 x_{1, t-1} + \beta_2 x_{2, t-1})   \\
+\alpha_2 (\beta_1 x_{1, t-1} + \beta_2 x_{2, t-1})  \end{array} \right]
++
+\left[ \begin{array}{cc}
+\lambda_{11,1} &amp; \lambda_{12,1}  \\
+\lambda_{21,1} &amp; \lambda_{22,1}  \end{array} \right]
+\left[ \begin{array}{c}
+\Delta x_{1, t-1} \\
+\Delta x_{2, t-1} \end{array} \right] +
+\left[ \begin{array}{c}
+u_{1t} \\
+u_{2t} \end{array} \right].
+\end{eqnarray*}\]</span></p>
+<p><!-- LISÄÄ ESIMERKKEJÄ (LUENNOLLE): LUTKEPOHL s. 249, kolme korkoa. Tästä %myös HT? --></p>
+<p>&nbsp;</p>
+<p><strong>The Granger Representation Theorem</strong>. In the derivation above, we assumed <span class="math inline">\(\boldsymbol{x}_{t} \sim I(1)\)</span>. The connection between the unit root assumption in <span class="math inline">\(\boldsymbol{A}(1)\)</span> and the VECM representation is formalized by the Granger Representation Theorem.</p>
+<ul>
+<li>Details are beyond the scope of this course.</li>
+</ul>
+<!-- **Assumptions:** 
+
+(i) If $\det(\boldsymbol{A}(z))=0$, then either $\left\vert z\right\vert > 1$ or $z=1$. (This ensures there are no explosive roots inside the unit circle).
+
+(ii) The rank condition holds: $\mathsf{rank}(\boldsymbol{\Theta})=r$, where $0 \leq r < K$, such that $\boldsymbol{\Theta} = \boldsymbol{\alpha} \boldsymbol{\beta}^{\prime}$.
+
+(iii) The number of unit roots in the system corresponds exactly to $K-r$.
+
+**Result:**
+Under these conditions, $\Delta \boldsymbol{x}_{t} \sim I(0)$ and the linear combinations $\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t} \sim I(0)$. With a suitable selection of initial values, both processes are stationary, consistent with the VECM equation defined above.
+
+More details on these conditions and definitions are discussed in the extra material below
+
+&nbsp;
+
+<div class="toggle-button" onclick="toggleCode('Extra5')">Extra: Details on Granger representation theorem </div>
+<div id="Extra5" style="display:none;">
+
+We start by introducing useful notation and making relevant assumptions.
+
+If $\boldsymbol{A}$ is an $K\times m$ matrix of rank $m$ $(m<K)$, then $\boldsymbol{A}_{\perp}$ denotes an $K\times (K-m)$ matrix of rank $K-m$ such that $\boldsymbol{A}^{\prime} \boldsymbol{A}_{\perp}=0$, i.e., the columns of the matrices $\boldsymbol{A}$ and $\boldsymbol{A}_{\perp}$ are orthogonal. This type of (non-unique) matrix is often called the orthogonal complement of $\boldsymbol{A}$ and its existence follows from well known results of linear algebra. Let $\boldsymbol{\Theta}$ and $\boldsymbol{A}(z)$ be defined as above. 
+
+# in equation \@ref(varprep) and the preceding discussion (compare with assumption # (\@ref(eq:azzero) and the discussion after it).
+
+\noindent (i) If $\det(\boldsymbol{A}(z))=0$, then $\left\vert z\right\vert>1$ or $z=1$. TSEK. TÄSSÄ ON JOKU ONGELMA TYPO?
+
+
+\noindent (ii) $\mathsf{r}(\boldsymbol{\Theta})=r$, $0\leq r < K$, so that $\boldsymbol{\Theta} = \boldsymbol{\alpha} \boldsymbol{\beta}^{\prime}$ holds.
+
+\noindent (iii) In part (i) the number of unit roots is precisely $K-r$.
+
+
+\noindent Part (i) of Assumption guarantees that the process $\boldsymbol{x}_{t}$ can be transformed to a (asymptotically) stationary process by taking sufficiently many differences. It accepts a unit root of the form $z=1$ and excludes other unit roots (complex ones and $z=-1$). Together parts (i) and (ii) imply that there are at least $K-r$ unit roots. Part (iii) specifies that the number of unit roots in precisely $K-r$. It can be proved that once parts (i) and (ii) are assumed, then part (iii) is equivalent to the condition
+\begin{equation*}
+    \mathsf{r}\left(\boldsymbol{\alpha}_{\perp}^{\prime}\sum_{j=1}^{p-1}\boldsymbol{\Lambda}_{j} \boldsymbol{\beta}_{\perp}\right) = K-r
+\end{equation*}
+where $\boldsymbol{\Lambda}_{1},...,\boldsymbol{\Lambda}_{p-1}$ are as above. In other words, the $\left(K-r\right)\times\left(L-r\right)$ matrix $\boldsymbol{\alpha}_{\perp}^{\prime}\sum_{j=1}^{p-1}\boldsymbol{\Lambda}_{j}\boldsymbol{\beta}_{\perp}$ is non-singular.
+
+**The Granger Representation Theorem**: When the VAR(p) process meets Assumption 1, then the following results hold.
+
+(i) $\Delta \boldsymbol{x}_{t}\sim \mathsf{I}(0)$ and $\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t}\sim \mathsf{I}(0)$ so that with suitable selection of initial values $\Delta \boldsymbol{x}_{t}$ and $\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t}$ are stationary. 
+
+(ii) The process $\boldsymbol{x}_{t}$ has the representation
+\begin{equation*}
+        \boldsymbol{x}_{t }= \boldsymbol{C} \sum_{j=1}^{t} \boldsymbol{u}_{j} + \sum_{j=0}^{\infty } \boldsymbol{C}_{j} \boldsymbol{u}_{t-j} + \boldsymbol{P}_{\boldsymbol{\beta}_{\perp}} \boldsymbol{x}_{0},\quad t=1,2,...,  
+\end{equation*}
+where $\boldsymbol{C}=\boldsymbol{\beta}_{\perp}\left(\boldsymbol{\alpha}_{\perp }^{\prime}\sum_{j=1}^{p-1} \boldsymbol{\Lambda}_{j} \boldsymbol{\beta}_{\perp}\right)\boldsymbol{\alpha}_{\perp}^{\prime}$, $\boldsymbol{P}_{\boldsymbol{\beta}_{\perp}} = \boldsymbol{\beta}_{\perp}\left(\boldsymbol{\beta}_{\perp }^{\prime} \boldsymbol{\beta}_{\perp}\right)^{-1}\boldsymbol{\beta}_{\perp}^{\prime}$ and $\left\Vert \boldsymbol{C}_{j}\right\Vert\rightarrow 0$ geometrically, as $j\rightarrow\infty$.
+
+Granger representation theorem shows that under Assumption 1 we have $\boldsymbol{x}_{t}\sim \mathsf{I}(1)$ and $\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t}\sim \mathsf{I}(0)$ as was concluded in the context of the error correction model. These results do not hold without Assumption 1 
+
+(iii). For example, when $p=2$ and $\boldsymbol{A}(z) = \boldsymbol{I}_{K}-2 \boldsymbol{I}_{K}z + \boldsymbol{I}_{K}z^{2} = (1-z)^{2} \boldsymbol{I}_{K}$, Assumptions 1 (i) and 2 (ii) hold, the latter with $r=0$, as $\boldsymbol{A}(1)=\boldsymbol{0}$. But there are more than $K$ unit roots so that Assumption (iii) does not hold and we do not get the result of Granger Representation Theorem, because $\boldsymbol{x}_{t}\sim \mathsf{I}(2)$.
+
+The results $\Delta \boldsymbol{x}_{t}\sim \mathsf{I}(0)$ and $\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t} = \sum_{j=0}^{\infty} \boldsymbol{C}_{j} \boldsymbol{u}_{t-j}\sim \mathsf{I}(0)$ are seen directly. Given the (reduced rank structure) of the matrix $\boldsymbol{C}$, it is natural to define the common trend components by using the random walk term $\boldsymbol{\alpha}_{\perp}^{\prime}\sum_{j=1}^{t} \boldsymbol{u}_{j}$ ($\left(K-r\right)\times 1$). There are $K-r$ stochastic trend components and $r$ stationary components (i.e., $\boldsymbol{\beta}^{\prime} \boldsymbol{x}_{t}$). Note however that we can define the common trend components in alternative ways (for example as $\boldsymbol{\beta}_{\perp}^{\prime} \boldsymbol{x}_{t}$).
+
+</div>
+-->
+<p>&nbsp;</p>
+<p><strong>Impulse responses in cointegrated systems</strong>. In the context of a stationary VAR process, impulse response functions are based on the coefficients <span class="math inline">\(\boldsymbol{\Psi}_{j}\)</span> of the VMA(<span class="math inline">\(\infty\)</span>) representation. While an <span class="math inline">\(I(1)\)</span> process does not have a standard VMA(<span class="math inline">\(\infty\)</span>) representation, we can still define the impulse responses using the same recursive logic.</p>
+<p>For a stationary VAR, the coefficient matrices are computed as: <span class="math display">\[\begin{equation*}
+    \boldsymbol{\Psi}_{j}=\sum_{i=1}^{j} \boldsymbol{\Psi}_{j-i} \boldsymbol{A}_{i},\ \boldsymbol{\Psi}_{0}=\boldsymbol{I}_{K},\ j=1,2,...,
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{A}_{i}=\boldsymbol{0}\)</span> when <span class="math inline">\(i&gt;p\)</span>. This formula remains well-defined even if the starting point is a cointegrated VAR(<span class="math inline">\(p\)</span>) process <span class="math inline">\(\boldsymbol{x}_{t}\)</span>. However, there is a fundamental difference in behavior:</p>
+<ul>
+<li><p><strong>Stationary case:</strong> Impulse responses converge to zero as <span class="math inline">\(j \to \infty\)</span>.</p></li>
+<li><p><strong>Integrated (<span class="math inline">\(I(1)\)</span>) case:</strong> The impulse responses <strong>do not</strong> converge to zero but instead usually converge towards a nonzero constant. This reflects the “permanent” nature of shocks in non-stationary cases. Consequently, the “total impact” (sum of matrix coefficients <span class="math inline">\(\boldsymbol{\Psi}_j\)</span>) often defined for stationary VARs cannot be defined for the <span class="math inline">\(I(1)\)</span> case, but the impulse response analysis itself remains a useful tool.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Adding Deterministic Terms</strong>. In the derivations above, we assumed the stationary components had zero mean, which is rarely realistic. We now extend the VECM to include deterministic terms like constants and trends.</p>
+<p><strong>Case 1: Nonzero mean</strong>. Consider the process <span class="math inline">\(\boldsymbol{y}_{t} = \boldsymbol{\mu} + \boldsymbol{x}_{t}\)</span>, where <span class="math inline">\(\boldsymbol{x}_{t}\)</span> follows a VAR(<span class="math inline">\(p\)</span>) and satisfies the Granger Representation Theorem. The resulting VECM is: <span class="math display">\[\begin{equation*}
+    \Delta \boldsymbol{y}_{t} = \boldsymbol{\alpha} \left(\boldsymbol{\beta}^{\prime} \boldsymbol{y}_{t-1}-\boldsymbol{\nu}\right) + \sum_{j=1}^{p-1}\boldsymbol{\Lambda}_{j}\Delta \boldsymbol{y}_{t-j} + \boldsymbol{u}_{t},
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{\nu} = \boldsymbol{\beta}^{\prime} \boldsymbol{\mu}\)</span>.</p>
+<ul>
+<li><strong>Interpretation:</strong> The term <span class="math inline">\(\boldsymbol{\nu}\)</span> represents the expectation of the stationary linear combinations. The system corrects towards the equilibrium <span class="math inline">\(\boldsymbol{\beta}^{\prime} \boldsymbol{y}_{t-1} = \boldsymbol{\nu}\)</span>.</li>
+</ul>
+<p><strong>Case 2: Linear trend</strong>. A more general model includes a linear trend: <span class="math inline">\(\boldsymbol{y}_{t} = \boldsymbol{\mu}_{0} + \boldsymbol{\mu}_{1}t + \boldsymbol{x}_{t}\)</span>. The corresponding VECM is: <span class="math display">\[\begin{equation*}
+    \Delta \boldsymbol{y}_{t} = \boldsymbol{\nu}_{0} + \boldsymbol{\alpha} \left(\boldsymbol{\beta}^{\prime} \boldsymbol{y}_{t-1}-\boldsymbol{\nu}_{1}(t-1)\right) + \sum_{j=1}^{p-1} \boldsymbol{\Lambda}_{j} \Delta \boldsymbol{y}_{t-j} + \boldsymbol{u}_{t},
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{\nu}_{1} = \boldsymbol{\beta}^{\prime}\boldsymbol{\mu}_{1}\)</span>.</p>
+<ul>
+<li>In this general specification, the linear combinations <span class="math inline">\(\boldsymbol{\beta}^{\prime} \boldsymbol{y}_{t}\)</span> are <strong>not</strong> stationary because their expectation contains a linear trend component.</li>
+</ul>
+<!-- **Restricted trend**: An important special case arises if the parameter $\boldsymbol{\mu}_{1}$ satisfies the condition $\boldsymbol{\mu}_{1} = \boldsymbol{\beta}_{\perp} \boldsymbol{\mu}_{\ast}$ (where $\boldsymbol{\mu}_{\ast}\neq \boldsymbol{0}$). This implies $\boldsymbol{\nu}_{1} = \boldsymbol{0}$, simplifying the model to: -->
+<p><strong>Restricted trend</strong>: An important special case arises if <span class="math inline">\(\boldsymbol{\nu}_{1} = \boldsymbol{0}\)</span>, simplifying the model to: <span class="math display">\[\begin{equation*}
+    \Delta \boldsymbol{y}_{t} = \boldsymbol{\nu}_{0} + \boldsymbol{\alpha} \boldsymbol{\beta}^{\prime} \boldsymbol{y}_{t-1} + \sum_{j=1}^{p-1} \boldsymbol{\Lambda}_{j} \Delta \boldsymbol{y}_{t-j} + \boldsymbol{u}_{t}.
+\end{equation*}\]</span> Here, the cointegrating relations <span class="math inline">\(\boldsymbol{\beta}^{\prime} \boldsymbol{y}_{t-1}\)</span> are stationary around a constant, even though the variables <span class="math inline">\(\boldsymbol{y}_{t}\)</span> themselves drift with a linear trend.</p>
+<p>&nbsp;</p>
+</section>
+<section id="cointegration-relations-and-identification" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="cointegration-relations-and-identification"><span class="header-section-number">11.3</span> Cointegration relations and identification</h2>
+<p>As discussed, cointegrating vectors are not unique: if the <span class="math inline">\(r \times K\)</span> matrix <span class="math inline">\(\boldsymbol{\beta}^{\prime}\)</span> satisfies <span class="math inline">\(\boldsymbol{\beta}^{\prime} \boldsymbol{y}_t \sim I(0)\)</span>, then <span class="math inline">\(\boldsymbol{C} \boldsymbol{\beta}^{\prime} \boldsymbol{y}_t\)</span> is also <span class="math inline">\(I(0)\)</span> for any non-singular <span class="math inline">\(r \times r\)</span> matrix <span class="math inline">\(\boldsymbol{C}\)</span>. To interpret the model, we must impose <strong>restrictions</strong> or <strong>normalization</strong> to achieve identification.</p>
+<p>Because the cointegrating matrix <span class="math inline">\(\boldsymbol{\beta}\)</span> is not uniquely determined, we must impose restrictions to identify the parameters. A standard approach is the <strong>normalization strategy</strong>.</p>
+<p>We begin by partitioning the <span class="math inline">\(K\)</span>-dimensional vector of variables <span class="math inline">\(\boldsymbol{y}_t\)</span> into two groups: <span class="math display">\[\begin{equation*}
+\boldsymbol{y}_t = \left[ \begin{array}{c} \boldsymbol{z}_t \\ \boldsymbol{q}_t \end{array} \right],
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{z}_t\)</span> is <span class="math inline">\(r \times 1\)</span> and <span class="math inline">\(\boldsymbol{q}_t\)</span> is <span class="math inline">\((K-r) \times 1\)</span>.</p>
+<p>A common identification assumption is to normalize <span class="math inline">\(\boldsymbol{\beta}\)</span> such that the first <span class="math inline">\(r\)</span> rows form an identity matrix: <span class="math display">\[\begin{equation*}
+\boldsymbol{\beta}^{\prime} = [\boldsymbol{I}_r \quad : \quad \boldsymbol{A}],
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{I}_r\)</span> is an <span class="math inline">\(r \times r\)</span> identity matrix and <span class="math inline">\(\boldsymbol{A}\)</span> is an <span class="math inline">\(r \times (K-r)\)</span> matrix of coefficients to be estimated. Key statistical implications:</p>
+<ul>
+<li><p>Linear independence: This normalization is valid if and only if the <span class="math inline">\(r\)</span> variables chosen for <span class="math inline">\(\boldsymbol{z}_t\)</span> are linearly independent in the cointegration space. Mathematically, the <span class="math inline">\(r \times r\)</span> sub-matrix of <span class="math inline">\(\boldsymbol{\beta}\)</span> corresponding to the variables in <span class="math inline">\(\boldsymbol{z}_t\)</span> must be non-singular (invertible).</p></li>
+<li><p>Common stochastic trends: In a system with <span class="math inline">\(K\)</span> variables and <span class="math inline">\(r\)</span> cointegrating equations, there are exactly <span class="math inline">\(K-r\)</span> independent sources of non-stationarity. These are known as the common stochastic trends. By partitioning the model this way, we treat the sub-process <span class="math inline">\(\boldsymbol{q}_t\)</span> as the “engine” of the system; it contains the <span class="math inline">\(K-r\)</span> trends that drive the long-run path of the entire vector.</p></li>
+<li><p>Economic interpretation: This structure often aligns with economic theories where <span class="math inline">\(r\)</span> variables (in <span class="math inline">\(\boldsymbol{z}_t\)</span>) adjust to an equilibrium determined by the remaining <span class="math inline">\(K-r\)</span> variables (in <span class="math inline">\(\boldsymbol{q}_t\)</span>).</p>
+<ul>
+<li>For example, if <span class="math inline">\(r=1\)</span>, we can express the long-run relation as: <span class="math display">\[\begin{equation*}
+z_{1,t} = -a_{11}q_{1,t} - a_{12}q_{2,t} \dots + \text{error}_t
+\end{equation*}\]</span> Here, <span class="math inline">\(z_{1,t}\)</span> ‘’follows’’ the stochastic trends generated by the <span class="math inline">\(\boldsymbol{q}_t\)</span> variables. If the ‘’drivers’’ in <span class="math inline">\(\boldsymbol{q}_t\)</span> shift, <span class="math inline">\(z_{1,t}\)</span> must eventually adjust to maintain the equilibrium.</li>
+</ul></li>
+</ul>
+<p><strong>Estimation and inference</strong>. The asymptotic theory for <span class="math inline">\(I(1)\)</span> processes is non-standard. However, standard procedures exist for VECM estimation.</p>
+<ul>
+<li><p>Assuming the cointegrating rank <span class="math inline">\(r\)</span> is known, the VECM parameters can be estimated using maximum likelihood (Johansen’s Reduced Rank Regression). This method can also handle models with specific structural restrictions on the cointegrating vectors.</p></li>
+<li><p><strong>Lag length selection</strong>: Typically, one first selects the lag length <span class="math inline">\(p\)</span> for the unrestricted VAR (in levels) using information criteria (AIC, BIC, HQ) or sequential testing, and then estimates the VECM with <span class="math inline">\(p-1\)</span> lags in differences.</p></li>
+</ul>
+<p><strong>Hypothesis testing</strong>: Once the model is estimated and identified (e.g., using the normalization <span class="math inline">\(\boldsymbol{\beta}^{\prime} = [\boldsymbol{I}_r \, : \, \boldsymbol{A}]\)</span>):</p>
+<ul>
+<li><p><strong>t-tests:</strong> The standard <span class="math inline">\(t\)</span>-test can be used to evaluate the significance of individual coefficients in <span class="math inline">\(\boldsymbol{\alpha}\)</span> or the non-restricted part of <span class="math inline">\(\boldsymbol{\beta}\)</span> (<span class="math inline">\(\boldsymbol{A}\)</span>), as these estimates are asymptotically normal.</p></li>
+<li><p><strong>Wald tests</strong>: Hypotheses restricting multiple parameters simultaneously can be tested using the Wald test statistic, which follows an asymptotic <span class="math inline">\(\chi^2\)</span>-distribution with degrees of freedom equal to the number of restrictions.</p></li>
+</ul>
+<p><strong>Diagnostic checks</strong>: Standard diagnostic checks used for stationary VAR models (e.g., Portmanteau tests for residual autocorrelation, ARCH-LM tests for heteroskedasticity) are also applicable to VECMs. Additionally, plotting the estimated cointegration relations—the residuals <span class="math inline">\(\widehat{\boldsymbol{\beta}}^{\prime} \boldsymbol{y}_t\)</span>—provides visual verification that the relations are indeed stationary.</p>
+<!-- &nbsp; 
+
+<div class="toggle-button" onclick="toggleCode('Extra6')">Extra: Uniqueness of Cointegrating Vectors [PÄIV, notaatio </div>
+<div id="Extra6" style="display:none;">
+
+**Uniqueness of Cointegrating Vectors**. It was noted earlier that CI-vectors are not unique. This is seen in the error correction model by noticing that $\boldsymbol{\alpha}\boldsymbol{\beta}^{\prime}=\left(\boldsymbol{\alpha}\boldsymbol{\zeta}^{-1}\right)\left(\boldsymbol{\beta}\boldsymbol{\zeta}^{\prime}\right)^{\prime}$, where $\boldsymbol{\zeta}$ can be any non-singular $r\times r$  matrix. The same is seen to hold for the error correction models (different exact formulations as presented above) when we make the transformations $\boldsymbol{\nu}\rightarrow \boldsymbol{\zeta}\boldsymbol{\nu}$ and $\boldsymbol{\nu}_{1}\rightarrow \boldsymbol{\zeta}\boldsymbol{\nu}_{1}$. Uniqueness, which is convenient from the point of view of interpretation, can be attained by restricting the cointegrating vectors. A simple approach is described.
+
+Partition $\boldsymbol{y}_{t}=(\boldsymbol{z}_{t},\boldsymbol{q}_{t})$, where $\boldsymbol{z}_{t}$ is $r\times 1$ and $\boldsymbol{q}_{t}$ is $(K-r)\times 1$ vector. Under what conditions we can choose the (unique) cointegrating matrix $\boldsymbol{\beta}^{\prime }=[\boldsymbol{I}_{r}:\boldsymbol{A}]$, where $\boldsymbol{A}$ is some $r\times\left(K-r\right)$ matrix. As $\mathsf{r}\left(\boldsymbol{\beta}\right)=r$, the $K\times r$ matrix $\boldsymbol{\beta}$ has always $r$ linearly independent rows and given that the columns of the matrix $\boldsymbol{\beta}\boldsymbol{\zeta}$ are cointegrating vectors we can choose $\boldsymbol{\beta}^{\prime}=[\boldsymbol{I}_{r}:\boldsymbol{A}]$ if and only if the $r$ first rows of the matrix $\boldsymbol{\beta}$ are linearly independent. This is equivalent to assuming that $\boldsymbol{\beta}^{\prime}=[\boldsymbol{\beta}_{(1)}^{\prime} : \boldsymbol{\beta}_{(2)}^{\prime}]$, where $\boldsymbol{\beta}_{(1)}$ ($r\times r$) is non-singular. If we restrict to the case $\boldsymbol{\beta}_{(1)} = \boldsymbol{I}_{r}$, we force the above transformation matrix $\boldsymbol{\zeta}=\boldsymbol{I}_{r}$, which implies that the expression $\boldsymbol{\beta}^{\prime}=[\boldsymbol{I}_{r}:\boldsymbol{A}]$ is unique.
+
+It is easy to see that the choice $\boldsymbol{\beta}_{(1)} = \boldsymbol{I}_{r}$ is possible if and only if the process $\boldsymbol{q}_{t}$ is not cointegrated. This can be seen by noting that we can write $\boldsymbol{\beta}^{\prime}=[\boldsymbol{I}_{r}:\boldsymbol{A}]$ if and only if the vector $\boldsymbol{b}=[\boldsymbol{0}:\boldsymbol{a}^{\prime}]^{\prime}$, $\boldsymbol{a}$ $(K-r)\times 1$ does not belong to the cointegrating space, that is, $\boldsymbol{b}$ is not a cointegrating vector. This again is means that $\boldsymbol{q}_{t}$ cannot be cointegrated. In practise, the choice $\boldsymbol{\beta}^{\prime}=[\boldsymbol{I}_{r}:\boldsymbol{A}]$ entails information on the structure of the cointegrating space so that we can make the partition $\boldsymbol{y}_{t}=(\boldsymbol{z}_{t},\boldsymbol{q}_{t})$ (possibly after changing the order of the variables). This information may derive from background theory or $\boldsymbol{q}_{t}$ may determine the nonstationarity of $\boldsymbol{y}_{t}$, that is, it works as the common trend.
+
+The above described approach for attaining unique CI-vectors can be generalized as follows. If we assume that $\mathsf{rank}\left(\boldsymbol{c}^{\prime}\boldsymbol{\beta}\right)=r$ for some chosen $K\times r$ matrix $\boldsymbol{c}$, then $\boldsymbol{\beta}_{c}= \boldsymbol{\beta} \left(\boldsymbol{c}^{\prime} \boldsymbol{\beta}\right)^{-1}$ is unique. By choosing $\boldsymbol{c}^{\prime} = [\boldsymbol{I}_{r}:\boldsymbol{0}]$, we obtain the above approach as a special case. This type of restrictions are often regarded as normalization restrictions on the CI-vectors. Only a minimum amount of restrictions is imposed to attain uniqueness. If there are more reasonable restrictions (for example, based on some background theory), we can impose more restrictions than needed for uniqueness. In the case of the above example, the CI-vectors are assumed to satisfy
+\begin{equation*}
+    \boldsymbol{\beta}_{i} = \boldsymbol{H}_{i} \boldsymbol{\delta}_{i}+ \boldsymbol{a}_{i}, \quad i=1,...,r
+\end{equation*}
+where $\boldsymbol{H}_{i}$ ($K\times s_{i}$) and $\boldsymbol{a}_{i}$ ($K\times 1$) are known and $\mathsf{r}\left(\boldsymbol{H}_{i}\right)=s_{i}$. When CI-vectors are specified in this way, uniqueness requires additional restrictions that are rather complicated to express and are omitted here.
+
+</div>-->
+<p>&nbsp;</p>
+</section>
+<section id="TestingCI" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="TestingCI"><span class="header-section-number">11.4</span> Testing cointegration</h2>
+<p>Determining the number of cointegration relationships is of particular interest in different applications.</p>
+<p><strong>Engle-Granger approach</strong>. At times the cointegration vector is known based on some (economic) theory.</p>
+<ul>
+<li>See, e.g., the previous examples on the consumption-income relationship.</li>
+</ul>
+<p>In this case, construct the cointegration relationship <span class="math inline">\(z_t = \boldsymbol{\beta}^{\prime} \boldsymbol{y}_t\)</span> and test whether the null hypothesis of no cointegration will be rejected.</p>
+<p>If it is known that there exists at most one cointegrating vector, a simple approach to test for the existence of cointegration is the Engle-Granger approach.</p>
+<ul>
+<li><p>Run a (linear) regression of <span class="math inline">\(y_{1t}\)</span> (the first element of <span class="math inline">\(\boldsymbol{y}_t\)</span>) on the other <span class="math inline">\(K-1\)</span> variables <span class="math inline">\(y_{2t}, \ldots, y_{Kt}\)</span> and testing the unit root in the residuals.</p></li>
+<li><p>This is based on the idea of the normalization introduced above.</p></li>
+<li><p>Unit root testing can be based on the ADF test (critical values are, however, different!). If the unit root hypothesis is rejected, the hypothesis of no-cointegration is also rejected.</p></li>
+</ul>
+<p>The above static regression gives consistent estimates of the cointegrating vector.</p>
+<ul>
+<li>In a second stage, the error-correction model can be estimated using the estimated cointegrating vector from the first stage.</li>
+</ul>
+<p>There are, however, problems with this Engle-Granger approach:</p>
+<ul>
+<li><p>The results of the tests are sensitive to the left-hand side variable of the regression, that is, to the normalization applied to the cointegrating vector.</p></li>
+<li><p>If the cointegrating vector happens not to involve <span class="math inline">\(y_{1t}\)</span> but only <span class="math inline">\(y_{2t}, \ldots, y_{Kt}\)</span>, the above test is not appropriate.</p></li>
+<li><p>The residual-based test tends to lack power because it does not exploit all the available information about the dynamic interactions of the variables.</p></li>
+<li><p>More than one cointegrating relationship may exist.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Johansen approach</strong>. An alternative approach (that does not suffer from the above drawbacks) was proposed by Johansen (1988), who developed a maximum likelihood estimation procedure.</p>
+<ul>
+<li><p>This also allows one to test for the number of cointegrating relations.</p></li>
+<li><p>The details of the Johansen procedure are complex and we shall only focus on the main aspects (for empirical analysis).</p></li>
+</ul>
+<p>The first step in the Johansen approach involves testing hypotheses about the rank of the long-run matrix <span class="math inline">\(\boldsymbol{\Theta}\)</span>, or equivalently the number of columns in <span class="math inline">\(\boldsymbol{\beta}\)</span> (<span class="math inline">\(K \times r\)</span>).</p>
+<ul>
+<li>Imposing the restriction <span class="math inline">\(\boldsymbol{\alpha} \boldsymbol{\beta}^{\prime}\)</span> and for a given <span class="math inline">\(r\)</span>, it can be shown that the maximum likelihood estimate for <span class="math inline">\(\boldsymbol{\beta}\)</span> in the VECM equals the matrix containing the <span class="math inline">\(r\)</span> eigenvectors corresponding to the <span class="math inline">\(r\)</span> largest (estimated) eigenvalues of a <span class="math inline">\(K \times r\)</span> matrix.</li>
+</ul>
+<p>Let us denote the (theoretical) eigenvalues of this matrix in decreasing order as <span class="math inline">\(\lambda_1 \ge \lambda_2 \ge \, \cdots \, \ge \lambda_K\)</span>.</p>
+<ul>
+<li>If there are <span class="math inline">\(r\)</span> cointegrating relationships (and <span class="math inline">\(\boldsymbol{\Theta}\)</span> has rank <span class="math inline">\(r\)</span>), it must be the case that <span class="math inline">\(\mathrm{log} (1-\lambda_j) = 0\)</span> for the smallest <span class="math inline">\(K-r\)</span> eigenvalues, that is, for <span class="math inline">\(j = r+1,r+2, \ldots, K\)</span>.</li>
+</ul>
+<p><strong>(Johansen approach): trace test</strong></p>
+<p>We can use the (estimated) eigenvalues <span class="math inline">\(\widehat{\lambda}_1 &gt; \widehat{\lambda}_2 &gt; \, \cdots \, &gt; \widehat{\lambda}_K\)</span> to test hypotheses about the rank of <span class="math inline">\(\boldsymbol{\Theta}\)</span>.</p>
+<p>For example, the hypothesis <span class="math inline">\(H_0: r \le r_0\)</span> against <span class="math inline">\(H_1: r_0 &lt; r \le K\)</span> can be tested using the likelihood ratio (LR) test statistic <span class="math display">\[\begin{equation*}
+\mathrm{LR} = - T \sum_{j=r_0+1}^{K} \mathrm{log} (1-\widehat{\lambda}_j).
+\end{equation*}\]</span> Trace test checks whether the smallest <span class="math inline">\(K-r_0\)</span> eigenvalues are significantly different from zero.</p>
+<ul>
+<li>The trace (and the following maximum eigenvalue) test statistic has generally a nonstandard asymptotic null distribution (do not have the usual <span class="math inline">\(\chi^2\)</span>-distribution).</li>
+</ul>
+<p><strong>(Johansen approach): maximum eigenvalue test</strong></p>
+<p>We can test <span class="math inline">\(H_0: r \le r_0\)</span> against <span class="math inline">\(H_1: r = r_0+1\)</span> using the maximum eigenvalue test statistic <span class="math display">\[\begin{equation*}
+\mathrm{LR}_{max} = - T \, \mathrm{log} (1-\widehat{\lambda}_{r_0+1}).
+\end{equation*}\]</span></p>
+<p>It is based on the estimated <span class="math inline">\((r_0 +1)\)</span>th largest eigenvalue.</p>
+<p>As with the unit root tests, the null distributions of both the trace and maximum eigenvalue tests depend on the fact whether a constant (and a time trend) are included in.</p>
+<p>&nbsp;</p>
+<p><strong>Determining the cointegrating rank</strong>. The cointegration rank may be specified by means of a sequential testing procedure, starting from a test of no cointegration (<span class="math inline">\(r = 0\)</span> or rank(<span class="math inline">\(\boldsymbol{\Theta}\)</span>) = 0) up to a test of full stationarity (<span class="math inline">\(r = K\)</span> or rank(<span class="math inline">\(\boldsymbol{\Theta}\)</span>) = <span class="math inline">\(K\)</span>).</p>
+<p>The full sequence of hypotheses is <span class="math display">\[\begin{eqnarray*}
+H_0(0) &amp;:&amp; \mathrm{rank}(\boldsymbol{\Theta}) = 0 \,\, \mathrm{vs} \,\, H_1:\mathrm{rank}(\boldsymbol{\Theta}) &gt; 0 \\
+H_0(1) &amp;:&amp; \mathrm{rank}(\boldsymbol{\Theta}) = 1 \,\, \mathrm{vs} \,\, H_1:\mathrm{rank}(\boldsymbol{\Theta}) &gt; 1 \\
+&amp; \vdots &amp;  \\
+H_0(K-1) &amp;:&amp; \mathrm{rank}(\boldsymbol{\Theta}) = K-1 \,\, \mathrm{vs} \,\, H_1:\mathrm{rank}(\boldsymbol{\Theta})=K.
+\end{eqnarray*}\]</span> Each hypothesis can be tested by the trace or the maximum eigenvalue test. The testing sequence terminates, and the corresponding cointegrating rank is selected, when the null hypothesis cannot be rejected for the first time.</p>
+<ul>
+<li><p>If the first hypothesis, <span class="math inline">\(H_0(0)\)</span>, cannot be rejected, a VAR model for the differenced series is considered.</p></li>
+<li><p>Rejection of all the hypotheses implies a VAR model for the levels.</p></li>
+</ul>
+<p>&nbsp;</p>
+</section>
+<section id="empirical-example" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="empirical-example"><span class="header-section-number">11.5</span> Empirical example</h2>
+<p>Let us consider the four variable Canada dataset available in R (vars package).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Canada_data.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<center>
+Figure: The four variables are the log of employment (<span class="math inline">\(e\)</span>), labour productivity (<span class="math inline">\(prod\)</span>), log real wage (<span class="math inline">\(rw\)</span>) and unemployment rate (<span class="math inline">\(U\)</span>). Sample period: 1980:Q1–2000:Q4.
+</center>
+<p>&nbsp;</p>
+<p>After preliminary data inspection (summary statistics and time series plots), it is meaningful to conduct unit root tests (here ADF tests).</p>
+<p>ADF unit root tests with different deterministic components (we assume, for simplicity, and throughout four lags in the ADF test regression):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Variable     Determ. terms       Test stat.   p-value</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                        </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>prod         constant, trend       -2.21      0.478</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>\Delta prod  constant              -4.73      0.000</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>e            constant, trend       -2.84      0.189</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>\Delta e     constant              -4.42      0.000</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>U            constant              -2.32      0.170</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>\Delta U     constant              -3.84      0.003</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>rw           constant, trend       -2.12      0.525</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>\Delta rw    constant              -3.04      0.035</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It can be concluded that all the four time series can be threated as integrated of order one (i.e.&nbsp;<span class="math inline">\(I(1)\)</span> processes) based on the visual inspection and the results of ADF tests.</p>
+<p>The lag length selections <span class="math inline">\(p\)</span> in the VAR(<span class="math inline">\(p\)</span>) when including the constant and deterministic trend: AIC=3, HQ=2 and BIC=1.</p>
+<p>&nbsp;</p>
+<p><strong>Testing cointegration</strong>. Let us consider an example of cointegration analysis. We proceed with lag length specifications of <span class="math inline">\(p=2\)</span> and <span class="math inline">\(p=3\)</span>, including a deterministic trend. We test the cointegration rank using the Trace test</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Test statistics Critical values</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>H_0       p=2    p=3      10%     5%     1%</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>r= 0      86.12  84.92   59.14   62.99  70.05  </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>r&lt;=1      37.33  36.42   39.06   42.44  48.45  </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>r&lt;=2      15.65  18.72   22.76   25.32  30.45  </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>r&lt;=3      4.10   3.85    10.49   12.25  16.26  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>These results indicate the presence of one cointegration relationship (<span class="math inline">\(r=1\)</span>). In the sequential testing procedure, the null hypothesis <span class="math inline">\(H_0: \mathrm{rank}(\boldsymbol{\Theta})=0\)</span> is clearly rejected. However, the subsequent null hypothesis, <span class="math inline">\(H_0: \mathrm{rank}(\boldsymbol{\Theta}) \le 1\)</span>, cannot be rejected against the alternative of higher-order cointegration.</p>
+<ul>
+<li>At times the “critical values” above are labeled to the corresponding percentage points (90, 95 and 99%) of the (non-standard) asymptotic distribution (the same numbers).</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Estimation results</strong>. The VECM estimation yields the following results for the cointegrating vector and the adjustment coefficients. (See also the attached R code. All the details are not reported here)</p>
+<ol type="1">
+<li>The long-run relationship: The estimated cointegration relationship, normalized on the variable <span class="math inline">\(rw\)</span> (real wages), is given by:<span class="math display">\[\begin{equation}ec_{t-1} = rw_{t-1} + \underset{(0.61)}{0.545} , prod_{t-1} - \underset{(0.68)}{0.013} , e_{t-1} + \underset{(1.45)}{1.727} , U_{t-1} - \underset{(0.28)}{0.709} \, (t-1)\end{equation}\]</span> Standard errors are reported in parentheses underneath the coefficients. The <span class="math inline">\(t\)</span>-values for the long-run coefficients lead the following statistical conclusions:</li>
+</ol>
+<ul>
+<li><p>Only the deterministic trend coefficient is significantly different from zero at the 5% level (<span class="math inline">\(|t| &gt; 1.96\)</span>).</p></li>
+<li><p>The coefficients for productivity (<span class="math inline">\(prod\)</span>), employment (<span class="math inline">\(e\)</span>), and unemployment (<span class="math inline">\(U\)</span>) are not statistically significant in this specific specification, suggesting that the long-run equilibrium is driven largely by the trend component relative to real wages.</p></li>
+</ul>
+<ol start="2" type="1">
+<li>The adjustment coefficients (<span class="math inline">\(\boldsymbol{\alpha}\)</span>): The estimated loading matrix <span class="math inline">\(\widehat{\boldsymbol{\alpha}}\)</span> describes how each variable adjusts to the disequilibrium <span class="math inline">\(ec_{t-1}\)</span>. The estimates and their corresponding <span class="math inline">\(t\)</span>-values: <span class="math display">\[
+\widehat{\boldsymbol{\alpha}} =
+\begin{pmatrix}
+-0.085 \\
+-0.012 \\
+-0.016 \\
+-0.009
+\end{pmatrix}
+\begin{array}{ll}
+(t = -5.71) &amp; \leftarrow \Delta rw_t \\
+(t = -0.92) &amp; \leftarrow \Delta prod_t \\
+(t = -2.16) &amp; \leftarrow \Delta e_t \\
+(t = -1.49) &amp; \leftarrow \Delta U_t
+\end{array}
+\]</span></li>
+</ol>
+<p>Interpretation:</p>
+<ul>
+<li><p>Significant adjustment (<span class="math inline">\(rw\)</span> and <span class="math inline">\(e\)</span>): The adjustment coefficient for real wages (<span class="math inline">\(\Delta rw\)</span>) is <span class="math inline">\(-0.085\)</span> with a highly significant <span class="math inline">\(t\)</span>-value of <span class="math inline">\(-5.71\)</span>. This implies that real wages actively adjust to correct deviations from the long-run path. Employment (<span class="math inline">\(\Delta e\)</span>) also shows significant adjustment (<span class="math inline">\(t = -2.16\)</span>) at the 5% level.</p></li>
+<li><p><span class="math inline">\(prod\)</span> and <span class="math inline">\(U\)</span>): The adjustment coefficients for productivity (<span class="math inline">\(\Delta prod\)</span>, <span class="math inline">\(t=-0.92\)</span>) and unemployment (<span class="math inline">\(\Delta U\)</span>, <span class="math inline">\(t=-1.49\)</span>) are not statistically different from zero. This suggests that these variables are weakly exogenous with respect to the long-run parameters. In other words, shocks to productivity and unemployment drive the system’s long-run movements, but these variables do not correct themselves to restore equilibrium.</p></li>
+</ul>
+<ol start="3" type="1">
+<li>Short-run dynamics: The regression output summary (not fully detailed here for brevity) shows the short-run dynamics via the lagged differenced terms (<span class="math inline">\(\boldsymbol{\Lambda}_j\)</span>). Notably:</li>
+</ol>
+<ul>
+<li><p>The first lag of employment (<span class="math inline">\(\Delta e_{t-1}\)</span>) is a significant predictor for current unemployment changes (<span class="math inline">\(\Delta U_t\)</span>), with a strong negative coefficient (<span class="math inline">\(-0.65\)</span>, <span class="math inline">\(t=-5.09\)</span>).</p></li>
+<li><p>Productivity growth (<span class="math inline">\(\Delta prod_t\)</span>) exhibits some autoregressive behavior, as indicated by the significance of its own lags.</p></li>
+</ul>
+<!-- %\begin{frame}% 
+%\frametitle{Empirical example}
+%\framesubtitle{Canada macro dataset, 1980:Q1--2000:Q4}
+
+%\begin{example}
+
+%\begin{stepitemize}
+
+%\item Let us specify the VECM model with one cointegration relation, the lag length $p=3$ and a linear trend (in the cointegration relationship).
+
+%\item The estimated cointegration vector and the loading parameters (with $t$-statistics in parentheses)
+%\begin{table}[h!]                      
+%\centering
+%\scriptsize
+% %\caption{}                       
+% %\label{tbl:}                         
+%\begin{tabular}{cccccc}                        
+%\hline                     
+%\hline     
+%   & $rw$  & $prod$    & $e$   & $U$    &   \\
+%      \hline                       
+%$\beta^{\prime}$   &  $\underset{}{1}$ & $\underset{(0.90)}{0.545}$    & $\underset{(-0.02)}{-0.013}$  & $\underset{(1.19)}{1.727}$ &  \\
+%$\alpha^{\prime}$  &  $\underset{(-5.71)}{-0.085}$ & $\underset{(-0.92)}{-0.012}$  & $\underset{(-2.16)}{-0.016}$  & $\underset{(-1.49)}{-0.009}$ &  \\
+%\hline                     
+%\hline                     
+%\end{tabular}  \\                  
+%\end{table}
+
+%\end{stepitemize}
+
+%\end{example}
+
+%\transboxout%
+%\end{frame}
+-->
+<p>&nbsp;</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ATSE-ch10.html" class="pagination-link" aria-label="Granger and instantaneous causality">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ATSE-ch12.html" class="pagination-link" aria-label="Big Dependent Data">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

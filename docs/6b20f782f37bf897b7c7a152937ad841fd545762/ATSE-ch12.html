@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Forecasting with VAR model – Advanced Time Series Econometrics (ATSE)</title>
+<title>12&nbsp; Big Dependent Data – Advanced Time Series Econometrics (ATSE)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ATSE-ch10.html" rel="next">
-<link href="./ATSE-ch8.html" rel="prev">
+<link href="./ATSE-ch13.html" rel="next">
+<link href="./ATSE-ch11.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -149,7 +149,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch9.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ATSE-ch12.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -235,7 +235,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ATSE-ch9.html" class="sidebar-item-text sidebar-link active">
+  <a href="./ATSE-ch9.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></span></a>
   </div>
 </li>
@@ -253,7 +253,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ATSE-ch12.html" class="sidebar-item-text sidebar-link">
+  <a href="./ATSE-ch12.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span></a>
   </div>
 </li>
@@ -274,15 +274,23 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#Bigbackground" id="toc-Bigbackground" class="nav-link active" data-scroll-target="#Bigbackground"><span class="header-section-number">12.1</span> Background</a></li>
+  <li><a href="#Factormodels" id="toc-Factormodels" class="nav-link" data-scroll-target="#Factormodels"><span class="header-section-number">12.2</span> Factor models</a></li>
+  <li><a href="#FAVAR" id="toc-FAVAR" class="nav-link" data-scroll-target="#FAVAR"><span class="header-section-number">12.3</span> FAVAR Model</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="VARforecasting" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Forecasting with VAR model</span></span></h1>
+<h1 class="title"><span id="Bigdependentdata" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Big Dependent Data</span></span></h1>
 </div>
 
 
@@ -299,64 +307,141 @@ window.Quarto = {
 </header>
 
 
-<p>Consider forecasting a VAR(<span class="math inline">\(p\)</span>) process in a theoretical situation, where the parameters of the process are assumed to be known.</p>
+<section id="Bigbackground" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="Bigbackground"><span class="header-section-number">12.1</span> Background</h2>
+<p>So far, we have examined standard VAR model (and its VECM counterpart). In practice, the number of variables in these models must be kept relatively small to maintain estimation accuracy and efficiency. Models with more than, say, six variables are rare. However, especially in many economic applications, this dimensionality constraint presents significant challenges.</p>
+<p><strong>Omitted variable bias.</strong> In applications where the underlying dynamics are driven by a large information set, restricting the model to a handful of variables creates a substantial risk of omitted variable bias.</p>
 <ul>
-<li>In practice, one must use estimated parameters when computing forecasts.</li>
+<li><p>For example, central banks monitor hundreds of variables when conducting monetary policy. Excluding this information from a model can lead to distorted results.</p></li>
+<li><p>A classic example is the “price puzzle” observed in early VAR-based monetary policy literature, where a contractionary monetary policy shock appeared to increase the price level. This counter-intuitive result is widely attributed to omitted variable bias: if the model does not include forward-looking inflation expectations (which the central bank observes), it misinterprets a policy rate hike—enacted in anticipation of future inflation—as the cause of the subsequent price rise.</p></li>
 </ul>
-<p>As discussed in univariate time series modelling, we know from probability theory that the optimal prediction of a random variable <span class="math inline">\(Y\)</span> given another variable <span class="math inline">\(X\)</span> is the conditional expectation (conditional mean) <span class="math inline">\(\mathsf{E}(Y|X)\)</span>.</p>
+<p><strong>Unobserved variables</strong>. Economic theory or other background information (or equivalent results in other application fields) often features variables that lack precise empirical counterparts or are measured with error.</p>
 <ul>
-<li><p>Recall the properties <strong>CEV1</strong>–<strong>CEV4</strong> (see also Appendix A).</p></li>
-<li><p>Here optimality refers to a prediction that has a minimum mean square error (MSE).</p></li>
+<li><p>For instance, “inflation” is a theoretical concept representing the decline in the value of money. In practice, we observe proxies like the Consumer Price Index (CPI) or core inflation (excluding volatile energy and food prices).</p></li>
+<li><p>It is often unclear which specific proxy best represents the underlying theoretical variable. A <strong>factor model approach</strong> allows us to extract the common signal (the underlying inflation) from a large panel of different price indicators.</p></li>
 </ul>
-<p>When <span class="math inline">\(\boldsymbol{Y}\)</span> is a vector, we obtain the same result, when our goal is to minimize the MSE matrix. An illustration follows. Let <span class="math inline">\(\widetilde{\boldsymbol{Y}} = g(\boldsymbol{X})\)</span> be any prediction for <span class="math inline">\(\boldsymbol{Y}\)</span> given <span class="math inline">\(\boldsymbol{X}\)</span> (a function of <span class="math inline">\(\boldsymbol{X}\)</span>). Then <span class="math display">\[\begin{equation*}
-    \mathsf{MSE}(\widetilde{\boldsymbol{Y}}) = \mathsf{E}[(\boldsymbol{Y}-\widetilde{\boldsymbol{Y}})(\boldsymbol{Y}-\widetilde{\boldsymbol{Y}})^\prime]
-\end{equation*}\]</span> is the mean square error matrix of the forecast <span class="math inline">\(\widetilde{\boldsymbol{Y}}\)</span>. Furthermore, we get <span class="math display">\[\begin{equation*}
-    \boldsymbol{a}^\prime\mathsf{MSE}(\widetilde{\boldsymbol{Y}}) \boldsymbol{a} \geq \boldsymbol{a}^\prime\mathsf{MSE}(\mathsf{E}(\boldsymbol{Y}|\boldsymbol{X}))\boldsymbol{a}
-\end{equation*}\]</span> for all vectors <span class="math inline">\(\boldsymbol{a}\)</span> (with comfortable dimension).</p>
-<ul>
-<li><p>In other words, the matrix <span class="math inline">\(\mathsf{MSE}(\widetilde{\boldsymbol{Y}})-\mathsf{MSE}(\mathsf{E}(\boldsymbol{Y}|\boldsymbol{X}))\)</span> is positive semi-definite, written as <span class="math inline">\(\mathsf{MSE}(\widetilde{\boldsymbol{Y}})-\mathsf{MSE}(\mathsf{E}(\boldsymbol{Y}|\boldsymbol{X}))\geq 0\)</span>.</p></li>
-<li><p>By choosing <span class="math inline">\(\boldsymbol{a} =(0,...,0,1,0,...,0)\)</span>, we observe that the mean square error of any component of <span class="math inline">\(\widetilde{\boldsymbol{Y}}\)</span> is at least as large as the one of <span class="math inline">\(\mathsf{E}(\boldsymbol{Y}|\boldsymbol{X})\)</span>.</p></li>
-<li><p>We have <span class="math inline">\(\mathsf{MSE}(\widetilde{Y}) = \mathsf{E}(Y-\widetilde{Y})^{2}\)</span>, when <span class="math inline">\(Y\)</span> is a scalar-valued.</p></li>
-</ul>
+<p><strong>Modelling specific dynamics</strong>. Standard VARs focus on varying a few key aggregates. However, researchers are often interested in the dynamic reaction of specific, disaggregated variables (e.g., sector-specific prices or regional housing starts). Including all these variables in a standard VAR is computationally infeasible.</p>
 <p>&nbsp;</p>
-<p>We apply the above result to a VAR(<span class="math inline">\(p\)</span>) process. First, we form the optimal prediction of <span class="math inline">\(\boldsymbol{y}_{t+1}\)</span> given that the whole history <span class="math inline">\(\boldsymbol{y}_{t},\boldsymbol{y}_{t-1},...\)</span> is known.</p>
-<!-- - Alternatively, we could consider forecasting the future value $\boldsymbol{y}_{T+h}, h\geq 1$, given that a finite sample $\boldsymbol{y}_{1},\ldots,\boldsymbol{y}_{T}$ is available. For a VAR($p$) process the two cases do not differ when $T>p$. -->
-<p>Given the VAR(<span class="math inline">\(p\)</span>) process, we have <span class="math display">\[\begin{equation*}
-    \mathsf{E}_{t}(\boldsymbol{y}_{t+1}) = \mathsf{E}(\boldsymbol{y}_{t+1}|\boldsymbol{y}_{t-j},j\geq 0) = \mathsf{E}(\boldsymbol{y}_{t+1}|\boldsymbol{y}_{t},\ldots,\boldsymbol{y}_{t-p+1}) \equiv \mathsf{E}(\boldsymbol{y}_{t+1}|\mathcal{F}_t)  \equiv \boldsymbol{y}_{t}(1),
-\end{equation*}\]</span> where <span class="math inline">\(\mathcal{F}_t = \{\boldsymbol{y}_{t},\ldots,\boldsymbol{y}_{t-p+1}\}\)</span> denotes <strong>information set</strong> containing the predictive information. By the independence of the error, we find that <span class="math inline">\(\boldsymbol{u}_{t}\)</span> and <span class="math inline">\(\boldsymbol{y}_{t-j}\)</span> are independent for <span class="math inline">\(j&gt;0\)</span>. Therefore, based on CEV2, we get (also in this vector-valued case) <span class="math inline">\(\mathsf{E}_{t}(\boldsymbol{u}_{t+j})=\mathsf{E}(\boldsymbol{u}_{t+j})=\boldsymbol{0}\)</span> <span class="math inline">\((j&gt;0)\)</span>, and <span class="math display">\[\begin{align*}
-    \boldsymbol{y}_{t}(1) &amp; = \boldsymbol{\nu} + \boldsymbol{A}_{1}\mathsf{E}_{t}(\boldsymbol{y}_{t}) + \cdots + \boldsymbol{A}_{p} \mathsf{E}_{t}(\boldsymbol{y}_{t+1-p})+\mathsf{E}_{t}(\boldsymbol{u}_{t+1}) \\
-    &amp;= \boldsymbol{\nu} + \boldsymbol{A}_{1} \boldsymbol{y}_{t}+\cdots+ \boldsymbol{A}_{p} \boldsymbol{y}_{t+1-p},
-\end{align*}\]</span> where <span class="math inline">\(\boldsymbol{\nu} = \boldsymbol{A}(1)\boldsymbol{\mu}\)</span>. Generally, for the forecast horizons <span class="math inline">\(h\geq 1\)</span>, <span class="math display">\[\begin{equation*}
-    \mathsf{E}_{t}(\boldsymbol{y}_{t+h}) = \boldsymbol{\nu} + \boldsymbol{A}_{1}\mathsf{E}_{t}(\boldsymbol{y}_{t+h-1})+\cdots + \boldsymbol{A}_{p}\mathsf{E}_{t}(\boldsymbol{y}_{t+h-p})
-\end{equation*}\]</span> or <span class="math display">\[\begin{equation*}
-    \boldsymbol{y}_{t}(h) = \boldsymbol{\nu} + \boldsymbol{A}_{1} \boldsymbol{y}_{t}(h-1) +\cdots + \boldsymbol{A}_{p} \boldsymbol{y}_{t}(h-p),
-\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{y}_{t}(h-j) = \mathsf{E}_{t}(\boldsymbol{y}_{t+h-j})\)</span> and <span class="math inline">\(\boldsymbol{y}_{t}(h-j) = \boldsymbol{y}_{t+h-j}\)</span> when <span class="math inline">\(h\leq j\)</span>.</p>
-<ul>
-<li>In other words, <span class="math inline">\(\boldsymbol{y}_{t}(s) = \mathsf{E}_{t}(\boldsymbol{y}_{t+s})\)</span> for <span class="math inline">\(s&gt;0\)</span> and <span class="math inline">\(\boldsymbol{y}_{t}(s) = \boldsymbol{y}_{t+s}\)</span> for <span class="math inline">\(s\leq 0\)</span>.</li>
-</ul>
+<p><strong>The FAVAR solution</strong>. One solution to these dimensionality problems, within the VAR context, is the <strong>Factor Augmented Vector Autoregression (FAVAR)</strong> model. The core idea is to utilize a large dataset (where even the number of variables <span class="math inline">\(M\)</span> may exceed the number of observations <span class="math inline">\(T\)</span>) to construct a small number of <strong>common factors</strong> via <strong>Principal Component Analysis</strong> (PCA), and then include these factors in the VAR model.</p>
+<p>The FAVAR approach offers distinct advantages:</p>
+<ol type="1">
+<li><p><strong>Dimension reduction</strong>: It condenses the information from hundreds of variables into a few factors, keeping the parameter space manageable.</p></li>
+<li><p><strong>Proxies for unobservables</strong>: Factors can act as better proxies for theoretical concepts (like “economic activity” or “global financial cycle”) than any single observed variable.</p></li>
+<li><p><strong>Broader analysis</strong>: It allows for the analysis of shocks (in structural VARs) on a vast set of variables that are not explicitly in the VAR system but are part of the large dataset used to extract factors.</p></li>
+</ol>
+<p>In the following sections, we will focus first on extracting factors from large datasets and second on utilizing them in the VAR analysis. This discussion draws heavily on Chapter 16 of Kilian and Lütkepohl (2017).</p>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> The notation in this chapter differs slightly from previous sections. Specifically, matrices and dimensions here relate to large-scale factor methods and should not be confused, for example, with notation in the previous cointegration and VECM section.</p>
+</blockquote>
 <p>&nbsp;</p>
-<p>By using the linear VMA(<span class="math inline">\(\infty\)</span>) representation of the VAR process (cf.&nbsp;the analogous results for the univariate case), we can present the forecast as <span class="math display">\[\begin{equation*}
-    \boldsymbol{y}_{t}(h) = \mathsf{E}_{t}(\boldsymbol{y}_{t+h}) = \boldsymbol{\mu} + \sum_{j=0}^\infty \boldsymbol{\Psi}_{j}\mathsf{E}_{t}(\boldsymbol{u}_{t+h-j}) = \boldsymbol{\mu} + \sum_{j=h}^\infty \boldsymbol{\Psi}_{j} \boldsymbol{u}_{t+h-j}
-\end{equation*}\]</span> from which we can see that the forecast error can be written as <span class="math display">\[\begin{equation*}
-    \boldsymbol{y}_{t+h}-\boldsymbol{y}_{t}(h) = \sum_{j=0}^{h-1} \boldsymbol{\Psi}_{j} \boldsymbol{u}_{t+h-j}\ \ \ (\boldsymbol{\Psi}_{0} = \boldsymbol{I}_{K}).
-\end{equation*}\]</span> This expression shows that the expectation of the forecast error is zero so that the forecast is unbiased. We also find that the covariance matrix of the error is <span class="math display">\[\begin{equation*}
-\sum_{j=0}^{h-1}\boldsymbol{\Psi}_{j}\boldsymbol{\Sigma}_u \boldsymbol{\Psi}_{j}^\prime.
-\end{equation*}\]</span> <strong>In the case of a normal errors</strong>, <span class="math inline">\(\boldsymbol{u}_{t}\sim \mathsf{nid}(\boldsymbol{0},\boldsymbol{\Sigma}_u)\)</span>, the forecast error is also normally distributed <span class="math display">\[\begin{equation*}
-    \boldsymbol{y}_{t+h}-\boldsymbol{y}_{t}(h)\sim \mathsf{N} \left(\boldsymbol{0},\sum_{j=0}^{h-1}\boldsymbol{\Psi}_{j}\boldsymbol{\Sigma}_u \boldsymbol{\Psi}_{j}^\prime \right).
-\end{equation*}\]</span> Using this results we can form confidence intervals for the components of <span class="math inline">\(\boldsymbol{y}_{t+h}\)</span> that we seek to forecast. Let <span class="math inline">\(\sigma_{i}^{2}(h)\)</span> denote the <span class="math inline">\(i\)</span>:th diagonal element of <span class="math inline">\(\sum_{j=0}^{h-1}\boldsymbol{\Psi}_{j}\boldsymbol{\Sigma}_u \boldsymbol{\Psi}_{j}^{\prime }\)</span>. Then (using obvious notation) <span class="math display">\[\begin{equation*}
-    \frac{y_{i,t+h}-y_{i,t}(h)}{\sigma_{i}(h)}\sim \mathsf{N}(0,1),
-\end{equation*}\]</span> and <span class="math display">\[\begin{align*}
-    0.95 &amp;= \mathsf{P} \left\{ -1.96\leq \frac{y_{i,t+h}-y_{i,t}(h)}{\sigma _{i}(h)}\leq 1.96\right\} \\
-    &amp;= \mathsf{P} \left\{ y_{i,t}(h)-1.96\sigma_{i}(h)\leq y_{i,t+h}\leq y_{i,t}(h)+1.96\sigma_{i}(h)\right\}.
-\end{align*}\]</span> That is, the 95% confidence interval for the <span class="math inline">\(i\)</span>:th component in <span class="math inline">\(\boldsymbol{y}_{t+h}\)</span> is <span class="math inline">\(y_{i,t}(h)\pm 1.96\sigma_{i}(h)\)</span>.</p>
-<p>Finally, in practice and as mentioned at the beginning of this section, unknown parameters need to be replaced by their estimates in forecast computation so that the above formulae hold only approximately.</p>
+</section>
+<section id="Factormodels" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="Factormodels"><span class="header-section-number">12.2</span> Factor models</h2>
+<p><strong>Static factor model</strong></p>
+<p>Let <span class="math inline">\(\boldsymbol{x}_t\)</span> be an <span class="math inline">\(M \times 1\)</span> vector of observed, demeaned variables. We assume these variables are driven by a small number of unobserved common factors <span class="math inline">\(\boldsymbol{f}_t\)</span> (<span class="math inline">\(r \times 1\)</span>) and idiosyncratic errors. The <strong>static factor model</strong> is defined as: <span class="math display">\[\begin{equation*}
+    \boldsymbol{x}_t = \boldsymbol{\Lambda} \boldsymbol{f}_t + \boldsymbol{v}_t,
+\end{equation*}\]</span> where</p>
 <ul>
-<li><p>Note also that the above confidence intervals were presented for fixed <span class="math inline">\(i\)</span> and <span class="math inline">\(h\)</span>.</p></li>
-<li><p>When we consider several confidence intervals simultaneously we face the usual problems of constructing joint confidence intervals.</p></li>
+<li><p><span class="math inline">\(\boldsymbol{\Lambda}\)</span> is the (<span class="math inline">\(M \times r\)</span>) matrix of <strong>factor loadings</strong>.</p></li>
+<li><p><span class="math inline">\(\boldsymbol{v}_t \sim \mathsf{iid}(\boldsymbol{0},\boldsymbol{\Sigma}_v)\)</span> is the vector of <strong>idiosyncratic errors</strong>.</p></li>
 </ul>
+<p>We assume that the common factors and idiosyncratic errors are uncorrelated, i.e., <span class="math inline">\(\mathsf{E}(\boldsymbol{v}_s \boldsymbol{f}_t^\prime) = \boldsymbol{0}\)</span> for all <span class="math inline">\(s, t\)</span>. Typically, we assume <span class="math inline">\(M \gg r\)</span>. The covariance matrix of <span class="math inline">\(\boldsymbol{x}_t\)</span> implies: <span class="math display">\[\begin{equation*}
+    \boldsymbol{\Sigma}_x = \boldsymbol{\Lambda} \boldsymbol{\Sigma}_f \boldsymbol{\Lambda}^\prime + \boldsymbol{\Sigma}_v.
+\end{equation*}\]</span> This model is not uniquely identified without further restrictions. Common identification assumptions include:</p>
+<ol type="1">
+<li><p>Orthogonal loadings: <span class="math inline">\(\boldsymbol{\Lambda}^\prime \boldsymbol{\Lambda} = \boldsymbol{I}_r\)</span>.</p></li>
+<li><p>Uncorrelated, standardized factors: <span class="math inline">\(\boldsymbol{f}_t \sim (\boldsymbol{0}, \boldsymbol{I}_r)\)</span>, implying <span class="math inline">\(\boldsymbol{\Sigma}_f\)</span> is a diagonal matrix.</p></li>
+</ol>
+<p>&nbsp;</p>
+<p><strong>Estimation via PCA</strong></p>
+<p>If <span class="math inline">\(\boldsymbol{\Lambda}\)</span> were known, we could estimate the factors easily. In practice, we estimate the factors by maximizing the variance of <span class="math inline">\(\boldsymbol{x}_t\)</span> explained by the common component (equivalently, minimizing the variance of the idiosyncratic errors). The objective function is: <span class="math display">\[\begin{equation*}
+    \min_{\boldsymbol{\Lambda}, \boldsymbol{f}_1,\ldots,\boldsymbol{f}_T} \frac{1}{T}\sum_{t=1}^{T}(\boldsymbol{x}_t-\boldsymbol{\Lambda} \boldsymbol{f}_t)^\prime (\boldsymbol{x}_t-\boldsymbol{\Lambda} \boldsymbol{f}_t).
+\end{equation*}\]</span> The solution is found via <strong>Principal Component Analysis (PCA)</strong>:</p>
+<ol type="1">
+<li><p>Find the <span class="math inline">\(r\)</span> largest eigenvalues <span class="math inline">\(\lambda_1 &gt; \dots &gt; \lambda_r\)</span> of the sample covariance matrix <span class="math inline">\(\boldsymbol{S}_x = \frac{1}{T}\sum_{t=1}^{T}\boldsymbol{x}_t \boldsymbol{x}_t^\prime\)</span> and their corresponding (orthonormal) eigenvectors <span class="math inline">\(\bar{\lambda}_1, \dots, \bar{\lambda}_r\)</span>.</p></li>
+<li><p>Set the estimated loading matrix is <span class="math inline">\(\widehat{\boldsymbol{\Lambda}} = [\bar{\lambda}_1, \dots, \bar{\lambda}_r]\)</span>.</p></li>
+<li><p>The estimated factors are <span class="math inline">\(\widehat{\boldsymbol{f}}_t = \widehat{\boldsymbol{\Lambda}}^\prime \boldsymbol{x}_t\)</span>.</p></li>
+</ol>
+<p>The eigenvalues <span class="math inline">\(\lambda_i\)</span> represent the empirical variance explained by the <span class="math inline">\(i\)</span>-th factor, ordered from largest to smallest.</p>
+<p>&nbsp;</p>
+<p><strong>Dynamic factor model</strong></p>
+<p>The static model assumes factors and errors are serially uncorrelated. The <strong>Dynamic Factor Model (DFM)</strong> generalizes this by allowing for autoregressive dynamics: <span class="math display">\[\begin{equation*}
+    \boldsymbol{x}_t = \boldsymbol{\Lambda}^f \boldsymbol{f}_t + \boldsymbol{v}_t,
+\end{equation*}\]</span> where the factors and errors follow time-series processes: <span class="math display">\[\begin{align*}
+    \boldsymbol{f}_t &amp;= \boldsymbol{\Gamma}_1 \boldsymbol{f}_{t-1} + \cdots + \boldsymbol{\Gamma}_s \boldsymbol{f}_{t-s} + \boldsymbol{\eta}_t, \\
+    \boldsymbol{v}_t &amp;= \boldsymbol{A}_1 \boldsymbol{v}_{t-1} + \cdots + \boldsymbol{A}_p \boldsymbol{v}_{t-p} + \boldsymbol{u}_t.
+\end{align*}\]</span> Here <span class="math inline">\(\boldsymbol{A}_i\)</span> are typically diagonal matrices, and <span class="math inline">\(\boldsymbol{u}_t\)</span> is white noise (or iid) error term.</p>
+<p>&nbsp;</p>
+<p><strong>Note</strong>: We assume <span class="math inline">\(\boldsymbol{x}_t\)</span> is stationary. While factor models exist for integrated processes, the methods presented here assume stationarity.</p>
+<p>&nbsp;</p>
+<p><strong>Dynamic form</strong>. If <span class="math inline">\(\boldsymbol{x}_t\)</span> depends directly on lagged values of the factors, we obtain the <strong>dynamic form</strong> of the model: <span class="math display">\[\begin{equation*}
+    \boldsymbol{x}_t = \boldsymbol{\Lambda}_0^f \boldsymbol{f}_t + \boldsymbol{\Lambda}_1^f \boldsymbol{f}_{t-1} + \cdots + \boldsymbol{\Lambda}_{q^*}^f \boldsymbol{f}_{t-q^*} + \boldsymbol{v}_t.
+\end{equation*}\]</span> Assuming the same DGP for <span class="math inline">\(\boldsymbol{f}_t\)</span> and <span class="math inline">\(\boldsymbol{v}_t\)</span> as in the static form (as above) of the DFM, this model can be written in lag operator notation as <span class="math display">\[\begin{equation*}
+    \boldsymbol{x}_t = \boldsymbol{\Lambda}^f(\mathsf{B}) \boldsymbol{f}_t + \boldsymbol{v}_t, \quad \boldsymbol{\Gamma}(\mathsf{B}) \boldsymbol{f}_t = \boldsymbol{\eta}_t, \quad \boldsymbol{A}(\mathsf{B}) \boldsymbol{v}_t = \boldsymbol{u}_t
+\end{equation*}\]</span> where <span class="math display">\[\begin{eqnarray*}
+\boldsymbol{\Lambda}^f(\mathsf{B}) &amp;=&amp;  \boldsymbol{\Lambda}_0^f  + \boldsymbol{\Lambda}_1^f \mathsf{B} + \cdots + \boldsymbol{\Lambda}_{q^*}^f \mathsf{B}^{q^*}, \\
+\boldsymbol{\Gamma}(\mathsf{B}) &amp;=&amp; \boldsymbol{I}_r - \boldsymbol{\Gamma}_1 \mathsf{B}- \cdots - \boldsymbol{\Gamma}_s \mathsf{B}^s, \\
+\boldsymbol{A}(\mathsf{B}) &amp;=&amp; \mathrm{diag}\Big[a_1(\mathsf{B}) \, \cdots \, a_M(\mathsf{B}) \Big],
+\end{eqnarray*}\]</span> where <span class="math inline">\(\boldsymbol{v}_t\)</span> is the vector of idiosyncratic components, and <span class="math inline">\(\boldsymbol{\eta}_t\)</span> is white noise or iid error term such that <span class="math inline">\(\mathsf{E}(\boldsymbol{u}_t \boldsymbol{\eta}^{\prime}_s) = \boldsymbol{0} \, \forall t,s\)</span>).</p>
+<p>Interestingly, this dynamic form can be rewritten in a <strong>static representation</strong> by stacking the current and lagged factors into a larger vector <span class="math inline">\(\boldsymbol{F}_t = (\boldsymbol{f}_t^\prime, \ldots, \boldsymbol{f}_{t-q^*}^\prime)\)</span>. The observation equation becomes <span class="math display">\[\begin{equation*}
+    \boldsymbol{x}_t = \boldsymbol{\Lambda}^F \boldsymbol{F}_t + \boldsymbol{v}_t,
+\end{equation*}\]</span> where <span class="math inline">\(\boldsymbol{\Lambda}^F = \Big[\boldsymbol{\Lambda}_0^f \quad \boldsymbol{\Lambda}_1^f \quad \cdots \quad \boldsymbol{\Lambda}_{q^*}^f \Big]\)</span>. This allows us to estimate the dynamic model using the PCA approach described for the static model.</p>
+<p><strong>Estimation strategy</strong>. Recall that the model can be rewritten as <span class="math display">\[\begin{equation*}
+   \boldsymbol{A}(\mathsf{B}) \boldsymbol{x}_t = \boldsymbol{A}(\mathsf{B}) \boldsymbol{\Lambda}^f(\mathsf{B}) \boldsymbol{f}_t + \boldsymbol{u}_t.
+\end{equation*}\]</span> A recommended iterative procedure for estimating the DFM (see Stock and Watson, 2005):</p>
+<ol type="1">
+<li><p>Initialize: Estimate univariate AR models for each component of <span class="math inline">\(\boldsymbol{x}_t\)</span> to get initial estimates <span class="math inline">\(\widetilde{\boldsymbol{A}}(\mathsf{B})\)</span>.</p></li>
+<li><p>PCA step: Estimate factors <span class="math inline">\(\widehat{\boldsymbol{F}}_t\)</span> from the filtered model <span class="math inline">\(\widetilde{\boldsymbol{A}}(\mathsf{B}) \boldsymbol{x}_t\)</span> using PCA.</p></li>
+<li><p>Regression step: Estimate the factor loadings and error dynamics by regressing <span class="math inline">\(\boldsymbol{x}_t\)</span> on the estimated factors.</p></li>
+<li><p>Iterate: Repeat steps 2 and 3 until convergence.</p></li>
+</ol>
+<p>&nbsp;</p>
+<p><strong>Choosing the number of factors</strong>. Since PCA does not rely on the time structure, a common heuristic for selecting <span class="math inline">\(r\)</span> (the number of factors) is the <strong>scree plot</strong> approach or a variance threshold. One specifies a target fraction of total variance (e.g., 50% or 90%) and selects the minimum number of principal components required to explain that cumulative variance.</p>
+<p><strong>Asymptotic convergence</strong>. Standard theory suggests estimation improves as <span class="math inline">\(M \to \infty\)</span>. However, Boivin and Ng (2006) highlight that simply adding more data is not always beneficial if the new variables have correlated errors or weak factor loadings. Quality matters more than quantity; including noisy or irrelevant variables can degrade the precision of factor estimates.</p>
+<p>&nbsp;</p>
+</section>
+<section id="FAVAR" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="FAVAR"><span class="header-section-number">12.3</span> FAVAR Model</h2>
+<p>We can now formally define the FAVAR model to address the omitted variable bias. Assume the “true” process (such as economy) is driven by both observable variables <span class="math inline">\(\boldsymbol{y}_t\)</span> (<span class="math inline">\(K \times 1\)</span>) and unobserved factors <span class="math inline">\(\boldsymbol{f}_t\)</span> (<span class="math inline">\(r \times 1\)</span>). The joint dynamics are given by a demeaned(!) VAR: <span class="math display">\[\begin{equation*}
+    \boldsymbol{z}_t =
+    \begin{pmatrix}
+        \boldsymbol{f}_t \\
+        \boldsymbol{y}_t
+    \end{pmatrix}
+     = \sum_{j=1}^{p} \boldsymbol{A}^*_j
+    \begin{pmatrix}
+        \boldsymbol{f}_{t-j} \\
+        \boldsymbol{y}_{t-j}
+    \end{pmatrix} + \widetilde{\boldsymbol{u}}_t,  
+\end{equation*}\]</span> where the coefficient matrix is partitioned as: <span class="math display">\[\begin{equation*}
+    \boldsymbol{A}_j^* =
+    \begin{pmatrix}
+        \boldsymbol{A}^*_{j, r \times r} &amp; \boldsymbol{A}^*_{j, r \times K} \\
+        \boldsymbol{A}^*_{j, K \times r} &amp; \boldsymbol{A}^*_{j, K \times K}
+    \end{pmatrix}.
+\end{equation*}\]</span> If we were to estimate a standard VAR using only <span class="math inline">\(\boldsymbol{y}_t\)</span>, we would effectively be restricting <span class="math inline">\(\boldsymbol{A}^*_{j, K \times r} = \boldsymbol{0}\)</span>. If the factors indeed drive <span class="math inline">\(\boldsymbol{y}_t\)</span>, this restriction is invalid and leads to the omitted variable bias.</p>
+<p><strong>Estimation and inference</strong>. The FAVAR approach proceeds in two steps:</p>
+<ol type="1">
+<li><p><strong>Factor extraction:</strong> Estimate the factors <span class="math inline">\(\widehat{\boldsymbol{f}}_t\)</span> from a large dataset <span class="math inline">\(\boldsymbol{x}_t\)</span> using, for example, the PCA methods described above.</p></li>
+<li><p><strong>VAR estimation:</strong> Treat the estimated factors as observed variables and estimate the augmented VAR:</p></li>
+</ol>
+<p><span class="math display">\[\begin{equation*}
+    \begin{pmatrix}
+        \widehat{\boldsymbol{f}}_t \\
+        \boldsymbol{y}_t
+    \end{pmatrix}
+     = \sum_{j=1}^{p} \boldsymbol{A}_j
+    \begin{pmatrix}
+        \widehat{\boldsymbol{f}}_{t-j} \\
+        \boldsymbol{y}_{t-j}
+    \end{pmatrix} + \boldsymbol{u}_t.
+\end{equation*}\]</span></p>
+<p>&nbsp;</p>
+<p>Notes on inference: Because <span class="math inline">\(\widehat{\boldsymbol{f}}_t\)</span> are estimated regressors (“generated regressors”) rather than true observations, standard asymptotic standard errors for impulse responses are incorrect. In practice, bootstrap methods are used to compute valid confidence intervals for FAVAR analysis.</p>
 <p>&nbsp;</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -761,13 +846,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./ATSE-ch8.html" class="pagination-link" aria-label="VAR($p$): Model selection and diagnostic checking">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">VAR(<span class="math inline">\(p\)</span>): Model selection and diagnostic checking</span></span>
+      <a href="./ATSE-ch11.html" class="pagination-link" aria-label="Cointegration">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Cointegration</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ATSE-ch10.html" class="pagination-link" aria-label="Granger and instantaneous causality">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Granger and instantaneous causality</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./ATSE-ch13.html" class="pagination-link" aria-label="Predictive regressions with time series variables">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Predictive regressions with time series variables</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
